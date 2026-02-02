@@ -21,29 +21,49 @@ effects:
      dichroic_names: "!INST.dichroic_names"
      filename_format: "dichroics/TER_{}.dat"
 
- - name: slit_nir
-   description: ZShooter NIR slit
-   class: FoVSpecificAperture
+ - name: slit_selector_wheel
+   description: ZShooter slit selector wheel
+   class: SelectorWheel
    include: True
    kwargs:
-     fov_ids: [0]
-     filename: "slits/slit_nir.dat"
+     selector_key: "id"
+     wheel:
+       - selector_value: 0
+         effect_class: ApertureList
+         effect_kwargs:
+           filename: "slits/slit_nir.dat"
+       - selector_value: 1
+         effect_class: ApertureList
+         effect_kwargs:
+           filename: "slits/slit_vis.dat"
+       - selector_value: 2
+         effect_class: ApertureList
+         effect_kwargs:
+           filename: "slits/slit_uvb.dat"
 
- - name: slit_vis
-   description: ZShooter VIS slit
-   class: FoVSpecificAperture
-   include: True
-   kwargs:
-     fov_ids: [1]
-     filename: "slits/slit_vis.dat"
-
- - name: slit_uvb
-   description: ZShooter UVB slit
-   class: FoVSpecificAperture
-   include: True
-   kwargs:
-     fov_ids: [2]
-     filename: "slits/slit_uvb.dat"
+# - name: slit_nir
+#   description: ZShooter NIR slit
+#   class: FoVSpecificAperture
+#   include: True
+#   kwargs:
+#     fov_ids: [0]
+#     filename: "slits/slit_nir.dat"
+#
+# - name: slit_vis
+#   description: ZShooter VIS slit
+#   class: FoVSpecificAperture
+#   include: True
+#   kwargs:
+#     fov_ids: [1]
+#     filename: "slits/slit_vis.dat"
+#
+# - name: slit_uvb
+#   description: ZShooter UVB slit
+#   class: FoVSpecificAperture
+#   include: True
+#   kwargs:
+#     fov_ids: [2]
+#     filename: "slits/slit_uvb.dat"
 
  - name: trace_eff
    description: list of spectral order trace efficiencies
