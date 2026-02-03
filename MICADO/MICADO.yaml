@@ -37,9 +37,12 @@ effects:
   class: SlitWheel
   kwargs:
     slit_names:
-      - 3000x48
       - 3000x16
+      - 3000x16_offset
+      - 3000x48
+      - 3000x48_offset
       - 15000x20
+      - 15000x20_offset
     filename_format: MASK_slit_{}.dat
     current_slit: "!OBS.slit"
     include: "!OBS.slit"
