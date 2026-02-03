@@ -34,6 +34,7 @@ properties :
   declination : -30
   hour_angle : 0
   pupil_angle : 0
+  slit: false   # overridden in spectroscopic modes
   dit : 60
   ndit : 1
   catg : SCIENCE
@@ -115,12 +116,12 @@ mode_yamls :
   - MICADO_SPEC.yaml
   properties :
     trace_file : TRACE_MICADO.fits
-    slit_file : MASK_slit_15000x20.dat
+    slit : 15000x20
     filter_name_fw1 : Spec_HK
     filter_name_fw2 : open
     filter_name_pupil : open
     fits_ins_filt : Spec_HK
-    fits_ins_slit : "Long"
+    fits_ins_slit : Long
 
 - object : observation
   alias: OBS
@@ -131,12 +132,12 @@ mode_yamls :
   - MICADO_SPEC.yaml
   properties :
     trace_file : TRACE_MICADO.fits
-    slit_file : MASK_slit_3000x48.dat
+    slit : 3000x48
     filter_name_fw1 : Spec_HK
     filter_name_fw2 : open
     filter_name_pupil : open
     fits_ins_filt : Spec_HK
-    fits_ins_slit : "Wide"
+    fits_ins_slit : Wide
 
 - object : observation
   alias : OBS
@@ -147,12 +148,30 @@ mode_yamls :
   - MICADO_SPEC.yaml
   properties :
     trace_file : TRACE_MICADO.fits
-    slit_file : MASK_slit_3000x16.dat
+    slit: 3000x16
     filter_name_fw1 : Spec_IJ
     filter_name_fw2 : open
     filter_name_pupil : open
     fits_ins_filt : Spec_IJ
-    fits_ins_slit : "Short"
+    fits_ins_slit : Short
+
+- object: observation
+  alias: OBS
+  name: SPEC
+  description: "spectrograph: all slits"
+  status: experimental
+  yamls:
+  - MICADO_SPEC.yaml
+  properties:       # Todo: these parameters all need to be changeable
+    trace_file: TRACE_MICADO.fits
+    slit: 3000x16
+    filter_name_fw1: Spec_IJ
+    filter_name_fw2: open
+    filter_name_pupil: open
+    tech: SPEC
+    fits_ins_mode: SPE
+    fits_ins_filt: Spec_IJ
+    fits_ins_slit: Short
 
 ---
 ### default simulation parameters needed for a MICADO simulation
@@ -169,6 +188,9 @@ properties :
     wave_min : 0.7
     wave_mid : 1.6
     wave_max : 2.5
+
+  sub_pixel:
+    flag: True
 
   computing :
     preload_field_of_views : True

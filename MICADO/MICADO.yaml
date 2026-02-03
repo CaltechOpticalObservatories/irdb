@@ -31,6 +31,19 @@ effects:
         pixel_scale : "!INST.pixel_scale"
         filename : "INST_MICADO_wavefront_error_budget.dat"
 
+
+- name: slit_wheel
+  description: collection of field masks and slits
+  class: SlitWheel
+  kwargs:
+    slit_names:
+      - 3000x48
+      - 3000x16
+      - 15000x20
+    filename_format: MASK_slit_{}.dat
+    current_slit: "!OBS.slit"
+    include: "!OBS.slit"
+
 -   name: filter_wheel_1
     description: upper filter wheel
     class: FilterWheel
