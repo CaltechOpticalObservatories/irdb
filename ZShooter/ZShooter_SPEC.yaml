@@ -157,7 +157,7 @@ effects:
              6: "transmission"   # k arm
 
 
- - name: trace_eff
+ - name: trace_eff  # Need only one entry for trace efficiency, and trace list as the same FITS description contains info for all arms and orders
    description: list of spectral order trace efficiencies
    class: SpectralEfficiency
    include: True

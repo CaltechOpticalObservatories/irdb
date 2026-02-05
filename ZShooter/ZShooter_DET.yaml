@@ -1,11 +1,10 @@
-### ZShooter DETECTOR
+### ZShooter DETECTORs for ZSPEC
 object : detector
 alias : DET
-name : zshooter_detectors
-description : Three 4k detectors
+name : zspec_detectors
+description : 3 CCDs/qCCDs for ub, gr, iz arms and 4 HgCdTe? detectors for NIR arms
 
 properties :
-    image_plane_id : 0
     temperature : -120
     binx : 1
     biny: 1
@@ -13,21 +12,21 @@ properties :
     ndit : "!OBS.ndit"
 
 effects :
-  - name: detector_nir
-    description: Single 4k x 4k detector for ZShooter NIR arm
+  - name: detector_ub
+    description: Single 4k x 4k detector for ZShooter UB arm
     include: True
     class: DetectorList
     kwargs:
         image_plane_id : 0
         array_dict:
-          id: [0, 1]
-          x_cen: [-30.72, 30.72]
-          y_cen: [0.0, 0.0]
-          x_size: [2048, 4096]
-          y_size: [2048, 4096]
-          pixel_size: [0.015, 0.015]
-          angle: [0.0, 0.0]
-          gain: [1.0, 1.0]
+          id: [0]
+          x_cen: [0.0]
+          y_cen: [0.0]
+          x_size: [4096]
+          y_size: [4096]
+          pixel_size: [0.015]
+          angle: [0.0]
+          gain: [1.0]
         x_cen_unit: mm
         y_cen_unit: mm
         x_size_unit: pixel
@@ -35,9 +34,10 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
+        detector: "CCD_UB"
 
-  - name: detector_vis
-    description: Single 4k x 4k detector for ZShooter VIS arm
+  - name: detector_gr
+    description: Single 4k x 4k detector for ZShooter GR arm
     include: True
     class: DetectorList
     kwargs:
@@ -58,9 +58,10 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
+        detector: "CCD_GR"
 
-  - name: detector_uvb
-    description: Single 4k x 4k detector for ZShooter UVB arm
+  - name: detector_iz
+    description: Single 4k x 4k detector for ZShooter IZ arm
     include: True
     class: DetectorList
     kwargs:
@@ -81,44 +82,173 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
+        detector: "CCD_IZ"
+
+  - name: detector_y
+    description: Single 2k x 2k detector for ZShooter Y arm
+    include: True
+    class: DetectorList
+    kwargs:
+        image_plane_id : 3
+        array_dict:
+          id: [3]
+          x_cen: [0.0]
+          y_cen: [0.0]
+          x_size: [2048]
+          y_size: [2048]
+          pixel_size: [0.015]
+          angle: [0.0]
+          gain: [1.0]
+        x_cen_unit: mm
+        y_cen_unit: mm
+        x_size_unit: pixel
+        y_size_unit: pixel
+        pixel_size_unit: mm
+        angle_unit: deg
+        gain_unit: electron/adu
+        detector: "APD_Y"
+
+  - name: detector_y
+    description: Single 2k x 2k detector for ZShooter J arm
+    include: True
+    class: DetectorList
+    kwargs:
+        image_plane_id : 4
+        array_dict:
+          id: [4]
+          x_cen: [0.0]
+          y_cen: [0.0]
+          x_size: [2048]
+          y_size: [2048]
+          pixel_size: [0.015]
+          angle: [0.0]
+          gain: [1.0]
+        x_cen_unit: mm
+        y_cen_unit: mm
+        x_size_unit: pixel
+        y_size_unit: pixel
+        pixel_size_unit: mm
+        angle_unit: deg
+        gain_unit: electron/adu
+        detector: "APD_J"
+
+  - name: detector_y
+    description: Single 2k x 2k detector for ZShooter H arm
+    include: True
+    class: DetectorList
+    kwargs:
+        image_plane_id : 5
+        array_dict:
+          id: [5]
+          x_cen: [0.0]
+          y_cen: [0.0]
+          x_size: [2048]
+          y_size: [2048]
+          pixel_size: [0.015]
+          angle: [0.0]
+          gain: [1.0]
+        x_cen_unit: mm
+        y_cen_unit: mm
+        x_size_unit: pixel
+        y_size_unit: pixel
+        pixel_size_unit: mm
+        angle_unit: deg
+        gain_unit: electron/adu
+        detector: "APD_H"
+
+  - name: detector_y
+    description: Single 2k x 2k detector for ZShooter K arm
+    include: True
+    class: DetectorList
+    kwargs:
+        image_plane_id : 6
+        array_dict:
+          id: [6]
+          x_cen: [0.0]
+          y_cen: [0.0]
+          x_size: [2048]
+          y_size: [2048]
+          pixel_size: [0.015]
+          angle: [0.0]
+          gain: [1.0]
+        x_cen_unit: mm
+        y_cen_unit: mm
+        x_size_unit: pixel
+        y_size_unit: pixel
+        pixel_size_unit: mm
+        angle_unit: deg
+        gain_unit: electron/adu
+        detector: "APD_K"
 
   - name: exposure_integration
     description: Summing up sky signal for all DITs and NDITs
     class: ExposureIntegration
 
-  - name: dark_current
-    description : OSIRIS dark current
-    class: DarkCurrent
-    # [e-/s] level of dark current for each detector
-    kwargs:
-        value: 0.0001
-
   - name: shot_noise
     description : apply poisson shot noise to images
     class: ShotNoise
 
-  - name: detector_linearity
-    description : Linearity characteristics of OSIRIS chip
-    class: LinearityCurve
+  - name: dark_current_selector
+    description: Selector Wheel for dark current levels for CCDs and APDs
+    class: SelectorWheel
+    include: True
+    kwargs:
+      selector_key: "detector_id" # not really used as the Detector object's id is stored as just "id", but kept for consistency
+      wheel:
+        - selector_value: [0,1,2]   # CCD detectors
+          effect_class: DarkCurrent
+          effect_kwargs:
+            value: 0.0001    # [e-/s] level of dark current for CCD detectors
+
+        - selector_value: [3,4,5,6]   # APD detectors
+          effect_class: DarkCurrent
+          effect_kwargs:
+            value: 0.0001     # [e-/s] level of dark current for APD detectors
+
+  - name: detector_linearity_selector
+    description: Selector Wheel for linearity characteristics for CCDs and APDs
+    class: SelectorWheel
     include: False
     kwargs:
-        array_dict:
-          incident: [0, 64e3]
-          measured: [0, 64e3]
+      selector_key: "detector_id" # not really used as the Detector object's id is stored as just "id", but kept for consistency
+      wheel:
+        - selector_value: [0,1,2]   # CCD detectors
+          effect_class: LinearityCurve
+          effect_kwargs:
+            array_dict:
+              incident: [0, 64e3]
+              measured: [0, 64e3]
 
-  - name: border_reference_pixels
-    description: Blanks the signal on N edge row and column pixels
-    class: ReferencePixelBorder
-    kwargs:
-        left:  50
+        - selector_value: [3,4,5,6]   # APD detectors
+          effect_class: LinearityCurve
+          effect_kwargs:
+            array_dict:
+              incident: [0, 64e3]
+              measured: [0, 64e3]
+
+#  - name: border_reference_pixels
+#    description: Blanks the signal on N edge row and column pixels
+#    class: ReferencePixelBorder
+#    kwargs:
+#        left:  50
 #        right: 50 #New CCD only has prescan, no overscan
 
-  - name : readout_noise
-    description : Readout noise frames
-    class : BasicReadoutNoise
-    kwargs :
-        noise_std : 2
+  - name: readout_noise_selector
+    description: Selector Wheel for readout noise levels for CCDs and APDs
+    class: SelectorWheel
+    include: True
+    kwargs:
+      selector_key: "detector_id" # not really used as the Detector object's id is stored as just "id", but kept for consistency
+      wheel:
+        - selector_value: [0,1,2]   # CCD detectors
+          effect_class: BasicReadoutNoise
+          effect_kwargs:
+            noise_std: 2    # CCD readout noise std dev in electrons
 
+        - selector_value: [3,4,5,6]   # APD detectors
+          effect_class: BasicReadoutNoise
+          effect_kwargs:
+            noise_std: 2     # APD readout noise std dev in electrons
 
   - name: binning
     description: Applies binning
@@ -128,22 +258,18 @@ effects :
         binx: "!DET.binx"
         biny: "!DET.biny"
 
-  - name : bias
-    description : Bias level
-    class : Bias
-    kwargs :
-        bias : 1040
-
-#  - name : extra_fits_keywords
-#    decription : adds extra FITS keywords from a yaml file
-#    class : ExtraFitsKeywords
-#    include : True
-#    kwargs :
-#      filename: FITS_extra_keywords.yaml
-#
-#  - name: NewCCD_rotation
-#    description: New OSIRIS CCD is rotated 90 degrees
-#    class: Rotate90CCD
-#    include: True
-#    kwargs:
-#      rotations: 1
+  - name: bias_selector
+    description: Selector Wheel for bias levels for CCDs and APDs
+    class: SelectorWheel
+    include: True
+    kwargs:
+      selector_key: "detector_id" # not really used as the Detector object's id is stored as just "id", but kept for consistency
+      wheel:
+        - selector_value: [0,1,2]   # CCD detectors
+          effect_class: Bias
+          effect_kwargs:
+            bias: 1040    # CCD bias level in electrons
+        - selector_value: [3,4,5,6]   # APD detectors
+          effect_class: Bias
+          effect_kwargs:
+            bias: 1040     # APD bias level in electrons
