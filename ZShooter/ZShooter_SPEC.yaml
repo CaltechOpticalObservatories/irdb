@@ -7,63 +7,155 @@ description: Effects from the ZShooter optics
 
 properties:
   decouple_detector_from_sky_headers: True  # needed for slit spectroscopy
-  dichroic_names:
-    - dichroic1
-    - dichroic2
+
 
 effects:
- - name: dichroic_tree
-   description: ZShooter dichroic tree
-   class: DichroicTreeEffect
+ - name: first_dichroic
+   description: Splits into ub+vis and nir arms
+   class: Dichroic
    include: True
    kwargs:
-     tree_filename: "dichroics/dichroic_tree.dat"
-     dichroic_names: "!INST.dichroic_names"
-     filename_format: "dichroics/TER_{}.dat"
+     filename: "dichroics/TER_first_dichroic.dat"
+     arm_key: "aperture_id"
+     arm_actions:
+       0: "reflection"  # ub+vis arm, later splits into 3 sub-arms (ub, gr, iz)
+       3: "transmission"   # NIR arm, later splits into 4 sub-arms (y, j, h, k)
 
- - name: slit_selector_wheel
-   description: ZShooter slit selector wheel
+
+ - name: adc_selector
+   description: SelectorWheel holding AtmosphericDispersionCorrector for ub+vis, optionally for NIR for testing
+   class: SelectorWheel
+   include: False
+   kwargs:
+     selector_key: "aperture_id"
+     wheel:
+       - selector_value: 0
+         effect_class: AtmosphericDispersionCorrection
+         effect_kwargs:
+           altitude : "!ATMO.altitude"
+           longitude : "!ATMO.longitude"
+           latitude : "!ATMO.latitude"
+           airmass : "!OBS.airmass"
+           temperature : "!ATMO.temperature"
+           humidity : "!ATMO.humidity"
+           pressure : "!ATMO.pressure"
+           pupil_angle : "!OBS.pupil_angle"
+           efficiency: 1
+           wave_mid: "!SIM.spectral.wave_mid"
+           quick_adc: True
+
+       - selector_value: 3     # NIR arm, usually no ADC, but option for testing
+         effect_class: AtmosphericDispersionCorrection
+         effect_kwargs:
+           altitude : "!ATMO.altitude"
+           longitude : "!ATMO.longitude"
+           latitude : "!ATMO.latitude"
+           airmass : "!OBS.airmass"
+           temperature : "!ATMO.temperature"
+           humidity : "!ATMO.humidity"
+           pressure : "!ATMO.pressure"
+           pupil_angle : "!OBS.pupil_angle"
+           efficiency: 1
+           wave_mid: "!SIM.spectral.wave_mid"
+           quick_adc: True
+
+
+ - name: slitwheel_selector
+   description: SelectorWheel holding two SlitWheels, one for ub+vis, one for nir
    class: SelectorWheel
    include: True
    kwargs:
-     selector_key: "id"
+     selector_key: "aperture_id"
      wheel:
        - selector_value: 0
-         effect_class: ApertureList
+         effect_class: SlitWheel
          effect_kwargs:
-           filename: "slits/slit_nir.dat"
-       - selector_value: 1
-         effect_class: ApertureList
-         effect_kwargs:
-           filename: "slits/slit_vis.dat"
-       - selector_value: 2
-         effect_class: ApertureList
-         effect_kwargs:
-           filename: "slits/slit_uvb.dat"
+           slit_names:
+             - "half_arcsec"
+             - "one_arcsec"
+             - "two_arcsec"
+           filename_format: "slits/ubvis_{}.dat"
+           current_slit: "one_arcsec"
 
-# - name: slit_nir
-#   description: ZShooter NIR slit
-#   class: FoVSpecificAperture
-#   include: True
-#   kwargs:
-#     fov_ids: [0]
-#     filename: "slits/slit_nir.dat"
-#
-# - name: slit_vis
-#   description: ZShooter VIS slit
-#   class: FoVSpecificAperture
-#   include: True
-#   kwargs:
-#     fov_ids: [1]
-#     filename: "slits/slit_vis.dat"
-#
-# - name: slit_uvb
-#   description: ZShooter UVB slit
-#   class: FoVSpecificAperture
-#   include: True
-#   kwargs:
-#     fov_ids: [2]
-#     filename: "slits/slit_uvb.dat"
+       - selector_value: 3
+         effect_class: SlitWheel
+         effect_kwargs:
+           slit_names:
+             - "half_arcsec"
+             - "one_arcsec"
+             - "two_arcsec"
+           filename_format: "slits/nir_{}.dat"
+           current_slit: "one_arcsec"
+
+
+ - name: some_optics
+   description: placeholder for other optics in ZShooter
+   class: SurfaceList
+   include: False
+   kwargs:
+     filename: "LIST_ZSHOOTER_optics.dat"
+
+
+ - name: second_dichroic_set_selector
+   description: SelectorWheel holding two Dichroics, one for ubvis arm that splits into ub and vis, one for nir that splits into yj and hk
+   class: SelectorWheel
+   include: True
+   kwargs:
+     selector_key: "aperture_id"
+     wheel:
+       - selector_value: 0
+         effect_class: Dichroic
+         effect_kwargs:
+           filename: "dichroics/TER_ubvis_dichroic.dat"
+           arm_key: "aperture_id"
+           arm_actions:
+             0: "reflection"  # ub arm
+             1: "transmission"   # vis arm
+
+       - selector_value: 3
+         effect_class: Dichroic
+         effect_kwargs:
+           filename: "dichroics/TER_nir_dichroic.dat"
+           arm_key: "aperture_id"
+           arm_actions:
+             3: "reflection"  # yj arm
+             5: "transmission"   # hk arm
+
+
+ - name: third_dichroic_set_selector
+   description: SelectorWheel holding three Dichroics, one for vis arm that splits into gr and iz, one for yj arm that splits into y and j, one for hk arm that splits into h and k
+   class: SelectorWheel
+   include: True
+   kwargs:
+     selector_key: "aperture_id"
+     wheel:
+       - selector_value: 1
+         effect_class: Dichroic
+         effect_kwargs:
+           filename: "dichroics/TER_vis_dichroic.dat"
+           arm_key: "aperture_id"
+           arm_actions:
+             1: "reflection"  # gr arm
+             2: "transmission"   # iz arm
+
+       - selector_value: 3
+         effect_class: Dichroic
+         effect_kwargs:
+           filename: "dichroics/TER_yj_dichroic.dat"
+           arm_key: "aperture_id"
+           arm_actions:
+             3: "reflection"  # y arm
+             4: "transmission"   # j arm
+
+       - selector_value: 5
+         effect_class: Dichroic
+         effect_kwargs:
+           filename: "dichroics/TER_hk_dichroic.dat"
+           arm_key: "aperture_id"
+           arm_actions:
+             5: "reflection"  # h arm
+             6: "transmission"   # k arm
+
 
  - name: trace_eff
    description: list of spectral order trace efficiencies
@@ -82,9 +174,4 @@ effects:
      s_colname: "s"
      col_number_start: 1
 
- - name: detector_qe
-   description: QE curve for new OSIRIS detector, placeholder for ZShooter
-   class: QuantumEfficiencyCurve
-   include: True
-   kwargs:
-     filename: "QE.dat"
+

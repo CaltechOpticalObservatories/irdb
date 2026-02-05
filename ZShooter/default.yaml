@@ -17,7 +17,6 @@ yamls:
 - MaunaKea.yaml
 - Keck.yaml
 - ZShooter.yaml
-- ZShooter_DET.yaml
 
 properties:
   instrument : ZShooter
@@ -40,6 +39,7 @@ mode_yamls:
   description : "spectroscopic mode"
   yamls :
     - ZShooter_SPEC.yaml
+    - ZShooter_DET.yaml
 
 ---
 ### default simulation parameters needed for a MICADO simulation
