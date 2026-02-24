@@ -1,9 +1,9 @@
-### Common effects list for ZShooter
+### Common effects list for ZShooter_v1
 
 object: instrument
 alias: INST
-name: ZShooter
-description: Effects from the ZShooter optics
+name: ZShooter_v1
+description: Effects from the ZShooter_v1 optics
 
 properties:
   decouple_detector_from_sky_headers: True  # needed for slit spectroscopy
@@ -63,7 +63,7 @@ effects:
      col_number_start: 1
 
  - name: detector_qe
-   description: QE curve for new OSIRIS detector, placeholder for ZShooter
+   description: QE curve for new OSIRIS detector, placeholder for ZShooter_v1
    class: QuantumEfficiencyCurve
    include: True
    kwargs:

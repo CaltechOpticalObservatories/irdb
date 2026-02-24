@@ -11,7 +11,7 @@ version: 0.1
 packages:
 - MaunaKea
 - keck
-- ZShooter
+- ZShooter_v1
 
 yamls:
 - MaunaKea.yaml
@@ -19,7 +19,7 @@ yamls:
 - ZShooter.yaml
 
 properties:
-  instrument : ZShooter
+  instrument : ZShooter_v1
   modes : ["SPEC"]
   airmass : 1.2
   declination : 0
