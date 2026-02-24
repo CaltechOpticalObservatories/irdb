@@ -85,3 +85,5 @@ TEST*.fits
 
 # Pylint
 .pylint.d/
+
+.DS_Store
