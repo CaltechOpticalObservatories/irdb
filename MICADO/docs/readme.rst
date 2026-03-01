@@ -85,6 +85,14 @@ Scientific use-case notebooks
    * - <add title>
      - <add description>
 
+Validation
+----------
+The following table shows an overview of the test results for limiting magnitudes assuming a minimal signal-to-noise ration of 5.
+Green (passed) means a result within the given tolerances, yellow (xfailed) means an *expected* deviation, red (failed) means an *unexpected* issue.
+
+**Click** on each row for a plot of the test results.
+
+.. validation-report:: ./MICADO/test_micado/validation_results.xml
 
 
 Documentation and useful references
