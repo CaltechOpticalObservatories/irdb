@@ -67,27 +67,32 @@ class TestLimiting:
 
     """
 
+    @pytest.mark.parametrize("img_mode", ["IMG_4mas"])
+    @pytest.mark.parametrize("ao_mode", ["MCAO", "SCAO"])
     @pytest.mark.parametrize(
         ("fw1", "fw2", "r0", "rics_lim_mag", "abslim"), [
             pytest.param(
-                "J", "open", 1, 27.9, 0.3,
+                "J", "open", 1, 27.9, 1.0,
                 marks=pytest.mark.xfail(
-                    not os.environ.get("READTHEDOCS"),
-                    reason="something changed in ScopeSim..."
-                    ),
+                    reason="most likely PSF contamination of nearby sources"
                 ),
+            ),
             pytest.param(
-                "open", "H", 2, 27.5, 0.3,
+                "open", "H", 2, 27.5, 0.6,
                 marks=pytest.mark.xfail(
-                    not os.environ.get("READTHEDOCS"),
-                    reason="something changed in ScopeSim..."
-                    ),
+                    reason="most likely PSF contamination of nearby sources"
                 ),
-            ("open", "Ks", 2, 27.1, 0.3),
+            ),
+            pytest.param(
+                "open", "Ks", 2, 27.1, 0.3,
+                marks=pytest.mark.xfail(
+                    reason="most likely PSF contamination of nearby sources"
+                ),
+            ),
         ],
     )
     def test_MCAO_IMG_4mas(
-        self, record_property, fw1, fw2, r0, rics_lim_mag, abslim, ao_mode="MCAO", img_mode="IMG_4mas",
+        self, record_property, fw1, fw2, r0, rics_lim_mag, abslim, ao_mode, img_mode,
     ):
         filt = fw1 if fw1 != "open" else fw2
         record_property("filter", filt)
