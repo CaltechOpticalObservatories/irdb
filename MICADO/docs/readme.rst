@@ -94,6 +94,7 @@ Green (passed) means a result within the given tolerances, yellow (xfailed) mean
 
 .. validation-report:: ./MICADO/test_micado/validation_results.xml
 
+The code used to generate these results can be found in this `GitHub folder <https://github.com/AstarVienna/irdb/tree/dev_master/MICADO/test_micado/>`_.
 
 Documentation and useful references
 -----------------------------------
