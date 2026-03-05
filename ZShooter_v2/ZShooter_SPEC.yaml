@@ -155,22 +155,37 @@ effects:
              5: "reflection"  # h arm
              6: "transmission"   # k arm
 
+## Need only one entry for trace efficiency and trace list for all arms as the same FITS description contains info for all arms and orders
+# - name: trace_eff_zemax
+#   description: list of spectral order trace efficiencies
+#   class: SpectralEfficiency
+#   include: True
+#   kwargs:
+#     filename: "traces/TRACE_eff.fits"  # Does not exist as of now
+#
+# - name: trace_list_zemax
+#   description: list of spectral order trace geometry on the focal plane
+#   class: SpectralTraceList
+#   include: True
+#   kwargs:
+#     filename: "traces/TRACE_ZSHOOTER.fits" # Does not exist as of now
+#     wave_colname: "wavelength"
+#     s_colname: "s"
+#     col_number_start: 1
 
- - name: trace_eff  # Need only one entry for trace efficiency, and trace list as the same FITS description contains info for all arms and orders
-   description: list of spectral order trace efficiencies
-   class: SpectralEfficiency
+
+ - name: trace_eff_analytical
+   description: list of spectral order trace efficiencies calculated from an analytical model
+   class: EchelleSpectralEfficiency
    include: True
    kwargs:
-     filename: "traces/TRACE_eff.fits"
+     filename: "traces/echelle_trace_parameters.dat"
 
- - name: trace_list
-   description: list of spectral order trace geometry on the focal plane
-   class: SpectralTraceList
+ - name: trace_list_analytical
+   description: list of spectral order trace geometry calculated from an analytical model
+   class: EchelleSpectralTraceList
    include: True
    kwargs:
-     filename: "traces/TRACE_ZSHOOTER.fits"
+     filename: "traces/echelle_trace_parameters.dat"
      wave_colname: "wavelength"
-     s_colname: "s"
-     col_number_start: 1
-
-
+     s_colname: "s""
