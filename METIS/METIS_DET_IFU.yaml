@@ -69,6 +69,14 @@ effects:
     description: Summing up sky signal for all DITs and NDITs
     class: ExposureIntegration
 
+  - name: prnu
+    description: Pixel-to-pixel response non-uniformity — fixed multiplicative gain map
+    class: PixelResponseNonUniformity
+    include: True
+    kwargs:
+      prnu_std: 0.5         # 0.5% RMS — typical H2RG value
+      prnu_seed: 42
+
   - name: dark_current
     description: METIS LMS dark current
     class: DarkCurrent

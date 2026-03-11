@@ -86,6 +86,14 @@ effects:
     description: Summing up sky signal for all DITs and NDITs
     class: ExposureIntegration
 
+  - name: prnu
+    description: Pixel-to-pixel response non-uniformity — fixed multiplicative gain map
+    class: PixelResponseNonUniformity
+    include: True
+    kwargs:
+      prnu_std: 0.010         # 1.0% RMS — GeoSnap estimate
+      prnu_seed: 42
+
   - name: dark_current
     description: METIS GeoSnap dark current
     class: DarkCurrent
