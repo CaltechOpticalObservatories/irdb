@@ -19,6 +19,7 @@ properties:
   temperature: -230
   dit: "!OBS.dit"
   ndit: "!OBS.ndit"
+  prnu_include: False       # off by default; enabled per mode via OBS.prnu_include
   layout:
     file_name: "FPA_metis_img_lm_layout.dat"
   qe_curve:
@@ -85,9 +86,9 @@ effects:
   - name: prnu
     description: Pixel-to-pixel response non-uniformity — fixed multiplicative gain map
     class: PixelResponseNonUniformity
-    include: True
+    include: "!DET.prnu_include"
     kwargs:
-      prnu_std: 0.005         
+      prnu_std: 0.005
       prnu_seed: 42
 
   - name: dark_current
