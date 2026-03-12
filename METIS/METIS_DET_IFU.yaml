@@ -74,7 +74,7 @@ effects:
     class: PixelResponseNonUniformity
     include: True
     kwargs:
-      prnu_std: 0.5         # 0.5% RMS — typical H2RG value
+      prnu_std: 0.005     
       prnu_seed: 42
 
   - name: dark_current
