@@ -55,7 +55,7 @@ properties :
   spectral :
     wave_min : 0.3 #change
     wave_mid : 1.0 #change
-    wave_max : 2.6 #change
+    wave_max : 2.5 #change
     spectral_bin_width: 0.0005       # 0.5 Angstrom
 
   computing :

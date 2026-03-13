@@ -1,0 +1,13 @@
+# name : third_layer_dichroic_HK
+# author : unknown
+# date_created : 2025-09-24
+# date_modified : 2025-09-24
+# comment : Transmits K, reflects H
+# wavelength_unit : um
+# changes :
+#
+wavelength transmission reflection
+1.470         0.00       0.98
+1.830         0.00       0.98
+1.980         0.98       0.00
+2.500         0.98       0.00

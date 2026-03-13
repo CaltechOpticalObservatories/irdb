@@ -1,0 +1,13 @@
+# name : second_layer_dichroic_NIR
+# author : unknown
+# date_created : 2025-09-24
+# date_modified : 2025-09-24
+# comment : Transmits HK, reflects YJ
+# wavelength_unit : um
+# changes :
+#
+wavelength transmission reflection
+0.960         0.00       0.98
+1.340         0.00       0.98
+1.460         0.98       0.00
+2.500         0.98       0.00

@@ -1,0 +1,13 @@
+# name : third_layer_dichroic_VIS
+# author : unknown
+# date_created : 2025-09-24
+# date_modified : 2025-09-24
+# comment : Transmits R, reflects G
+# wavelength_unit : um
+# changes :
+#
+wavelength transmission reflection
+0.400         0.00       0.98
+0.580         0.98       0.98
+0.600         0.98       0.98
+0.980         0.98       0.00

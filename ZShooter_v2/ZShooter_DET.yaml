@@ -1,8 +1,8 @@
-### ZShooter_v1 DETECTORs for ZSPEC
+### ZShooter_v2 DETECTORs for ZSPEC
 object : detector
 alias : DET
 name : zspec_detectors
-description : 3 CCDs/qCCDs for ub, gr, iz arms and 4 HgCdTe? detectors for NIR arms
+description : 3 CCDs/qCCDs for b, g, r arms and 3 HgCdTe APDs for yj, h, k arms
 
 properties :
     temperature : -120
@@ -12,8 +12,8 @@ properties :
     ndit : "!OBS.ndit"
 
 effects :
-  - name: detector_ub
-    description: Single 4k x 4k detector for ZShooter_v1 UB arm
+  - name: detector_b
+    description: Single 2k x 2k detector for ZShooter_v2 B arm
     include: True
     class: DetectorList
     kwargs:
@@ -22,8 +22,8 @@ effects :
           id: [0]
           x_cen: [0.0]
           y_cen: [0.0]
-          x_size: [4096]
-          y_size: [4096]
+          x_size: [2048]
+          y_size: [2048]
           pixel_size: [0.015]
           angle: [0.0]
           gain: [1.0]
@@ -34,10 +34,10 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
-        detector: "CCD_UB"
+        detector: "CCD_B"
 
-  - name: detector_gr
-    description: Single 4k x 4k detector for ZShooter_v1 GR arm
+  - name: detector_g
+    description: Single 2k x 2k detector for ZShooter_v2 G arm
     include: True
     class: DetectorList
     kwargs:
@@ -46,8 +46,8 @@ effects :
           id: [1]
           x_cen: [0.0]
           y_cen: [0.0]
-          x_size: [4096]
-          y_size: [4096]
+          x_size: [2048]
+          y_size: [2048]
           pixel_size: [0.015]
           angle: [0.0]
           gain: [1.0]
@@ -58,10 +58,10 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
-        detector: "CCD_GR"
+        detector: "CCD_G"
 
-  - name: detector_iz
-    description: Single 4k x 4k detector for ZShooter_v1 IZ arm
+  - name: detector_r
+    description: Single 2k x 2k detector for ZShooter_v2 R arm
     include: True
     class: DetectorList
     kwargs:
@@ -70,8 +70,8 @@ effects :
           id: [2]
           x_cen: [0.0]
           y_cen: [0.0]
-          x_size: [4096]
-          y_size: [4096]
+          x_size: [2048]
+          y_size: [2048]
           pixel_size: [0.015]
           angle: [0.0]
           gain: [1.0]
@@ -82,10 +82,10 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
-        detector: "CCD_IZ"
+        detector: "CCD_R"
 
-  - name: detector_y
-    description: Single 2k x 2k detector for ZShooter_v1 Y arm
+  - name: detector_yj
+    description: Single 2k x 2k detector for ZShooter_v2 YJ arm
     include: True
     class: DetectorList
     kwargs:
@@ -106,10 +106,10 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
-        detector: "APD_Y"
+        detector: "APD_YJ"
 
-  - name: detector_y
-    description: Single 2k x 2k detector for ZShooter_v1 J arm
+  - name: detector_h
+    description: Single 2k x 2k detector for ZShooter_v2 H arm
     include: True
     class: DetectorList
     kwargs:
@@ -130,40 +130,16 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
-        detector: "APD_J"
+        detector: "APD_H"
 
-  - name: detector_y
-    description: Single 2k x 2k detector for ZShooter_v1 H arm
+  - name: detector_k
+    description: Single 2k x 2k detector for ZShooter_v2 K arm
     include: True
     class: DetectorList
     kwargs:
         image_plane_id : 5
         array_dict:
           id: [5]
-          x_cen: [0.0]
-          y_cen: [0.0]
-          x_size: [2048]
-          y_size: [2048]
-          pixel_size: [0.015]
-          angle: [0.0]
-          gain: [1.0]
-        x_cen_unit: mm
-        y_cen_unit: mm
-        x_size_unit: pixel
-        y_size_unit: pixel
-        pixel_size_unit: mm
-        angle_unit: deg
-        gain_unit: electron/adu
-        detector: "APD_H"
-
-  - name: detector_y
-    description: Single 2k x 2k detector for ZShooter_v1 K arm
-    include: True
-    class: DetectorList
-    kwargs:
-        image_plane_id : 6
-        array_dict:
-          id: [6]
           x_cen: [0.0]
           y_cen: [0.0]
           x_size: [2048]
@@ -199,11 +175,15 @@ effects :
           effect_class: DarkCurrent
           effect_kwargs:
             value: 0.0001    # [e-/s] level of dark current for CCD detectors
+            dit: "!DET.dit"
+            ndit: "!DET.ndit"
 
-        - selector_value: [3,4,5,6]   # APD detectors
+        - selector_value: [3,4,5]   # APD detectors
           effect_class: DarkCurrent
           effect_kwargs:
             value: 0.0001     # [e-/s] level of dark current for APD detectors
+            dit: "!OBS.dit"
+            ndit: "!OBS.ndit"
 
   - name: detector_linearity_selector
     description: Selector Wheel for linearity characteristics for CCDs and APDs
@@ -218,13 +198,15 @@ effects :
             array_dict:
               incident: [0, 64e3]
               measured: [0, 64e3]
+            ndit: "!OBS.ndit"
 
-        - selector_value: [3,4,5,6]   # APD detectors
+        - selector_value: [3,4,5]   # APD detectors
           effect_class: LinearityCurve
           effect_kwargs:
             array_dict:
               incident: [0, 64e3]
               measured: [0, 64e3]
+            ndit: "!OBS.ndit"
 
 #  - name: border_reference_pixels
 #    description: Blanks the signal on N edge row and column pixels
@@ -244,11 +226,13 @@ effects :
           effect_class: BasicReadoutNoise
           effect_kwargs:
             noise_std: 2    # CCD readout noise std dev in electrons
+            ndit: "!OBS.ndit"
 
-        - selector_value: [3,4,5,6]   # APD detectors
+        - selector_value: [3,4,5]   # APD detectors
           effect_class: BasicReadoutNoise
           effect_kwargs:
             noise_std: 2     # APD readout noise std dev in electrons
+            ndit: "!OBS.ndit"
 
   - name: binning
     description: Applies binning
@@ -269,7 +253,7 @@ effects :
           effect_class: Bias
           effect_kwargs:
             bias: 1040    # CCD bias level in electrons
-        - selector_value: [3,4,5,6]   # APD detectors
+        - selector_value: [3,4,5]   # APD detectors
           effect_class: Bias
           effect_kwargs:
             bias: 1040     # APD bias level in electrons
