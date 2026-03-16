@@ -1,5 +1,6 @@
 import numpy as np
 import astropy.units as u
+from astropy.time import Time
 from scipy.stats import norm
 from scipy.signal import convolve
 import yaml
@@ -94,6 +95,15 @@ def make_zshooter_dichroics(channel_ranges:dict[str, tuple[float, float]], valid
                            0.5 * (channel_ranges['H'].min() + channel_ranges['Y'].max()))
     return data
 
+def write_dichroic_curves(filename, tx_model, rx_model, header=None):
+    wave = np.arange(3000, 25000, 100)
+    with open(filename, 'w') as f:
+        if header is not None:
+            f.write(header + '\n')
+        f.write('wavelength transmission reflection\n')
+        for x in wave:
+            f.write(f'{(x*u.AA).to(u.um).value:.2f} {tx_model(x):.6f} {rx_model(x):.6f}\n')
+
 DICHROIC_PAD = 30 * u.nm
 DICHROIC_TRANS = 0.985
 DICHROIC_REFL = 0.985
@@ -109,3 +119,58 @@ for c, cfg in zshooter_cfg.items():
         channel_range[c] = crange
 
 dichroics = make_zshooter_dichroics(channel_range, DICHROIC_DOMAIN, DICHROIC_TRANS, DICHROIC_REFL, DICHROIC_PAD)
+
+## First dichroic: I, splits BGR from YJHK
+hdr_i = f"""# name : first_dichroic
+# author : unknown
+# date_created : 2026-03-16T12:00:00
+# date_modified : {Time.now().isot}
+# comment : Transmits NIR, reflects UBVIS
+# wavelength_unit : um
+# changes :
+#"""
+write_dichroic_curves('TER_dichroic_bgr-yjhk.dat', dichroics['I'][1]._model, dichroics['I'][0]._model, header=hdr_i)
+
+## Second layer dichroic in BGR arm: U, splits UB from GR
+hdr_u = f"""# name : second_layer_dichroic_UBVIS
+# author : unknown
+# date_created : 2026-03-16T12:00:00
+# date_modified : {Time.now().isot}
+# comment : Transmits GR (VIS) reflects UB
+# wavelength_unit : um
+# changes :
+#"""
+write_dichroic_curves('TER_dichroic_b-gr.dat', dichroics['U'][1]._model, dichroics['U'][0]._model, header=hdr_u)
+
+## Second layer dichroic in YJHK arm: J, splits YJ from HK
+hdr_j = f"""# name : second_layer_dichroic_NIR
+# author : unknown
+# date_created : 2026-03-16T12:00:00
+# date_modified : {Time.now().isot}
+# comment : Transmits HK, reflects YJ
+# wavelength_unit : um
+# changes :
+#"""
+write_dichroic_curves('TER_dichroic_yj-hk.dat', dichroics['J'][1]._model, dichroics['J'][0]._model, header=hdr_j)
+
+## Third layer dichroic in GR arm: G, splits G from R
+hdr_g = f"""# name : third_layer_dichroic_VIS
+# author : unknown
+# date_created : 2026-03-16T12:00:00
+# date_modified : {Time.now().isot}
+# comment : Transmits R, reflects G
+# wavelength_unit : um
+# changes :
+#"""
+write_dichroic_curves('TER_dichroic_g-r.dat', dichroics['G'][1]._model, dichroics['G'][0]._model, header=hdr_g)
+
+## Third layer dichroic in HK arm: H, splits H from K
+hdr_h = f"""# name : third_layer_dichroic_HK
+# author : unknown
+# date_created : 2026-03-16T12:00:00
+# date_modified : {Time.now().isot}
+# comment : Transmits K, reflects H
+# wavelength_unit : um
+# changes :
+#"""
+write_dichroic_curves('TER_dichroic_h-k.dat', dichroics['H'][1]._model, dichroics['H'][0]._model, header=hdr_h)
