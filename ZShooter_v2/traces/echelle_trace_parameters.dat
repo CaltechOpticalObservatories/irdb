@@ -1,0 +1,27 @@
+# author : Y. Sharma
+# date_created : 2025-10-20
+# status : draft
+# type : echelle:table
+# min_wave_unit : nm
+# max_wave_unit : nm
+# echelle_blaze_unit : deg
+# focal_length_unit : mm
+# fwhm_unit : pixel
+# detector_pad_unit : pixel
+# pixel_size_unit : mm
+# n_disp_unit : pixel
+# n_xdisp_unit : pixel
+# disp_freq_unit : mm
+# xdisp_freq_unit : mm
+# slitlength_unit : arcsec
+# description : Table that defines the parameters for echelle trace generation, used by EchelleSpectralTraceList effect. m0 = maximum order
+# changes :
+# - 2025-10-20 : Initial creation of the file with trace parameters
+#
+prefix   aperture_id   image_plane_id    m0    n    min_wave    max_wave  design_res  echelle_blaze    focal_length    fwhm    detector_pad    pixel_size  n_disp  n_xdisp     disp_freq    xdisp_freq    slitlength    dispdir    xbeta_center
+b        0              0                91    25   310         420       17799       65.6               225           4.5     10              0.015       2048    2048        65.000       0             10            x               0
+g        1              1                71    25   400         600       17799       65.6               225           4.5     10              0.015       2048    2048        65.000       0             10            x               0
+r        2              2                49    21   580         980       17799       65.6               225           4.5     10              0.015       2048    2048        65.000       0             10            x               0
+yj       3              3                80    24   960         1340      17799       65.6               225           4.5     10              0.015       2048    2048        24.000       0             10            x               0
+h        4              4                51    11   1470        1830      17799       65.6               225           4.5     10              0.015       2048    2048        24.000       0             10            x               0
+k        5              5                39    8    1990        2450      17799       65.6               225           4.5     10              0.015       2048    2048        24.000       0             10            x               0

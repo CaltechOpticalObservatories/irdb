@@ -14,7 +14,7 @@ properties :
 
 effects :
   - name: detector_nir
-    description: Single 4k x 4k detector for ZShooter NIR arm
+    description: Two detectors for ZShooter NIR arm
     include: True
     class: DetectorList
     kwargs:
@@ -35,6 +35,7 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
+        detector: "NIR"
 
   - name: detector_vis
     description: Single 4k x 4k detector for ZShooter VIS arm
@@ -58,6 +59,7 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
+        detector: "VIS"
 
   - name: detector_uvb
     description: Single 4k x 4k detector for ZShooter UVB arm
@@ -81,6 +83,7 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
+        detector: "UVB"
 
   - name: exposure_integration
     description: Summing up sky signal for all DITs and NDITs

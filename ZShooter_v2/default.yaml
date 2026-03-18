@@ -11,16 +11,15 @@ version: 0.1
 packages:
 - MaunaKea
 - keck
-- ZShooter
+- ZShooter_v2
 
 yamls:
 - MaunaKea.yaml
 - Keck.yaml
 - ZShooter.yaml
-- ZShooter_DET.yaml
 
 properties:
-  instrument : ZShooter
+  instrument : ZShooter_v2
   modes : ["SPEC"]
   airmass : 1.2
   declination : 0
@@ -40,6 +39,7 @@ mode_yamls:
   description : "spectroscopic mode"
   yamls :
     - ZShooter_SPEC.yaml
+    - ZShooter_DET.yaml
 
 ---
 ### default simulation parameters needed for a MICADO simulation
@@ -55,7 +55,7 @@ properties :
   spectral :
     wave_min : 0.3 #change
     wave_mid : 1.0 #change
-    wave_max : 2.6 #change
+    wave_max : 2.5 #change
     spectral_bin_width: 0.0005       # 0.5 Angstrom
 
   computing :

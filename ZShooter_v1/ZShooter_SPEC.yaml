@@ -1,9 +1,9 @@
-### Common effects list for ZShooter
+### Common effects list for ZShooter_v1
 
 object: instrument
 alias: INST
-name: ZShooter
-description: Effects from the ZShooter optics
+name: ZShooter_v1
+description: Effects from the ZShooter_v1 optics
 
 properties:
   decouple_detector_from_sky_headers: True  # needed for slit spectroscopy
@@ -14,12 +14,12 @@ properties:
 effects:
  - name: dichroic_tree
    description: ZShooter dichroic tree
-   class: DichroicTreeEffect
+   class: DichroicTree
    include: True
    kwargs:
      tree_filename: "dichroics/dichroic_tree.dat"
      dichroic_names: "!INST.dichroic_names"
-     filename_format: "dichroics/TER_{}.dat"
+     filename_format: "dichroics/TER_tree_{}.dat"
 
  - name: slit_nir
    description: ZShooter NIR slit
@@ -50,20 +50,20 @@ effects:
    class: SpectralEfficiency
    include: True
    kwargs:
-     filename: "traces/TRACE_eff.fits"
+     filename: "traces/TRACE_eff_old.fits"
 
  - name: trace_list
    description: list of spectral order trace geometry on the focal plane
    class: SpectralTraceList
    include: True
    kwargs:
-     filename: "traces/TRACE_ZSHOOTER.fits"
+     filename: "traces/TRACE_ZSHOOTER_old.fits"
      wave_colname: "wavelength"
      s_colname: "s"
      col_number_start: 1
 
  - name: detector_qe
-   description: QE curve for new OSIRIS detector, placeholder for ZShooter
+   description: QE curve for new OSIRIS detector, placeholder for ZShooter_v1
    class: QuantumEfficiencyCurve
    include: True
    kwargs:

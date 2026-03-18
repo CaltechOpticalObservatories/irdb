@@ -1,0 +1,139 @@
+
+object: instrument
+alias: INST
+name: ZShooter
+description: Effects from the ZShooter optics
+
+properties:
+  decouple_detector_from_sky_headers: True  # needed for slit spectroscopy
+  dichroic_names:
+    - bgr-yjhk # First dichroic, splits beam into bgr and yjhk
+    - b-gr     # Next dichroic in bgr arm, splits b from gr
+    - yj-hk    # Next dichroic in yjhk arm, splits yj from hk
+    - g-r      # Next dichroic in gr arm, splits g from r
+    - h-k      # Next dichroic in hk arm, splits h from k
+
+# There are 6 image planes in ZSpec: b, g, r, yj, h, k. We use the DichroicTree effect to establish the branching
+# in the beginning of the flow, using aperture_id as the identifying key. Though physically there may be other
+# optical elements in between dichroics, here all dichroics are considered together in a tree. Other effects that
+# act selectively on different arms can be orchestrated using SelectorWheel effects.
+
+effects:
+ - name: dichroic_tree
+   description: ZShooter_v2 dichroic tree
+   class: DichroicTree
+   include: True
+   kwargs:
+     tree_filename: "dichroics/dichroic_tree.dat"
+     dichroic_names: "!INST.dichroic_names"
+     filename_format: "dichroics/TER_dichroic_{}.dat"
+
+
+# - name: adc_selector
+#   description: SelectorWheel holding AtmosphericDispersionCorrector for ub+vis, optionally for NIR for testing
+#   class: SelectorWheel
+#   include: False
+#   kwargs:
+#     selector_key: "aperture_id"
+#     wheel:
+#       - selector_value: [0, 1, 2]     # ADC that acts on bgr after first dichroic split
+#         effect_class: AtmosphericDispersionCorrection
+#         effect_kwargs:
+#           altitude : "!ATMO.altitude"
+#           longitude : "!ATMO.longitude"
+#           latitude : "!ATMO.latitude"
+#           airmass : "!OBS.airmass"
+#           temperature : "!ATMO.temperature"
+#           humidity : "!ATMO.humidity"
+#           pressure : "!ATMO.pressure"
+#           pupil_angle : "!OBS.pupil_angle"
+#           efficiency: 1
+#           wave_mid: "!SIM.spectral.wave_mid"
+#           quick_adc: True
+#
+#       - selector_value: [3, 4, 5]     # ADC that acts on yjhk after first dichroic split, usually no ADC, but option for testing
+#         effect_class: AtmosphericDispersionCorrection
+#         effect_kwargs:
+#           altitude : "!ATMO.altitude"
+#           longitude : "!ATMO.longitude"
+#           latitude : "!ATMO.latitude"
+#           airmass : "!OBS.airmass"
+#           temperature : "!ATMO.temperature"
+#           humidity : "!ATMO.humidity"
+#           pressure : "!ATMO.pressure"
+#           pupil_angle : "!OBS.pupil_angle"
+#           efficiency: 1
+#           wave_mid: "!SIM.spectral.wave_mid"
+#           quick_adc: True
+
+
+ - name: slitwheel_selector
+   description: SelectorWheel holding two SlitWheels, one for bgr, one for yjhk
+   class: SelectorWheel
+   include: True
+   kwargs:
+     selector_key: "aperture_id"
+     wheel:
+       - selector_value: [0, 1, 2]
+         effect_class: SlitWheel
+         effect_kwargs:
+           slit_names:
+             - "ubvis_half_arcsec"
+             - "ubvis_one_arcsec"
+             - "ubvis_two_arcsec"
+           filename_format: "slits/{}.dat"
+           current_slit: "ubvis_one_arcsec"
+
+       - selector_value: [3, 4, 5]
+         effect_class: SlitWheel
+         effect_kwargs:
+           slit_names:
+             - "nir_half_arcsec"
+             - "nir_one_arcsec"
+             - "nir_two_arcsec"
+           filename_format: "slits/{}.dat"
+           current_slit: "nir_one_arcsec"
+
+
+# - name: some_optics
+#   description: placeholder for other optics in ZShooter
+#   class: SurfaceList
+#   include: False
+#   kwargs:
+#     filename: "LIST_ZSHOOTER_optics.dat"
+
+
+## Need only one entry for trace efficiency and trace list for all arms as the same FITS description contains info for all arms and orders
+# - name: trace_eff_zemax
+#   description: list of spectral order trace efficiencies
+#   class: SpectralEfficiency
+#   include: True
+#   kwargs:
+#     filename: "traces/TRACE_eff.fits"  # Does not exist as of now
+#
+# - name: trace_list_zemax
+#   description: list of spectral order trace geometry on the focal plane
+#   class: SpectralTraceList
+#   include: True
+#   kwargs:
+#     filename: "traces/TRACE_ZSHOOTER.fits" # Does not exist as of now
+#     wave_colname: "wavelength"
+#     s_colname: "s"
+#     col_number_start: 1
+
+ - name: trace_eff_analytical
+   description: list of spectral order trace efficiencies calculated from analytical model for Echelle
+   class: EchelleSpectralEfficiency
+   include: True
+   kwargs:
+     filename: "traces/echelle_trace_parameters.dat"
+
+ - name: trace_list_analytical
+   description: list of spectral order trace geometry on the focal plane calculated from analytical model for Echelle
+   class: EchelleSpectralTraceList
+   include: True
+   kwargs:
+     filename: "traces/echelle_trace_parameters.dat"
+     wave_colname: "wavelength"
+     s_colname: "s"
+     col_number_start: 1
