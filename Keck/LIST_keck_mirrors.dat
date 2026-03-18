@@ -11,4 +11,4 @@
 # changes :
 #
 name  outer  inner  angle  temperature  action         filename
-M1    10.0    1.0    0.     -273           reflection     TC_mirror_aluminium.dat
+M1    10.0    1.0    0.     0           reflection     TC_mirror_aluminium.dat

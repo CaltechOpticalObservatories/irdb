@@ -9,7 +9,7 @@ properties :
     altitude :      4123        # m
     longitude :     -155.4744    # deg
     latitude :      19.8263    # deg
-    temperature :   -273           # deg C
+    temperature :   2.5           # deg C
     humidity :      0.1         # [0..1]
     pressure :      0.620       # [bar]
     pwv :           1.0         # [mm]
