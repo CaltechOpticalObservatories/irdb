@@ -16,4 +16,4 @@ effects:
     class: SurfaceList
     include: True
     kwargs:
-      filename: LIST_ZShooter_mirrors.dat
+      filename: other_optics/LIST_ZShooter_mirrors.dat

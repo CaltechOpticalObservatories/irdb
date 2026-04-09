@@ -2,9 +2,7 @@
 # source : https://www.oir.caltech.edu/twiki_oir/pub/Keck/NGAO/NewKAONs/KAON554_NGAO_Passband_Definitions.pdf
 # date_created : 2025-08-28
 # date_modified : 2025-08-28
-# status : Design
 # type : atmosphere:ter_curve
-# pwv : 1.0
 # airmass : 1.0
 # season : entire year
 # time : entire night

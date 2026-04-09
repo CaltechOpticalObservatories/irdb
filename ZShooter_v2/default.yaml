@@ -10,7 +10,7 @@ version: 0.1
 
 packages:
 - MaunaKea
-- keck
+- Keck
 - ZShooter_v2
 
 yamls:
@@ -21,16 +21,19 @@ yamls:
 properties:
   instrument : ZShooter_v2
   modes : ["SPEC"]
-  airmass : 1.2
-  declination : 0
-  hour_angle : 0
+  airmass : 1.0
   pupil_angle : 0
   dit : 10
   ndit : 1
-  mjdobs : 60920
+  mjdobs : 61132.0
   object : "Test"
-  ra : 0.0
-  dec : 0.0
+  alt: 90.0
+  az: 0.0
+#  object: "Feige34"
+#  ra : 159.90307
+#  dec : 43.10256
+#  declination : 43.10256
+#  hour_angle : 0
 
 mode_yamls:
 - object: instrument
@@ -53,10 +56,12 @@ properties :
     seed : 9001
 
   spectral :
-    wave_min : 0.3 #change
-    wave_mid : 1.0 #change
-    wave_max : 2.5 #change
-    spectral_bin_width: 0.0005       # 0.5 Angstrom
+    wave_unit : "um"
+    wave_min : 0.3
+    wave_mid : 1.0
+    wave_max : 2.5
+    spectral_bin_width: 0.00001 # in um
+    spectral_resolution: 40000
 
   computing :
     preload_field_of_views : True

@@ -12,7 +12,7 @@ properties :
     temperature :   2.5           # deg C
     humidity :      0.1         # [0..1]
     pressure :      0.620       # [bar]
-    pwv :           1.0         # [mm]
+    pwv :           2.5         # [mm]
     airmass :       "!OBS.airmass"
     pupil_angle :   "!OBS.pupil_angle"
     pixel_scale :   "!INST.pixel_scale"
@@ -21,15 +21,34 @@ properties :
         value: 22.0
         unit: mag
     seeing : 0.7                # [arcsec]
-    spectrum :
-        filename: "TER_maunakea_default.dat"
 
 effects :
-- name : maunakea_atmospheric_transmission
-  description : Atmospheric transmission for Mauna Kea
+- name : atmo_transmission    # Also applies thermal emission component using !ATMO.temperature and (1-transmission)
+  description : Atmospheric transmission for Mauna Kea from TAPAS
   class : TERCurve
+  include : True
   kwargs:
-    filename: "TER_maunakea_default.dat"
+    filename: "TER_maunakea_tapas.dat"
+
+- name : continuum_emission
+  description : Continuum emission (only from moon, starlight, zodiacal light) from SkyCalc
+  class : SkyBackgroundTERCurve
+  include : True
+  kwargs:
+    time_str: "dark"
+    disable_transmission: True
+    target:
+      alt: "!OBS.alt"
+      az: "!OBS.az"
+
+- name : airglow_and_interline_continuum
+  description: Airglow emission lines and residual continuum from PALACE model
+  class : PalaceLineEmission
+  include : True
+  kwargs:
+    save_model_output: False
+    only_line: False
+    only_continuum: False
 
 - name : seeing_psf
   description : Seeing limited PSF
