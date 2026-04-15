@@ -51,7 +51,14 @@ effects :
     only_continuum: False
 
 - name : seeing_psf
-  description : Seeing limited PSF
-  class : SeeingPSF
+  description : Seeing limited Moffat PSF (wavelength dependent)
+  class : MoffatPSF
+  include : True
   kwargs:
-        fwhm: "!ATMO.seeing"
+    seeing: 0.7
+    seeing_unit: "arcsec"
+    pivot_wave: 500
+    pivot_wave_unit: "nm"
+    alpha: 4.765
+    enable_ao: False
+    ao_alpha: 3.25
