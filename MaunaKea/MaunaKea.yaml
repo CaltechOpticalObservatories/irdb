@@ -13,6 +13,7 @@ properties :
     humidity :      0.1         # [0..1]
     pressure :      0.620       # [bar]
     pwv :           2.5         # [mm]
+    x_co2 :         450         # [ppm]
     airmass :       "!OBS.airmass"
     pupil_angle :   "!OBS.pupil_angle"
     pixel_scale :   "!INST.pixel_scale"
@@ -37,18 +38,33 @@ effects :
   kwargs:
     time_str: "dark"
     disable_transmission: True
+    disable_airglow: True
     target:
       alt: "!OBS.alt"
       az: "!OBS.az"
+    pwv: "!ATMO.pwv"
+    wmin: "!SIM.spectral.wave_min"
+    wmax: "!SIM.spectral.wave_max"
+    wdelta: "!SIM.spectral.spectral_bin_width"
+    wres: "!SIM.spectral.spectral_resolution"
+    wunit: "!SIM.spectral.wave_unit"
 
 - name : airglow_and_interline_continuum
   description: Airglow emission lines and residual continuum from PALACE model
-  class : PalaceLineEmission
+  class : PalaceAirglowEmission
   include : True
   kwargs:
+    time_str: "dark"
+    target:
+      alt: "!OBS.alt"
+      az: "!OBS.az"
     save_model_output: False
     only_line: False
     only_continuum: False
+    pwv: "!ATMO.pwv"
+    lammin: "!SIM.spectral.wave_min"
+    lammax: "!SIM.spectral.wave_max"
+    lamunit: "!SIM.spectral.wave_unit"
 
 - name : seeing_psf
   description : Seeing limited Moffat PSF (wavelength dependent)
