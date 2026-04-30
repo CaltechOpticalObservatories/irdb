@@ -78,3 +78,17 @@ effects :
     alpha: 4.765
     enable_ao: False
     ao_alpha: 3.25
+
+- name : adc_residuals
+  description : Residuals after ADC correction, from LRIS ADC data and from positional error of 0.1 deg in AD correction
+  class : ADCShift
+  include : True
+  kwargs:
+    filename: "adc_residuals.dat"
+    method: "roll"
+    mjdobs: "!OBS.mjdobs"
+    target:
+      alt: "!OBS.alt"
+      az: "!OBS.az"
+    zenith_angle_error: 0.1
+    wave_ref_um: 0.5
