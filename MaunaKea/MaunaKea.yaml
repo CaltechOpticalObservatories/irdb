@@ -36,12 +36,8 @@ effects :
   class : SkyBackgroundTERCurve
   include : True
   kwargs:
-    time_str: "dark"
     disable_transmission: True
     disable_airglow: True
-    target:
-      alt: "!OBS.alt"
-      az: "!OBS.az"
     pwv: "!ATMO.pwv"
     wmin: "!SIM.spectral.wave_min"
     wmax: "!SIM.spectral.wave_max"
@@ -54,10 +50,6 @@ effects :
   class : PalaceAirglowEmission
   include : True
   kwargs:
-    time_str: "dark"
-    target:
-      alt: "!OBS.alt"
-      az: "!OBS.az"
     save_model_output: False
     only_line: False
     only_continuum: False
@@ -67,17 +59,19 @@ effects :
     lamunit: "!SIM.spectral.wave_unit"
 
 - name : seeing_psf
-  description : Seeing limited Moffat PSF (wavelength dependent)
-  class : MoffatPSF
+  description : Seeing limited but AO enhanceable Moffat PSF (wavelength dependent)
+  class : AOEnhanceablePSF
   include : True
   kwargs:
-    seeing: 0.7
-    seeing_unit: "arcsec"
-    pivot_wave: 500
-    pivot_wave_unit: "nm"
-    alpha: 4.765
     enable_ao: False
-    ao_alpha: 3.25
+    ao_table: "ao_table.dat"
+    is_absolute: True
+    fwhm:
+      seeing: 0.7
+      seeing_unit: "arcsec"
+      pivot_wave: 500
+      pivot_wave_unit: "nm"
+    alpha: 4.765
 
 - name : adc_residuals
   description : Residuals after ADC correction, from LRIS ADC data and from positional error of 0.1 deg in AD correction
@@ -86,9 +80,5 @@ effects :
   kwargs:
     filename: "adc_residuals.dat"
     method: "roll"
-    mjdobs: "!OBS.mjdobs"
-    target:
-      alt: "!OBS.alt"
-      az: "!OBS.az"
     zenith_angle_error: 0.1
     wave_ref_um: 0.5
