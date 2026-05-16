@@ -72,33 +72,36 @@ Copy the desired notebook out first.
 
 ### Introductory notebooks
 
-| Notebook | Description |
-|----------|-------------|
-| [`Introduction_to_Scopesim_for_METIS.ipynb`](example_notebooks/Introduction_to_Scopesim_for_METIS.ipynb) | Introductory overview of how to run simulations in ScopeSim. Also available as [PDF](example_notebooks/Introduction_to_Scopesim_for_METIS.pdf). |
+```{toctree}
+:maxdepth: 1
+
+example_notebooks/Introduction_to_Scopesim_for_METIS
+example_notebooks/METIS_IFU-01-Source_cube
+example_notebooks/METIS_IFU-02-Simulation
+example_notebooks/METIS_WCU
+```
 
 ### Scientific use-case notebooks
 
-| Notebook | Description |
-|----------|-------------|
-| [`IMG_L_N-examples.ipynb`](example_notebooks/IMG_L_N-examples.ipynb) | Imaging of HL Tau and an AGN model in the L and N bands |
-| [`LSS-YSO_model_simulation.ipynb`](example_notebooks/LSS-YSO_model_simulation.ipynb) | Long-slit spectroscopy in the L-band of a young stellar object model |
-| [`LSS_AGN-01_preparation.ipynb`](example_notebooks/LSS_AGN-01_preparation.ipynb) + [`LSS_AGN-02_simulation.ipynb`](example_notebooks/LSS_AGN-02_simulation.ipynb) | Long-slit spectroscopy in the N-band of an AGN model. Part 1: input data preparation. Part 2: simulation. |
+```{toctree}
+:maxdepth: 1
+
+example_notebooks/IMG_L_N-examples
+example_notebooks/LSS-YSO_model_simulation
+example_notebooks/LSS_AGN-01_preparation
+example_notebooks/LSS_AGN-02_simulation
+```
 
 ### Effect demonstration notebooks
 
 These notebooks are in `docs/example_notebooks/demos/`.
 
-| Notebook | Description |
-|----------|-------------|
-| [`demo_adc_wheel.ipynb`](example_notebooks/demos/demo_adc_wheel.ipynb) | Using the atmospheric dispersion correctors |
-| [`demo_auto_exposure.ipynb`](example_notebooks/demos/demo_auto_exposure.ipynb) | Selecting `dit`/`ndit` automatically |
-| [`demo_chopping_and_nodding.ipynb`](example_notebooks/demos/demo_chopping_and_nodding.ipynb) | Chop-nod difference images in the N band |
-| [`demo_detector_modes.ipynb`](example_notebooks/demos/demo_detector_modes.ipynb) | Setting detector readout modes |
-| [`demo_filter_wheel.ipynb`](example_notebooks/demos/demo_filter_wheel.ipynb) | Using the filter wheel(s) |
-| [`demo_lss_simple.ipynb`](example_notebooks/demos/demo_lss_simple.ipynb) | Basic long-slit spectroscopy procedure |
-| [`demo_grating_efficiency.ipynb`](example_notebooks/demos/demo_grating_efficiency.ipynb) | Spectral (grating) efficiency |
-| [`demo_slit_wheel.ipynb`](example_notebooks/demos/demo_slit_wheel.ipynb) | Using the slit wheel for spectroscopy and imaging |
-| [`demo_rectify_traces.ipynb`](example_notebooks/demos/demo_rectify_traces.ipynb) | Wavelength-calibrated and rectified 2D spectra |
+```{toctree}
+:maxdepth: 1
+:glob:
+
+example_notebooks/demos/*
+```
 
 ### Instrument homepage
 
