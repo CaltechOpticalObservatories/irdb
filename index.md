@@ -19,8 +19,6 @@ Each instrument package below ships with example notebooks, mode configuration
 files, and the component data (filters, PSFs, detector layouts, etc.) needed to
 run realistic end-to-end simulations.
 
----
-
 ## Available Instruments
 
 ::::{grid} 1 2 3 3
@@ -58,17 +56,15 @@ Supports imaging and long-slit spectroscopy. LMS IFU mode in development.
 
 ::::
 
----
-
 ## All Instrument Packages
 
-| Location | Telescope | Instrument | Documented |
-|---|---|---|:---:|
-| Cerro Armazones | ELT | [MICADO](MICADO/docs/readme) | ✓ |
-| Cerro Armazones | ELT | [METIS](METIS/docs/readme) | ✓ |
-| Cerro Armazones | ELT | [MOSAIC](MOSAIC/docs/readme) | ✓ |
-| Paranal | VLT | HAWKI | |
-| — | — | LFOA | |
+| Location        | Telescope | Instrument | Documented |
+|-----------------|-----------|------------|:----------:|
+| Cerro Armazones | ELT       | [MICADO](MICADO/docs/readme) | ✓ |
+| Cerro Armazones | ELT       | [METIS](METIS/docs/readme) | ✓ |
+| Cerro Armazones | ELT       | [MOSAIC](MOSAIC/docs/readme) | ✓ |
+| Paranal         | VLT       | HAWKI      |            |
+| LFOA            | -         | -          |            |
 
 ---
 

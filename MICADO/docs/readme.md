@@ -27,8 +27,6 @@ Please always include the output of `scopesim.bug_report()` from your
 installation.
 ```
 
----
-
 ## Downloading the MICADO instrument package
 
 Once ScopeSim is installed, download the MICADO instrument package into your
@@ -55,12 +53,8 @@ my_simulations/
                 └── <notebook>.ipynb   ← copy to working dir before running
 ```
 
----
-
 ```{include} ../../docs/ScopeSim_guide.md
 ```
-
----
 
 ## Example notebooks
 
@@ -86,7 +80,7 @@ example_notebooks/MICADO_FAQs
 ```
 
 | Notebook | Description |
-|---|---|
+|----------|-------------|
 | `1_scopesim_MCAO_4mas_galaxy` | MCAO 4 mas imaging of a galaxy |
 | `2_scopesim_SCAO_1.5mas_astrometry` | SCAO 1.5 mas astrometry use case |
 | `3_scopesim_SCAO_4mas_fv-psf` | SCAO 4 mas field-varying PSF |

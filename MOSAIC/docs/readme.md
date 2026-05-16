@@ -29,8 +29,6 @@ Please always include the output of `scopesim.bug_report()` from your
 installation.
 ```
 
----
-
 ## Downloading the MOSAIC instrument package
 
 Once ScopeSim is installed, download the MOSAIC instrument package into your
@@ -57,12 +55,8 @@ my_simulations/
                 └── <notebook>.ipynb   ← copy to working dir before running
 ```
 
----
-
 ```{include} ../../docs/ScopeSim_guide.md
 ```
-
----
 
 ## Example notebooks
 

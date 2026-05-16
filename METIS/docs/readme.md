@@ -30,8 +30,6 @@ Please always include the output of `scopesim.bug_report()` from your
 installation.
 ```
 
----
-
 ## Downloading the METIS instrument package
 
 Once ScopeSim is installed, download the METIS instrument package into your
@@ -58,12 +56,8 @@ my_simulations/
                 └── <notebook>.ipynb   ← copy to working dir before running
 ```
 
----
-
 ```{include} ../../docs/ScopeSim_guide.md
 ```
-
----
 
 ## Example notebooks
 
@@ -79,13 +73,13 @@ Copy the desired notebook out first.
 ### Introductory notebooks
 
 | Notebook | Description |
-|---|---|
+|----------|-------------|
 | [`Introduction_to_Scopesim_for_METIS.ipynb`](example_notebooks/Introduction_to_Scopesim_for_METIS.ipynb) | Introductory overview of how to run simulations in ScopeSim. Also available as [PDF](example_notebooks/Introduction_to_Scopesim_for_METIS.pdf). |
 
 ### Scientific use-case notebooks
 
 | Notebook | Description |
-|---|---|
+|----------|-------------|
 | [`IMG_L_N-examples.ipynb`](example_notebooks/IMG_L_N-examples.ipynb) | Imaging of HL Tau and an AGN model in the L and N bands |
 | [`LSS-YSO_model_simulation.ipynb`](example_notebooks/LSS-YSO_model_simulation.ipynb) | Long-slit spectroscopy in the L-band of a young stellar object model |
 | [`LSS_AGN-01_preparation.ipynb`](example_notebooks/LSS_AGN-01_preparation.ipynb) + [`LSS_AGN-02_simulation.ipynb`](example_notebooks/LSS_AGN-02_simulation.ipynb) | Long-slit spectroscopy in the N-band of an AGN model. Part 1: input data preparation. Part 2: simulation. |
@@ -95,7 +89,7 @@ Copy the desired notebook out first.
 These notebooks are in `docs/example_notebooks/demos/`.
 
 | Notebook | Description |
-|---|---|
+|----------|-------------|
 | [`demo_adc_wheel.ipynb`](example_notebooks/demos/demo_adc_wheel.ipynb) | Using the atmospheric dispersion correctors |
 | [`demo_auto_exposure.ipynb`](example_notebooks/demos/demo_auto_exposure.ipynb) | Selecting `dit`/`ndit` automatically |
 | [`demo_chopping_and_nodding.ipynb`](example_notebooks/demos/demo_chopping_and_nodding.ipynb) | Chop-nod difference images in the N band |

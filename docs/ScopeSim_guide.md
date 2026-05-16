@@ -4,8 +4,6 @@
 - `pip` (the Python package installer)
 - Jupyter, if you want to run the example notebooks (recommended)
 
----
-
 ## Installing ScopeSim
 
 Install the latest release from PyPI:
@@ -20,8 +18,6 @@ To upgrade an existing installation:
 pip install -U scopesim
 ```
 
----
-
 ## Setting up a working directory
 
 Create a dedicated directory where your simulation notebooks will live and
@@ -31,8 +27,6 @@ where the instrument packages will be downloaded:
 mkdir ~/path/to/my_simulations
 cd ~/path/to/my_simulations
 ```
-
----
 
 ## Running the example notebooks
 
@@ -46,8 +40,6 @@ cp ./inst_pkgs/<INSTRUMENT>/docs/example_notebooks/<Notebook.ipynb> .
 jupyter notebook <Notebook.ipynb>
 ```
 
----
-
 ## Documentation and useful references
 
 - [ScopeSim documentation](https://scopesim.readthedocs.io/en/latest/)
@@ -55,8 +47,6 @@ jupyter notebook <Notebook.ipynb>
 - GitHub repositories:
   - [ScopeSim (simulator engine)](https://github.com/AstarVienna/scopesim)
   - [IRDB (instrument packages)](https://github.com/AstarVienna/irdb)
-
----
 
 ## Contact and support
 
