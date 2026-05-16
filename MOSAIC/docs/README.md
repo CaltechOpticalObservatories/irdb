@@ -72,7 +72,7 @@ Copy the desired notebook out first.
 ### Introductory notebooks
 
 | Notebook | Description |
-|---|---|
+|----------|-------------|
 | [`MOSAIC_demo.ipynb`](example_notebooks/MOSAIC_demo.ipynb) | Introductory overview of how to run MOSAIC simulations in ScopeSim |
 
 ### Instrument homepage

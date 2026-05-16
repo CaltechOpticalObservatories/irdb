@@ -59,7 +59,7 @@ Supports imaging and long-slit spectroscopy. LMS IFU mode in development.
 ## All Instrument Packages
 
 | Location  | Telescope | Instrument                   | Documented |
-|-----------|-----------|------------------------------|:----------:|
+|-----------|-----------|------------------------------|------------|
 | Armazones | ELT       | [MICADO](MICADO/docs/README) | ✓          |
 | Armazones | ELT       | [METIS](METIS/docs/README)   | ✓          |
 | Armazones | ELT       | [MOSAIC](MOSAIC/docs/README) | ✓          |

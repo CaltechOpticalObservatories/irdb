@@ -86,8 +86,6 @@ example_notebooks/MICADO_FAQs
 | `3_scopesim_SCAO_4mas_fv-psf` | SCAO 4 mas field-varying PSF |
 | `MICADO_FAQs` | Frequently asked questions |
 
----
-
 ## Validation
 
 The table below shows limiting-magnitude test results (minimum S/N = 5).
