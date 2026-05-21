@@ -6,7 +6,7 @@ description : MORFEO AO relay module
 
 properties :
     temperature : "!ATMO.temperature"
-
+    psf_file : "PSF_MCAO_ConstPSF_40_18_6.fits"
 
 effects :
 -   name: morfeo_surface_list
@@ -20,7 +20,7 @@ effects :
     description : MORFEO field varying MCAO PSF
     class : FieldConstantPSF
     kwargs:
-        filename : PSF_MCAO_ConstPSF_40_18_6.fits
+        filename : "!RO.psf_file"
         warning : "Default PSF is not Field Varying. See Documentation"
 
 
