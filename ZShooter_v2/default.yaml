@@ -26,19 +26,20 @@ properties:
   alt: 90.0              # Make sure to set altitude and airmass consistently, or only set one of them.
   az: 0.0
   airmass : 1.0          # altitude, if set and different from airmass will override airmass
+  seeing: 0.7
   brightness : "dark"    # Sky brightness, can be "dark", "grey", or "bright"
-  dit_blue : 10.0              # exposure time for B arm
+  dit_blue : 300.0              # exposure time for B arm
   ndit_blue : 1                # number of exposures for B arm
-  dit_green : 5.0              # exposure time for G arm
+  dit_green : 300.0              # exposure time for G arm
   ndit_green : 1                # number of exposures for G arm
-  dit_red : 3.0              # exposure time for RYJHK arms
-  ndit_red : 1                # number of exposures for RYJHK arms
-#  mjdobs : 61132.0       # observation time, set here or set "brightness". Overrides "brightness" if set.
-#  object: "Feige34"
-#  ra : 159.90307         # for target coordinates, alt/airmass/az if set overrides ra/dec
-#  dec : 43.10256
-#  declination : 43.10256
-#  hour_angle : 0
+  dit_red : 300.0              # exposure time for R arms
+  ndit_red : 1                # number of exposures for R arms
+  dit_yj: 300.0              # exposure time for YJ arms
+  ndit_yj: 1                # number of exposures for YJ arms
+  dit_h: 300.0              # exposure time for H arms
+  ndit_h: 1                # number of exposures for H arms
+  dit_k: 300.0              # exposure time for K arms
+  ndit_k: 1                # number of exposures for K arms
 
 mode_yamls:
 - object: instrument
