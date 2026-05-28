@@ -61,6 +61,23 @@ effects:
            current_slit: "!INST.nir_curr_slit"  # as live property to allow dynamic updates
 
 
+ - name: channel_optics_selector
+   description: ZSpec channel optics
+   class: SelectorWheel
+   include: True
+   kwargs:
+     selector_key: "aperture_id"
+     wheel:
+       - selector_value: [0, 1, 2]
+         effect_class: SurfaceList
+         effect_kwargs:
+           filename: "LIST_zspec_vis_optics.dat"
+
+       - selector_value: [3, 4, 5]
+         effect_class: SurfaceList
+         effect_kwargs:
+           filename: "LIST_zspec_nir_optics.dat"
+
 # - name: some_optics
 #   description: placeholder for other optics in ZShooter
 #   class: SurfaceList
