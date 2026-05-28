@@ -6,22 +6,8 @@ description: Effects from the ZShooter optics
 
 properties:
   decouple_detector_from_sky_headers: True  # needed for slit spectroscopy
-  dichroic_names:
-    - bgr-yjhk # First dichroic, splits beam into bgr and yjhk
-    - b-gr     # Next dichroic in bgr arm, splits b from gr
-    - yj-hk    # Next dichroic in yjhk arm, splits yj from hk
-    - g-r      # Next dichroic in gr arm, splits g from r
-    - h-k      # Next dichroic in hk arm, splits h from k
-  ubvis_slit_names:
-    - "ubvis_half_arcsec"
-    - "ubvis_one_arcsec"
-    - "ubvis_two_arcsec"
-  nir_slit_names:
-    - "nir_half_arcsec"
-    - "nir_one_arcsec"
-    - "nir_two_arcsec"
-  ubvis_curr_slit: "ubvis_one_arcsec"
-  nir_curr_slit: "nir_one_arcsec"
+  vis_curr_slit: 0.70
+  nir_curr_slit: 0.70
 
 # There are 6 image planes in ZSpec: b, g, r, yj, h, k. We use the DichroicTree effect to establish the branching
 # in the beginning of the flow, using aperture_id as the identifying key. Though physically there may be other
@@ -35,7 +21,12 @@ effects:
    include: True
    kwargs:
      tree_filename: "dichroics/dichroic_tree.dat"
-     dichroic_names: "!INST.dichroic_names"
+     dichroic_names:
+       - bgr-yjhk # First dichroic, splits beam into bgr and yjhk
+       - b-gr     # Next dichroic in bgr arm, splits b from gr
+       - yj-hk    # Next dichroic in yjhk arm, splits yj from hk
+       - g-r      # Next dichroic in gr arm, splits g from r
+       - h-k      # Next dichroic in hk arm, splits h from k
      filename_format: "dichroics/TER_dichroic_{}.dat"
 
 
@@ -49,15 +40,28 @@ effects:
        - selector_value: [0, 1, 2]
          effect_class: SlitWheel
          effect_kwargs:
-           slit_names: "!INST.ubvis_slit_names"   # as live property to allow dynamic updates
-           filename_format: "slits/{}.dat"
-           current_slit: "!INST.ubvis_curr_slit"  # as live property to allow dynamic updates
-
+           slit_names:
+             - 1.25
+             - 0.70
+             - 0.57
+             - 0.50
+             - 0.42
+             - 0.37
+             - 0.33
+           filename_format: "slits/slit_{:.2f}_as.dat"
+           current_slit: "!INST.vis_curr_slit"  # as live property to allow dynamic updates
        - selector_value: [3, 4, 5]
          effect_class: SlitWheel
          effect_kwargs:
-           slit_names: "!INST.nir_slit_names"   # as live property to allow dynamic updates
-           filename_format: "slits/{}.dat"
+           slit_names:
+             - 1.25
+             - 0.70
+             - 0.57
+             - 0.50
+             - 0.42
+             - 0.37
+             - 0.33
+           filename_format: "slits/{:.2f}_as.dat"
            current_slit: "!INST.nir_curr_slit"  # as live property to allow dynamic updates
 
 

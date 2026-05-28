@@ -21,7 +21,7 @@ properties :
         filter_name : R
         value: 22.0
         unit: mag
-    seeing : 0.7                # [arcsec]
+    seeing : "!OBS.seeing"                # [arcsec]
 
 effects :
 - name : atmo_transmission    # Also applies thermal emission component using !ATMO.temperature and (1-transmission)
