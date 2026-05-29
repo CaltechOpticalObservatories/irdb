@@ -1,6 +1,6 @@
 # author : Jeb Bailey
 # date_created  : 2026-05-26
-# date_modified : 2026-05-26
+# date_modified : 2026-05-29
 # status : ZShooter NIR optics throughput list
 # type : mirror:list
 # outer_unit : m
@@ -9,28 +9,29 @@
 # temperature_unit  : K
 # changes :
 # - 2026-05-26 : replaced placeholder file with ZShooter NIR optics train
+# - 2026-05-29 : added throughput_group and emission_phase metadata
 #
-name                  outer   inner   angle   temperature   action         filename
-NIR_DewarWindow_1     0.09    0.0     0       273             transmission   optics/TER_nir_arcoat.dat
-NIR_DewarWindow_2     0.09    0.0     0       273             transmission   optics/TER_nir_arcoat.dat
-NIR_ADC_1             0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
-NIR_ADC_2             0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
-NIR_ADC_3             0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
-NIR_ADC_4             0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
-NIR_Derotator_AR_1    0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
-NIR_Derotator_AR_2    0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
-NIR_Derotator_Refl_1  0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat
-NIR_Derotator_Refl_2  0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat
-NIR_Derotator_Refl_3  0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat
-NIR_PreOptFinal_1     0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
-NIR_PreOptFinal_2     0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
-NIR_Col1_1            0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat
-NIR_Col1_2            0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat
-NIR_Mangin_AR         0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
-NIR_Mangin_Mirror     0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat
-NIR_Col2              0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat
-NIR_Camera_1          0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
-NIR_Camera_2          0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
-NIR_Camera_3          0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
-NIR_Camera_4          0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
-NIR_Camera_5          0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat
+name                  outer   inner   angle   temperature   action         filename                    throughput_group   emission_phase
+NIR_DewarWindow_1     0.09    0.0     0       273           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
+NIR_DewarWindow_2     0.09    0.0     0       273           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
+NIR_ADC_1             0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
+NIR_ADC_2             0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
+NIR_ADC_3             0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
+NIR_ADC_4             0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
+NIR_Derotator_AR_1    0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
+NIR_Derotator_AR_2    0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
+NIR_Derotator_Refl_1  0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat preoptics          pre_disperser
+NIR_Derotator_Refl_2  0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat preoptics          pre_disperser
+NIR_Derotator_Refl_3  0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat preoptics          pre_disperser
+NIR_PreOptFinal_1     0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
+NIR_PreOptFinal_2     0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
+NIR_Col1_1            0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat collimator         pre_disperser
+NIR_Col1_2            0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat collimator         pre_disperser
+NIR_Mangin_AR         0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   collimator         pre_disperser
+NIR_Mangin_Mirror     0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat collimator         pre_disperser
+NIR_Col2              0.09    0.0     0       120           reflection     optics/TER_nir_armirror.dat collimator         pre_disperser
+NIR_Camera_1          0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   camera             post_disperser
+NIR_Camera_2          0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   camera             post_disperser
+NIR_Camera_3          0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   camera             post_disperser
+NIR_Camera_4          0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   camera             post_disperser
+NIR_Camera_5          0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   camera             post_disperser
