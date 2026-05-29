@@ -4,10 +4,48 @@
 from distutils.core import setup
 import os
 from os import path as pth
+import shutil
+import zipfile
 
 # Version number
 with open('irdb/version.py') as f:
     __version__ = f.readline().split("'")[1]
+
+
+ZIPPED_DATA_FILES = (
+    ("MaunaKea", "TER_maunakea_tapas.dat"),
+)
+
+
+def ensure_zipped_data_files():
+    """Create large ignored data files from their checked-in zip archives."""
+    for folder, filename in ZIPPED_DATA_FILES:
+        target = pth.join(folder, filename)
+        archive = f"{target}.zip"
+        if not pth.exists(archive):
+            if not pth.exists(target):
+                raise FileNotFoundError(f"Missing required data archive: {archive}")
+            continue
+
+        with zipfile.ZipFile(archive) as zip_file:
+            try:
+                zip_info = zip_file.getinfo(filename)
+            except KeyError as err:
+                raise FileNotFoundError(f"{archive} does not contain {filename}") from err
+
+            if pth.exists(target) and pth.getsize(target) == zip_info.file_size:
+                continue
+
+            tmp_target = f"{target}.tmp"
+            try:
+                with zip_file.open(zip_info) as source, open(tmp_target, "wb") as dest:
+                    shutil.copyfileobj(source, dest)
+                os.replace(tmp_target, target)
+            except Exception:
+                if pth.exists(tmp_target):
+                    os.remove(tmp_target)
+                raise
+            print(f"Extracted {archive} -> {target}")
 
 
 def create_manifest():
@@ -20,6 +58,7 @@ def create_manifest():
 
 
 def setup_package():
+    ensure_zipped_data_files()
     setup(name = 'IRDB',
           version = __version__,
           description = "Instrument package database",
