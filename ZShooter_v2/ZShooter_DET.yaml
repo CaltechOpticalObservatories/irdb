@@ -172,7 +172,7 @@ effects :
         - selector_value: [3, 4, 5] # CCD_B
           effect_class: TERCurve
           effect_kwargs:
-            filename: "data/APD_QE_TER.dat"
+            filename: "detector_specs/APD_QE_TER.dat"
 
   - name: exposure_integration_selector
     description: Summing up sky signal for all DITs and NDITs for different detectors

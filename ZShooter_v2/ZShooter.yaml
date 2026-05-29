@@ -10,10 +10,10 @@ properties:
   pixel_scale : 0.159574468085 #TODO update with real value
   plate_scale : 10.638297872333334 #TODO update with real value
 
-effects:
-  - name: Selector
-    description: Mirror selector for imaging or spectroscopic mode
-    class: SurfaceList
-    include: True
-    kwargs:
-      filename: other_optics/LIST_ZShooter_mirrors.dat
+#effects:
+#  - name: Selector
+#    description: Mirror selector for imaging or spectroscopic mode
+#    class: SurfaceList
+#    include: True
+#    kwargs:
+#      filename: optics/LIST_ZShooter_mirrors.dat
