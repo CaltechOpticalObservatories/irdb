@@ -2,11 +2,10 @@
 # date_created  : 2026-05-28
 # type : detector:quantum_efficiency
 # description : quantum efficiency for an LmAPD based on H2RG data with a 1.2x excess noise factor.
-# wavelength_unit: um
+# wavelength_unit : um
 # action : transmission
 # changes :
 wavelength  transmission
-   wavelength       transmission
    0.990            0.7384272
    1.0033284        0.7384272
    1.0100157        0.7365941

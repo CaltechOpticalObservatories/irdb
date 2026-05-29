@@ -159,7 +159,7 @@ effects :
     class: SelectorWheel
     include: True
     kwargs:
-      selector_key: "detector_id" # not really used as the Detector object's id is stored as just "id", but kept for consistency
+      selector_key: "aperture_id" #must be this because TERCurves are processed at FieldOfView phase do to z_order
       wheel:
         - selector_value: [0, 1] # CCD_B
           effect_class: TERCurve

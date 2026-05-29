@@ -2,7 +2,7 @@
 # date_created  : 2025-10-30
 # type : detector:quantum_efficiency
 # description : quantum efficiency from lris2 r600.csv
-# wavelength_unit: um
+# wavelength_unit : nm
 # action : transmission
 # changes :
 wavelength  transmission
