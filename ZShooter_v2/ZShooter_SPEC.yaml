@@ -6,6 +6,7 @@ description: Effects from the ZShooter optics
 
 properties:
   decouple_detector_from_sky_headers: True  # needed for slit spectroscopy
+  include_post_echelle_diffuse_background: True
   vis_curr_slit: 0.70
   nir_curr_slit: 0.70
 
@@ -146,3 +147,30 @@ effects:
      wave_colname: "wavelength"
      s_colname: "s"
      col_number_start: 1
+
+ - name: post_echelle_diffuse_background_selector
+   description: Post-echelle camera emission injected as diffuse image-plane background
+   class: SelectorWheel
+   include: "!INST.include_post_echelle_diffuse_background"
+   kwargs:
+     z_order: [760]
+     selector_key: "image_plane_id"
+     wheel:
+       - selector_value: [0, 1] # CCD_B
+         effect_class: PostDisperserDiffuseBackground
+         effect_kwargs:
+           filename: "optics/LIST_zspec_vis_optics.dat"
+           detector_qe_filename: "detector_specs/CCD_B_TER.dat"
+           wave_bin: 0.001
+       - selector_value: [2] # CCD_R
+         effect_class: PostDisperserDiffuseBackground
+         effect_kwargs:
+           filename: "optics/LIST_zspec_vis_optics.dat"
+           detector_qe_filename: "detector_specs/CCD_R_TER.dat"
+           wave_bin: 0.001
+       - selector_value: [3, 4, 5] # APD
+         effect_class: PostDisperserDiffuseBackground
+         effect_kwargs:
+           filename: "optics/LIST_zspec_nir_optics.dat"
+           detector_qe_filename: "detector_specs/APD_TER.dat"
+           wave_bin: 0.001
