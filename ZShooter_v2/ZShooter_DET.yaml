@@ -172,7 +172,7 @@ effects :
         - selector_value: [3, 4, 5] # CCD_B
           effect_class: TERCurve
           effect_kwargs:
-            filename: "detector_specs/APD_QE_TER.dat"
+            filename: "detector_specs/APD_TER.dat"
 
   - name: exposure_integration_selector
     description: Summing up sky signal for all DITs and NDITs for different detectors
@@ -356,7 +356,7 @@ effects :
             noise_std: .5     # APD readout noise std dev in electrons
             ndit: "!OBS.ndit_k"
 
-  - name: readout_noise_selector
+  - name: visible_binning_selector
     description: Applies Binning in Visible
     class: SelectorWheel
     include: True
@@ -364,21 +364,18 @@ effects :
       selector_key: "detector_id" # not really used as the Detector object's id is stored as just "id", but kept for consistency
       wheel:
         - selector_value: [ 0 ]
-          class: UnequalBinnedImage
-          include: True
-          kwargs:
+          effect_class: UnequalBinnedImage
+          effect_kwargs:
               binx: "!DET.binx"
               biny: "!DET.biny"
         - selector_value: [ 1 ]
-          class: UnequalBinnedImage
-          include: True
-          kwargs:
+          effect_class: UnequalBinnedImage
+          effect_kwargs:
               binx: "!DET.binx"
               biny: "!DET.biny"
         - selector_value: [ 2 ]
-          class: UnequalBinnedImage
-          include: True
-          kwargs:
+          effect_class: UnequalBinnedImage
+          effect_kwargs:
               binx: "!DET.binx"
               biny: "!DET.biny"
 
