@@ -7,7 +7,7 @@
 # changes :
 # - 2025-09-24 : created
 #
-wavelength  reflection
+wavelength  transmission
 3300	0.95902
 3295	0.95293
 3290	1.0

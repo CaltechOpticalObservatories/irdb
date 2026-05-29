@@ -87,3 +87,4 @@ TEST*.fits
 .pylint.d/
 
 .DS_Store
+/MaunaKea/TER_maunakea_tapas.dat
