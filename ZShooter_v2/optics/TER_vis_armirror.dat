@@ -3,11 +3,10 @@
 # status : conceptual
 # type : mirror:reflection
 # wavelength_unit : nm
-# description :
+# description : ZecoatAg KCWI  Extended to NIR
 # changes :
 # - 2025-09-24 : created
 #
-#ZecoatAg KCWI  Extended to NIR
 wavelength  reflection
 3300	0.95902
 3295	0.95293
