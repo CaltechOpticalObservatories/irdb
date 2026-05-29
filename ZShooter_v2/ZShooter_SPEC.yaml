@@ -70,6 +70,7 @@ effects:
    class: SelectorWheel
    include: True
    kwargs:
+     z_order: [610]
      selector_key: "aperture_id"
      wheel:
        - selector_value: [0, 1, 2]
@@ -114,6 +115,27 @@ effects:
    include: True
    kwargs:
      filename: "traces/echelle_trace_parameters.dat"
+
+ - name: detector_qe_selector
+   description: Throughput-only QE curves for different detectors
+   class: SelectorWheel
+   include: True
+   kwargs:
+     z_order: [610]
+     selector_key: "aperture_id"
+     wheel:
+       - selector_value: [0, 1] # CCD_B
+         effect_class: SpectralQuantumEfficiency
+         effect_kwargs:
+           filename: "detector_specs/CCD_B_TER.dat"
+       - selector_value: [2] # CCD_R
+         effect_class: SpectralQuantumEfficiency
+         effect_kwargs:
+           filename: "detector_specs/CCD_R_TER.dat"
+       - selector_value: [3, 4, 5] # APD
+         effect_class: SpectralQuantumEfficiency
+         effect_kwargs:
+           filename: "detector_specs/APD_TER.dat"
 
  - name: trace_list_analytical
    description: list of spectral order trace geometry on the focal plane calculated from analytical model for Echelle

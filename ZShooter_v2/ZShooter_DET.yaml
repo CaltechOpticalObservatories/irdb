@@ -154,26 +154,6 @@ effects :
         gain_unit: electron/adu
         detector: "APD_K"
 
-  - name: detector_qe_selector
-    description: QE curves for different detectors
-    class: SelectorWheel
-    include: True
-    kwargs:
-      selector_key: "aperture_id" #must be this because TERCurves are processed at FieldOfView phase do to z_order
-      wheel:
-        - selector_value: [0, 1] # CCD_B
-          effect_class: TERCurve
-          effect_kwargs:
-            filename: "detector_specs/CCD_B_TER.dat"
-        - selector_value: [ 2 ] # CCD_R
-          effect_class: TERCurve
-          effect_kwargs:
-            filename: "detector_specs/CCD_R_TER.dat"
-        - selector_value: [3, 4, 5] # CCD_B
-          effect_class: TERCurve
-          effect_kwargs:
-            filename: "detector_specs/APD_TER.dat"
-
   - name: exposure_integration_selector
     description: Summing up sky signal for all DITs and NDITs for different detectors
     class: SelectorWheel
