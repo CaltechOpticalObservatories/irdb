@@ -6,7 +6,7 @@ description: Effects from the ZShooter optics
 
 properties:
   decouple_detector_from_sky_headers: True  # needed for slit spectroscopy
-  include_post_echelle_diffuse_background: True
+  include_diffuse_emmisivity: True
   vis_curr_slit: 0.70
   nir_curr_slit: 0.70
 
@@ -151,7 +151,7 @@ effects:
  - name: post_echelle_diffuse_background_selector
    description: Post-echelle camera emission injected as diffuse image-plane background
    class: SelectorWheel
-   include: "!INST.include_post_echelle_diffuse_background"
+   include: "!INST.include_diffuse_emmisivity"
    kwargs:
      z_order: [760]
      selector_key: "image_plane_id"
