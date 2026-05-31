@@ -132,16 +132,12 @@ effects:
        - selector_value: [1] # CCD_G, placeholder inherited from old CCD_B curve
          effect_class: SpectralQuantumEfficiency
          effect_kwargs:
-           filename: "detector_specs/ccd_B_TER.dat"
+           filename: "detector_specs/ccd_ml_uv_enhanced_TER.dat"
        - selector_value: [2] # CCD_R, e2v ML coating, UV enhanced
          effect_class: SpectralQuantumEfficiency
          effect_kwargs:
-           filename: "detector_specs/ccd_ml_uv_enhanced_TER.dat"
-       - selector_value: [3] # APD_YJ, e2v ML2 coating, UV enhanced, HiRho
-         effect_class: SpectralQuantumEfficiency
-         effect_kwargs:
            filename: "detector_specs/ccd_ml2_uv_enhanced_hirho_TER.dat"
-       - selector_value: [4, 5] # APD_H, APD_K
+       - selector_value: [3, 4, 5] # APD_H, APD_K
          effect_class: SpectralQuantumEfficiency
          effect_kwargs:
            filename: "detector_specs/APD_TER.dat"
@@ -174,21 +170,15 @@ effects:
          effect_class: PostDisperserDiffuseBackground
          effect_kwargs:
            filename: "optics/LIST_zspec_vis_optics.dat"
-           detector_qe_filename: "detector_specs/ccd_B_TER.dat"
+           detector_qe_filename: "detector_specs/ccd_ml_uv_enhanced_TER.dat"
            wave_bin: 0.001
        - selector_value: [2] # CCD_R, e2v ML coating, UV enhanced
          effect_class: PostDisperserDiffuseBackground
          effect_kwargs:
            filename: "optics/LIST_zspec_vis_optics.dat"
-           detector_qe_filename: "detector_specs/ccd_ml_uv_enhanced_TER.dat"
-           wave_bin: 0.001
-       - selector_value: [3] # APD_YJ, e2v ML2 coating, UV enhanced, HiRho
-         effect_class: PostDisperserDiffuseBackground
-         effect_kwargs:
-           filename: "optics/LIST_zspec_nir_optics.dat"
            detector_qe_filename: "detector_specs/ccd_ml2_uv_enhanced_hirho_TER.dat"
            wave_bin: 0.001
-       - selector_value: [4, 5] # APD_H, APD_K
+       - selector_value: [3, 4, 5] # APD_H, APD_K
          effect_class: PostDisperserDiffuseBackground
          effect_kwargs:
            filename: "optics/LIST_zspec_nir_optics.dat"
