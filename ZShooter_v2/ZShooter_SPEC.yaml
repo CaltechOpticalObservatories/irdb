@@ -142,6 +142,108 @@ effects:
          effect_kwargs:
            filename: "detector_specs/APD_TER.dat"
 
+ - name: tapered_detector_qe_selector
+   description: >
+     Disabled example for detector-axis tapered QE coatings. If enabled,
+     disable or replace detector_qe_selector so QE is not applied twice.
+     The Gaussian bandpass peak is 95%; FWHM is 30% of each channel span.
+   class: SelectorWheel
+   include: False
+   kwargs:
+     z_order: [610]
+     selector_key: "aperture_id"
+     wheel:
+       - selector_value: [0] # B channel: 310-420 nm, FWHM = 33 nm
+         effect_class: TaperedQuantumEfficiency
+         effect_kwargs:
+           axis: y
+           position_unit: pix
+           position_min: 0
+           position_max: 2048
+           wave_unit: nm
+           center_wave_min: 310
+           center_wave_max: 420
+           fwhm: 33
+           peak: 0.95
+           floor: 0.0
+           clip_position: True
+           diffuse_position_samples: 256
+       - selector_value: [1] # G channel: 400-600 nm, FWHM = 60 nm
+         effect_class: TaperedQuantumEfficiency
+         effect_kwargs:
+           axis: y
+           position_unit: pix
+           position_min: 0
+           position_max: 2048
+           wave_unit: nm
+           center_wave_min: 400
+           center_wave_max: 600
+           fwhm: 60
+           peak: 0.95
+           floor: 0.0
+           clip_position: True
+           diffuse_position_samples: 256
+       - selector_value: [2] # R channel: 580-980 nm, FWHM = 120 nm
+         effect_class: TaperedQuantumEfficiency
+         effect_kwargs:
+           axis: y
+           position_unit: pix
+           position_min: 0
+           position_max: 2048
+           wave_unit: nm
+           center_wave_min: 580
+           center_wave_max: 980
+           fwhm: 120
+           peak: 0.95
+           floor: 0.0
+           clip_position: True
+           diffuse_position_samples: 256
+       - selector_value: [3] # YJ channel: 960-1340 nm, FWHM = 114 nm
+         effect_class: TaperedQuantumEfficiency
+         effect_kwargs:
+           axis: y
+           position_unit: pix
+           position_min: 0
+           position_max: 2048
+           wave_unit: nm
+           center_wave_min: 960
+           center_wave_max: 1340
+           fwhm: 114
+           peak: 0.95
+           floor: 0.0
+           clip_position: True
+           diffuse_position_samples: 256
+       - selector_value: [4] # H channel: 1470-1830 nm, FWHM = 108 nm
+         effect_class: TaperedQuantumEfficiency
+         effect_kwargs:
+           axis: y
+           position_unit: pix
+           position_min: 0
+           position_max: 2048
+           wave_unit: nm
+           center_wave_min: 1470
+           center_wave_max: 1830
+           fwhm: 108
+           peak: 0.95
+           floor: 0.0
+           clip_position: True
+           diffuse_position_samples: 256
+       - selector_value: [5] # K channel: 1990-2450 nm, FWHM = 138 nm
+         effect_class: TaperedQuantumEfficiency
+         effect_kwargs:
+           axis: y
+           position_unit: pix
+           position_min: 0
+           position_max: 2048
+           wave_unit: nm
+           center_wave_min: 1990
+           center_wave_max: 2450
+           fwhm: 138
+           peak: 0.95
+           floor: 0.0
+           clip_position: True
+           diffuse_position_samples: 256
+
  - name: trace_list_analytical
    description: list of spectral order trace geometry on the focal plane calculated from analytical model for Echelle
    class: EchelleSpectralTraceList

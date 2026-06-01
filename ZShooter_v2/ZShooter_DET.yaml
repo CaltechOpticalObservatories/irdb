@@ -8,6 +8,56 @@ properties :
     temperature : -120
     binx : 1
     biny: 1
+    tapered_qe_example:
+      enabled: False
+      description: >
+        Detector-axis tapered QE design metadata. This is documentation for
+        the disabled TaperedQuantumEfficiency selector in ZShooter_SPEC.yaml,
+        not an active detector effect.
+      axis: y
+      position_unit: pix
+      position_min: 0
+      position_max: 2048
+      wave_unit: nm
+      peak: 0.95
+      bandwidth_fraction: 0.30
+      channels:
+        - name: b
+          detector_id: 0
+          image_plane_id: 0
+          blue_nm: 310
+          red_nm: 420
+          fwhm_nm: 33
+        - name: g
+          detector_id: 1
+          image_plane_id: 1
+          blue_nm: 400
+          red_nm: 600
+          fwhm_nm: 60
+        - name: r
+          detector_id: 2
+          image_plane_id: 2
+          blue_nm: 580
+          red_nm: 980
+          fwhm_nm: 120
+        - name: yj
+          detector_id: 3
+          image_plane_id: 3
+          blue_nm: 960
+          red_nm: 1340
+          fwhm_nm: 114
+        - name: h
+          detector_id: 4
+          image_plane_id: 4
+          blue_nm: 1470
+          red_nm: 1830
+          fwhm_nm: 108
+        - name: k
+          detector_id: 5
+          image_plane_id: 5
+          blue_nm: 1990
+          red_nm: 2450
+          fwhm_nm: 138
 
 effects :
   - name: detector_b
