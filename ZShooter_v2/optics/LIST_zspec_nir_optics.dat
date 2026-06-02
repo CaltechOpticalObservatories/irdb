@@ -13,7 +13,7 @@
 #
 name                  outer   inner   angle   temperature   action         filename                    throughput_group   emission_phase
 NIR_DewarWindow_1     0.09    0.0     0       273           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
-NIR_DewarWindow_2     0.09    0.0     0       273           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
+NIR_DewarWindow_2     0.09    0.0     0       273           transmission   optics/TER_nir_dewarwindow.dat   preoptics          pre_disperser
 NIR_ADC_1             0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
 NIR_ADC_2             0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
 NIR_ADC_3             0.09    0.0     0       120           transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser

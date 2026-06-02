@@ -84,12 +84,28 @@ effects:
          effect_kwargs:
            filename: "optics/LIST_zspec_nir_optics.dat"
 
-# - name: some_optics
-#   description: placeholder for other optics in ZShooter
-#   class: SurfaceList
-#   include: False
-#   kwargs:
-#     filename: "LIST_ZSHOOTER_optics.dat"
+
+ - name: ir_blocking_filter_selector
+   description: nIR blocking filter
+   class: SelectorWheel
+   include: True
+   kwargs:
+     z_order: [610]
+     selector_key: "aperture_id"
+     emission_phase: post_disperser
+     wheel:
+       - selector_value: [ 3 ]
+         effect_class: TERCurve
+         effect_kwargs:
+           filename: "optics/TER_nir_blocking_filtYJ.dat"
+       - selector_value: [ 4 ]
+         effect_class: TERCurve
+         effect_kwargs:
+           filename: "optics/TER_nir_blocking_filtH.dat"
+       - selector_value: [ 5 ]
+         effect_class: TERCurve
+         effect_kwargs:
+           filename: "optics/TER_nir_blocking_filtK.dat"
 
 
 ## Need only one entry for trace efficiency and trace list for all arms as the same FITS description contains info for all arms and orders
