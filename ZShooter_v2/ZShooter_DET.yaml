@@ -21,44 +21,32 @@ properties :
       position_max: 2048
       wave_unit: nm
       peak: 0.95
-      bandwidth_fraction: 0.30
+      description_note: >
+        This is a flattop/wide-rolloff coating model, not a Gaussian bandpass.
+        Use flat_width_nm for the plateau width and transition_width_nm for
+        each cosine-edged shoulder.
       channels:
         - name: b
           detector_id: 0
           image_plane_id: 0
           blue_nm: 310
           red_nm: 420
-          fwhm_nm: 33
+          flat_width_nm: 100
+          transition_width_nm: 300
         - name: g
           detector_id: 1
           image_plane_id: 1
           blue_nm: 400
           red_nm: 600
-          fwhm_nm: 60
+          flat_width_nm: 100
+          transition_width_nm: 300
         - name: r
           detector_id: 2
           image_plane_id: 2
           blue_nm: 580
           red_nm: 980
-          fwhm_nm: 120
-        - name: yj
-          detector_id: 3
-          image_plane_id: 3
-          blue_nm: 960
-          red_nm: 1340
-          fwhm_nm: 114
-        - name: h
-          detector_id: 4
-          image_plane_id: 4
-          blue_nm: 1470
-          red_nm: 1830
-          fwhm_nm: 108
-        - name: k
-          detector_id: 5
-          image_plane_id: 5
-          blue_nm: 1990
-          red_nm: 2450
-          fwhm_nm: 138
+          flat_width_nm: 240
+          transition_width_nm: 500
 
 effects :
   - name: detector_b
