@@ -107,6 +107,7 @@ effects:
    kwargs:
      z_order: [610]
      selector_key: "aperture_id"
+     allowed_missing_selector_values: [ 0, 1, 2 ]
      emission_phase: post_disperser
      wheel:
        - selector_value: [ 3 ]

@@ -8,6 +8,7 @@ properties :
     temperature : -120
     binx : 1
     biny: 1
+    full_well: 64000
     tapered_qe_example:
       enabled: False
       description: >
@@ -392,6 +393,7 @@ effects :
     include: True
     kwargs:
       selector_key: "detector_id" # not really used as the Detector object's id is stored as just "id", but kept for consistency
+      allowed_missing_selector_values: [ 3, 4, 5 ]
       wheel:
         - selector_value: [ 0 ]
           effect_class: UnequalBinnedImage
