@@ -136,7 +136,7 @@ effects:
  - name: detector_qe_selector
    description: Throughput-only QE curves for different detectors
    class: SelectorWheel
-   include: True
+   include: False
    kwargs:
      z_order: [610]
      selector_key: "aperture_id"
@@ -158,18 +158,18 @@ effects:
          effect_kwargs:
            filename: "detector_specs/APD_TER.dat"
 
- - name: tapered_detector_qe_selector
+ - name: detector_qe_selector
    description: >
-     Disabled example for detector-axis tapered QE coatings. If enabled,
-     disable or replace detector_qe_selector so QE is not applied twice.
-     The Gaussian bandpass peak is 95%; FWHM is 30% of each channel span.
+     Active detector QE selector. Visible channels use detector-axis tapered
+     flattop QE coatings; NIR channels use spectral APD QE. The flattop
+     bandpass peak is 95%, with broad cosine-edged transitions to a 30% floor.
    class: SelectorWheel
-   include: False
+   include: True
    kwargs:
      z_order: [610]
      selector_key: "aperture_id"
      wheel:
-       - selector_value: [0] # B channel: 310-420 nm, FWHM = 33 nm
+       - selector_value: [0] # B channel: 310-420 nm, flat width = 100 nm
          effect_class: TaperedQuantumEfficiency
          effect_kwargs:
            axis: y
@@ -177,14 +177,15 @@ effects:
            position_min: 0
            position_max: 2048
            wave_unit: nm
-           center_wave_min: 310
+           center_wave_min: 308
            center_wave_max: 420
-           fwhm: 33
+           flat_width: 100
+           transition_width: 300
            peak: 0.95
-           floor: 0.0
+           floor: 0.3
            clip_position: True
-           diffuse_position_samples: 256
-       - selector_value: [1] # G channel: 400-600 nm, FWHM = 60 nm
+           diffuse_position_samples: 20
+       - selector_value: [1] # G channel: 400-600 nm, flat width = 100 nm
          effect_class: TaperedQuantumEfficiency
          effect_kwargs:
            axis: y
@@ -194,12 +195,13 @@ effects:
            wave_unit: nm
            center_wave_min: 400
            center_wave_max: 600
-           fwhm: 60
+           flat_width: 100
+           transition_width: 300
            peak: 0.95
-           floor: 0.0
+           floor: 0.3
            clip_position: True
-           diffuse_position_samples: 256
-       - selector_value: [2] # R channel: 580-980 nm, FWHM = 120 nm
+           diffuse_position_samples: 20
+       - selector_value: [2] # R channel: 580-980 nm, flat width = 240 nm
          effect_class: TaperedQuantumEfficiency
          effect_kwargs:
            axis: y
@@ -209,56 +211,18 @@ effects:
            wave_unit: nm
            center_wave_min: 580
            center_wave_max: 980
-           fwhm: 120
+           flat_width: 240
+           transition_width: 500
            peak: 0.95
-           floor: 0.0
+           floor: 0.3
            clip_position: True
-           diffuse_position_samples: 256
-       - selector_value: [3] # YJ channel: 960-1340 nm, FWHM = 114 nm
-         effect_class: TaperedQuantumEfficiency
+           diffuse_position_samples: 20
+       - selector_value: [3, 4, 5] # APD_H, APD_K
+         effect_class: SpectralQuantumEfficiency
          effect_kwargs:
-           axis: y
-           position_unit: pix
-           position_min: 0
-           position_max: 2048
-           wave_unit: nm
-           center_wave_min: 960
-           center_wave_max: 1340
-           fwhm: 114
-           peak: 0.95
-           floor: 0.0
-           clip_position: True
-           diffuse_position_samples: 256
-       - selector_value: [4] # H channel: 1470-1830 nm, FWHM = 108 nm
-         effect_class: TaperedQuantumEfficiency
-         effect_kwargs:
-           axis: y
-           position_unit: pix
-           position_min: 0
-           position_max: 2048
-           wave_unit: nm
-           center_wave_min: 1470
-           center_wave_max: 1830
-           fwhm: 108
-           peak: 0.95
-           floor: 0.0
-           clip_position: True
-           diffuse_position_samples: 256
-       - selector_value: [5] # K channel: 1990-2450 nm, FWHM = 138 nm
-         effect_class: TaperedQuantumEfficiency
-         effect_kwargs:
-           axis: y
-           position_unit: pix
-           position_min: 0
-           position_max: 2048
-           wave_unit: nm
-           center_wave_min: 1990
-           center_wave_max: 2450
-           fwhm: 138
-           peak: 0.95
-           floor: 0.0
-           clip_position: True
-           diffuse_position_samples: 256
+           filename: "detector_specs/APD_TER.dat"
+
+
 
  - name: trace_list_analytical
    description: list of spectral order trace geometry on the focal plane calculated from analytical model for Echelle
@@ -282,23 +246,83 @@ effects:
          effect_class: PostDisperserDiffuseBackground
          effect_kwargs:
            filename: "optics/LIST_zspec_vis_optics.dat"
-           detector_qe_filename: "detector_specs/ccd_uv_enhanced_TER.dat"
+           detector_qe:
+             class: TaperedQuantumEfficiency
+             kwargs:
+               axis: y
+               position_unit: pix
+               position_min: 0
+               position_max: 2048
+               wave_unit: nm
+               center_wave_min: 308
+               center_wave_max: 420
+               flat_width: 100
+               transition_width: 300
+               peak: 0.95
+               floor: 0.3
+               clip_position: True
+               diffuse_position_samples: 20
            wave_bin: 0.001
        - selector_value: [1] # CCD_G, placeholder inherited from old CCD_B curve
          effect_class: PostDisperserDiffuseBackground
          effect_kwargs:
            filename: "optics/LIST_zspec_vis_optics.dat"
-           detector_qe_filename: "detector_specs/ccd_ml_uv_enhanced_TER.dat"
+           detector_qe:
+             class: TaperedQuantumEfficiency
+             kwargs:
+               axis: y
+               position_unit: pix
+               position_min: 0
+               position_max: 2048
+               wave_unit: nm
+               center_wave_min: 400
+               center_wave_max: 600
+               flat_width: 100
+               transition_width: 300
+               peak: 0.95
+               floor: 0.3
+               clip_position: True
+               diffuse_position_samples: 20
            wave_bin: 0.001
        - selector_value: [2] # CCD_R, e2v ML coating, UV enhanced
          effect_class: PostDisperserDiffuseBackground
          effect_kwargs:
            filename: "optics/LIST_zspec_vis_optics.dat"
-           detector_qe_filename: "detector_specs/ccd_ml2_uv_enhanced_hirho_TER.dat"
+           detector_qe:
+             class: TaperedQuantumEfficiency
+             kwargs:
+               axis: y
+               position_unit: pix
+               position_min: 0
+               position_max: 2048
+               wave_unit: nm
+               center_wave_min: 580
+               center_wave_max: 980
+               flat_width: 240
+               transition_width: 500
+               peak: 0.95
+               floor: 0.3
+               clip_position: True
+               diffuse_position_samples: 20
            wave_bin: 0.001
-       - selector_value: [3, 4, 5] # APD_H, APD_K
+       - selector_value: [3] # APD_YJ
          effect_class: PostDisperserDiffuseBackground
          effect_kwargs:
            filename: "optics/LIST_zspec_nir_optics.dat"
            detector_qe_filename: "detector_specs/APD_TER.dat"
+           downstream_throughput_filename: "optics/TER_nir_blocking_filtYJ.dat"
+           wave_bin: 0.001
+       - selector_value: [4] # APD_H
+         effect_class: PostDisperserDiffuseBackground
+         effect_kwargs:
+           filename: "optics/LIST_zspec_nir_optics.dat"
+           detector_qe_filename: "detector_specs/APD_TER.dat"
+           downstream_throughput_filename: "optics/TER_nir_blocking_filtH.dat"
+           wave_bin: 0.001
+       - selector_value: [5] # APD_K
+         effect_class: PostDisperserDiffuseBackground
+         effect_kwargs:
+           filename: "optics/LIST_zspec_nir_optics.dat"
+           detector_qe_filename: "detector_specs/APD_TER.dat"
+           downstream_throughput_filename: "optics/TER_nir_blocking_filtK.dat"
            wave_bin: 0.001
