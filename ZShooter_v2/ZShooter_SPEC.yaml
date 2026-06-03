@@ -9,6 +9,21 @@ properties:
   include_diffuse_emmisivity: True
   vis_curr_slit: 0.70
   nir_curr_slit: 0.70
+  tapered_qe_peak: 0.95
+  tapered_qe_floor: 0.0
+  tapered_qe_diffuse_position_samples: 20
+  tapered_qe_b_center_wave_min: 308
+  tapered_qe_b_center_wave_max: 420
+  tapered_qe_b_flat_width: 100
+  tapered_qe_b_transition_width: 300
+  tapered_qe_g_center_wave_min: 400
+  tapered_qe_g_center_wave_max: 600
+  tapered_qe_g_flat_width: 100
+  tapered_qe_g_transition_width: 300
+  tapered_qe_r_center_wave_min: 580
+  tapered_qe_r_center_wave_max: 980
+  tapered_qe_r_flat_width: 240
+  tapered_qe_r_transition_width: 500
 
 # There are 6 image planes in ZSpec: b, g, r, yj, h, k. We use the DichroicTree effect to establish the branching
 # in the beginning of the flow, using aperture_id as the identifying key. Though physically there may be other
@@ -177,14 +192,14 @@ effects:
            position_min: 0
            position_max: 2048
            wave_unit: nm
-           center_wave_min: 308
-           center_wave_max: 420
-           flat_width: 100
-           transition_width: 300
-           peak: 0.95
-           floor: 0.3
+           center_wave_min: "!INST.tapered_qe_b_center_wave_min"
+           center_wave_max: "!INST.tapered_qe_b_center_wave_max"
+           flat_width: "!INST.tapered_qe_b_flat_width"
+           transition_width: "!INST.tapered_qe_b_transition_width"
+           peak: "!INST.tapered_qe_peak"
+           floor: "!INST.tapered_qe_floor"
            clip_position: True
-           diffuse_position_samples: 20
+           diffuse_position_samples: "!INST.tapered_qe_diffuse_position_samples"
        - selector_value: [1] # G channel: 400-600 nm, flat width = 100 nm
          effect_class: TaperedQuantumEfficiency
          effect_kwargs:
@@ -193,14 +208,14 @@ effects:
            position_min: 0
            position_max: 2048
            wave_unit: nm
-           center_wave_min: 400
-           center_wave_max: 600
-           flat_width: 100
-           transition_width: 300
-           peak: 0.95
-           floor: 0.3
+           center_wave_min: "!INST.tapered_qe_g_center_wave_min"
+           center_wave_max: "!INST.tapered_qe_g_center_wave_max"
+           flat_width: "!INST.tapered_qe_g_flat_width"
+           transition_width: "!INST.tapered_qe_g_transition_width"
+           peak: "!INST.tapered_qe_peak"
+           floor: "!INST.tapered_qe_floor"
            clip_position: True
-           diffuse_position_samples: 20
+           diffuse_position_samples: "!INST.tapered_qe_diffuse_position_samples"
        - selector_value: [2] # R channel: 580-980 nm, flat width = 240 nm
          effect_class: TaperedQuantumEfficiency
          effect_kwargs:
@@ -209,14 +224,14 @@ effects:
            position_min: 0
            position_max: 2048
            wave_unit: nm
-           center_wave_min: 580
-           center_wave_max: 980
-           flat_width: 240
-           transition_width: 500
-           peak: 0.95
-           floor: 0.3
+           center_wave_min: "!INST.tapered_qe_r_center_wave_min"
+           center_wave_max: "!INST.tapered_qe_r_center_wave_max"
+           flat_width: "!INST.tapered_qe_r_flat_width"
+           transition_width: "!INST.tapered_qe_r_transition_width"
+           peak: "!INST.tapered_qe_peak"
+           floor: "!INST.tapered_qe_floor"
            clip_position: True
-           diffuse_position_samples: 20
+           diffuse_position_samples: "!INST.tapered_qe_diffuse_position_samples"
        - selector_value: [3, 4, 5] # APD_H, APD_K
          effect_class: SpectralQuantumEfficiency
          effect_kwargs:
@@ -254,14 +269,14 @@ effects:
                position_min: 0
                position_max: 2048
                wave_unit: nm
-               center_wave_min: 308
-               center_wave_max: 420
-               flat_width: 100
-               transition_width: 300
-               peak: 0.95
-               floor: 0.3
+               center_wave_min: "!INST.tapered_qe_b_center_wave_min"
+               center_wave_max: "!INST.tapered_qe_b_center_wave_max"
+               flat_width: "!INST.tapered_qe_b_flat_width"
+               transition_width: "!INST.tapered_qe_b_transition_width"
+               peak: "!INST.tapered_qe_peak"
+               floor: "!INST.tapered_qe_floor"
                clip_position: True
-               diffuse_position_samples: 20
+               diffuse_position_samples: "!INST.tapered_qe_diffuse_position_samples"
            wave_bin: 0.001
        - selector_value: [1] # CCD_G, placeholder inherited from old CCD_B curve
          effect_class: PostDisperserDiffuseBackground
@@ -275,14 +290,14 @@ effects:
                position_min: 0
                position_max: 2048
                wave_unit: nm
-               center_wave_min: 400
-               center_wave_max: 600
-               flat_width: 100
-               transition_width: 300
-               peak: 0.95
-               floor: 0.3
+               center_wave_min: "!INST.tapered_qe_g_center_wave_min"
+               center_wave_max: "!INST.tapered_qe_g_center_wave_max"
+               flat_width: "!INST.tapered_qe_g_flat_width"
+               transition_width: "!INST.tapered_qe_g_transition_width"
+               peak: "!INST.tapered_qe_peak"
+               floor: "!INST.tapered_qe_floor"
                clip_position: True
-               diffuse_position_samples: 20
+               diffuse_position_samples: "!INST.tapered_qe_diffuse_position_samples"
            wave_bin: 0.001
        - selector_value: [2] # CCD_R, e2v ML coating, UV enhanced
          effect_class: PostDisperserDiffuseBackground
@@ -296,14 +311,14 @@ effects:
                position_min: 0
                position_max: 2048
                wave_unit: nm
-               center_wave_min: 580
-               center_wave_max: 980
-               flat_width: 240
-               transition_width: 500
-               peak: 0.95
-               floor: 0.3
+               center_wave_min: "!INST.tapered_qe_r_center_wave_min"
+               center_wave_max: "!INST.tapered_qe_r_center_wave_max"
+               flat_width: "!INST.tapered_qe_r_flat_width"
+               transition_width: "!INST.tapered_qe_r_transition_width"
+               peak: "!INST.tapered_qe_peak"
+               floor: "!INST.tapered_qe_floor"
                clip_position: True
-               diffuse_position_samples: 20
+               diffuse_position_samples: "!INST.tapered_qe_diffuse_position_samples"
            wave_bin: 0.001
        - selector_value: [3] # APD_YJ
          effect_class: PostDisperserDiffuseBackground
