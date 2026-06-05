@@ -12,6 +12,16 @@ properties:
     - yj-hk    # Next dichroic in yjhk arm, splits yj from hk
     - g-r      # Next dichroic in gr arm, splits g from r
     - h-k      # Next dichroic in hk arm, splits h from k
+  ubvis_slit_names:
+    - "ubvis_half_arcsec"
+    - "ubvis_one_arcsec"
+    - "ubvis_two_arcsec"
+  nir_slit_names:
+    - "nir_half_arcsec"
+    - "nir_one_arcsec"
+    - "nir_two_arcsec"
+  ubvis_curr_slit: "ubvis_one_arcsec"
+  nir_curr_slit: "nir_one_arcsec"
 
 # There are 6 image planes in ZSpec: b, g, r, yj, h, k. We use the DichroicTree effect to establish the branching
 # in the beginning of the flow, using aperture_id as the identifying key. Though physically there may be other
@@ -29,44 +39,6 @@ effects:
      filename_format: "dichroics/TER_dichroic_{}.dat"
 
 
-# - name: adc_selector
-#   description: SelectorWheel holding AtmosphericDispersionCorrector for ub+vis, optionally for NIR for testing
-#   class: SelectorWheel
-#   include: False
-#   kwargs:
-#     selector_key: "aperture_id"
-#     wheel:
-#       - selector_value: [0, 1, 2]     # ADC that acts on bgr after first dichroic split
-#         effect_class: AtmosphericDispersionCorrection
-#         effect_kwargs:
-#           altitude : "!ATMO.altitude"
-#           longitude : "!ATMO.longitude"
-#           latitude : "!ATMO.latitude"
-#           airmass : "!OBS.airmass"
-#           temperature : "!ATMO.temperature"
-#           humidity : "!ATMO.humidity"
-#           pressure : "!ATMO.pressure"
-#           pupil_angle : "!OBS.pupil_angle"
-#           efficiency: 1
-#           wave_mid: "!SIM.spectral.wave_mid"
-#           quick_adc: True
-#
-#       - selector_value: [3, 4, 5]     # ADC that acts on yjhk after first dichroic split, usually no ADC, but option for testing
-#         effect_class: AtmosphericDispersionCorrection
-#         effect_kwargs:
-#           altitude : "!ATMO.altitude"
-#           longitude : "!ATMO.longitude"
-#           latitude : "!ATMO.latitude"
-#           airmass : "!OBS.airmass"
-#           temperature : "!ATMO.temperature"
-#           humidity : "!ATMO.humidity"
-#           pressure : "!ATMO.pressure"
-#           pupil_angle : "!OBS.pupil_angle"
-#           efficiency: 1
-#           wave_mid: "!SIM.spectral.wave_mid"
-#           quick_adc: True
-
-
  - name: slitwheel_selector
    description: SelectorWheel holding two SlitWheels, one for bgr, one for yjhk
    class: SelectorWheel
@@ -77,22 +49,16 @@ effects:
        - selector_value: [0, 1, 2]
          effect_class: SlitWheel
          effect_kwargs:
-           slit_names:
-             - "ubvis_half_arcsec"
-             - "ubvis_one_arcsec"
-             - "ubvis_two_arcsec"
+           slit_names: "!INST.ubvis_slit_names"   # as live property to allow dynamic updates
            filename_format: "slits/{}.dat"
-           current_slit: "ubvis_one_arcsec"
+           current_slit: "!INST.ubvis_curr_slit"  # as live property to allow dynamic updates
 
        - selector_value: [3, 4, 5]
          effect_class: SlitWheel
          effect_kwargs:
-           slit_names:
-             - "nir_half_arcsec"
-             - "nir_one_arcsec"
-             - "nir_two_arcsec"
+           slit_names: "!INST.nir_slit_names"   # as live property to allow dynamic updates
            filename_format: "slits/{}.dat"
-           current_slit: "nir_one_arcsec"
+           current_slit: "!INST.nir_curr_slit"  # as live property to allow dynamic updates
 
 
 # - name: some_optics

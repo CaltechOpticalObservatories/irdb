@@ -12,7 +12,8 @@ properties :
     temperature :   2.5           # deg C
     humidity :      0.1         # [0..1]
     pressure :      0.620       # [bar]
-    pwv :           1.0         # [mm]
+    pwv :           2.5         # [mm]
+    x_co2 :         450         # [ppm]
     airmass :       "!OBS.airmass"
     pupil_angle :   "!OBS.pupil_angle"
     pixel_scale :   "!INST.pixel_scale"
@@ -21,18 +22,65 @@ properties :
         value: 22.0
         unit: mag
     seeing : 0.7                # [arcsec]
-    spectrum :
-        filename: "TER_maunakea_default.dat"
 
 effects :
-- name : maunakea_atmospheric_transmission
-  description : Atmospheric transmission for Mauna Kea
+- name : atmo_transmission    # Also applies thermal emission component using !ATMO.temperature and (1-transmission)
+  description : Atmospheric transmission for Mauna Kea from TAPAS
   class : TERCurve
+  include : True
   kwargs:
-    filename: "TER_maunakea_default.dat"
+    filename: "TER_maunakea_tapas.dat"
+
+- name : continuum_emission
+  description : Continuum emission (only from moon, starlight, zodiacal light) from SkyCalc
+  class : SkyBackgroundTERCurve
+  include : True
+  kwargs:
+    disable_transmission: True
+    disable_airglow: True
+    pwv: "!ATMO.pwv"
+    wmin: "!SIM.spectral.wave_min"
+    wmax: "!SIM.spectral.wave_max"
+    wdelta: "!SIM.spectral.spectral_bin_width"
+    wres: "!SIM.spectral.spectral_resolution"
+    wunit: "!SIM.spectral.wave_unit"
+
+- name : airglow_and_interline_continuum
+  description: Airglow emission lines and residual continuum from PALACE model
+  class : PalaceAirglowEmission
+  include : True
+  kwargs:
+    save_model_output: False
+    only_line: False
+    only_continuum: False
+    pwv: "!ATMO.pwv"
+    lammin: "!SIM.spectral.wave_min"
+    lammax: "!SIM.spectral.wave_max"
+    lamunit: "!SIM.spectral.wave_unit"
 
 - name : seeing_psf
-  description : Seeing limited PSF
-  class : SeeingPSF
+  description : Seeing limited but AO enhanceable Moffat PSF (wavelength dependent)
+  class : AOEnhanceablePSF
+  include : True
   kwargs:
-        fwhm: "!ATMO.seeing"
+    enable_ao: False
+    ao_table: "ao_table.dat"
+    is_absolute: True
+    fwhm:
+      seeing: "!ATMO.seeing"
+      seeing_unit: "arcsec"
+      pivot_wave: 500
+      pivot_wave_unit: "nm"
+    alpha: 4.765
+
+## Currently, below ADC effect applies to all FoVs (i.e. including NIR arms). The effect can be made arm-specific by
+## wrapping it in a SelectorWheel effect (see ZShooter_v2/ZShooter_SPEC.yaml for examples).
+- name : adc_residuals
+  description : Residuals after ADC correction, from LRIS ADC data and from positional error of 0.1 deg in AD correction
+  class : ADCShift
+  include : True
+  kwargs:
+    filename: "adc_residuals.dat"
+    method: "roll"
+    zenith_angle_error: 0.1
+    wave_ref_um: 0.5

@@ -8,8 +8,6 @@ properties :
     temperature : -120
     binx : 1
     biny: 1
-    dit : "!OBS.dit"
-    ndit : "!OBS.ndit"
 
 effects :
   - name: detector_b
@@ -156,9 +154,28 @@ effects :
         gain_unit: electron/adu
         detector: "APD_K"
 
-  - name: exposure_integration
-    description: Summing up sky signal for all DITs and NDITs
-    class: ExposureIntegration
+  - name: exposure_integration_selector
+    description: Summing up sky signal for all DITs and NDITs for different detectors
+    class: SelectorWheel
+    include: True
+    kwargs:
+      selector_key: "detector_id" # not really used as the Detector object's id is stored as just "id", but kept for consistency
+      wheel:
+        - selector_value: [0] # CCD_B
+          effect_class: ExposureIntegration
+          effect_kwargs:
+            dit: "!OBS.dit_blue"
+            ndit: "!OBS.ndit_blue"
+        - selector_value: [1] # CCD_G
+          effect_class: ExposureIntegration
+          effect_kwargs:
+            dit: "!OBS.dit_green"
+            ndit: "!OBS.ndit_green"
+        - selector_value: [2,3,4,5] # CCD_R, APD_YJ, APD_H, and APD_K detectors
+          effect_class: ExposureIntegration
+          effect_kwargs:
+            dit: "!OBS.dit_red"
+            ndit: "!OBS.ndit_red"
 
   - name: shot_noise
     description : apply poisson shot noise to images
@@ -171,19 +188,24 @@ effects :
     kwargs:
       selector_key: "detector_id" # not really used as the Detector object's id is stored as just "id", but kept for consistency
       wheel:
-        - selector_value: [0,1,2]   # CCD detectors
+        - selector_value: [0]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.0001    # [e-/s] level of dark current for CCD detectors
-            dit: "!DET.dit"
-            ndit: "!DET.ndit"
-
-        - selector_value: [3,4,5]   # APD detectors
+            value: 0.00001    # [e-/s] level of dark current for CCD detectors
+            dit: "!OBS.dit_blue"
+            ndit: "!OBS.ndit_blue"
+        - selector_value: [1]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.0001     # [e-/s] level of dark current for APD detectors
-            dit: "!OBS.dit"
-            ndit: "!OBS.ndit"
+            value: 0.00001    # [e-/s] level of dark current for CCD detectors
+            dit: "!OBS.dit_green"
+            ndit: "!OBS.ndit_green"
+        - selector_value: [2,3,4,5]
+          effect_class: DarkCurrent
+          effect_kwargs:
+            value: 0.00001     # [e-/s] level of dark current for APD detectors
+            dit: "!OBS.dit_red"
+            ndit: "!OBS.ndit_red"
 
   - name: detector_linearity_selector
     description: Selector Wheel for linearity characteristics for CCDs and APDs
@@ -192,21 +214,34 @@ effects :
     kwargs:
       selector_key: "detector_id" # not really used as the Detector object's id is stored as just "id", but kept for consistency
       wheel:
-        - selector_value: [0,1,2]   # CCD detectors
+        - selector_value: [0]   # CCD_B detectors
           effect_class: LinearityCurve
           effect_kwargs:
             array_dict:
               incident: [0, 64e3]
               measured: [0, 64e3]
-            ndit: "!OBS.ndit"
-
+            ndit: "!OBS.ndit_blue"
+        - selector_value: [1]   # CCD_G detector
+          effect_class: LinearityCurve
+          effect_kwargs:
+            array_dict:
+              incident: [0, 64e3]
+              measured: [0, 64e3]
+            ndit: "!OBS.ndit_green"
+        - selector_value: [2] # CCD_R detectors
+          effect_class: LinearityCurve
+          effect_kwargs:
+            array_dict:
+              incident: [0, 64e3]
+              measured: [0, 64e3]
+            ndit: "!OBS.ndit_red"
         - selector_value: [3,4,5]   # APD detectors
           effect_class: LinearityCurve
           effect_kwargs:
             array_dict:
               incident: [0, 64e3]
               measured: [0, 64e3]
-            ndit: "!OBS.ndit"
+            ndit: "!OBS.ndit_red"
 
 #  - name: border_reference_pixels
 #    description: Blanks the signal on N edge row and column pixels
@@ -222,17 +257,26 @@ effects :
     kwargs:
       selector_key: "detector_id" # not really used as the Detector object's id is stored as just "id", but kept for consistency
       wheel:
-        - selector_value: [0,1,2]   # CCD detectors
+        - selector_value: [0]
           effect_class: BasicReadoutNoise
           effect_kwargs:
             noise_std: 2    # CCD readout noise std dev in electrons
-            ndit: "!OBS.ndit"
-
+            ndit: "!OBS.ndit_blue"
+        - selector_value: [1]
+          effect_class: BasicReadoutNoise
+          effect_kwargs:
+            noise_std: 2    # CCD readout noise std dev in electrons
+            ndit: "!OBS.ndit_green"
+        - selector_value: [2]
+          effect_class: BasicReadoutNoise
+          effect_kwargs:
+            noise_std: 2    # CCD readout noise std dev in electrons
+            ndit: "!OBS.ndit_red"
         - selector_value: [3,4,5]   # APD detectors
           effect_class: BasicReadoutNoise
           effect_kwargs:
             noise_std: 2     # APD readout noise std dev in electrons
-            ndit: "!OBS.ndit"
+            ndit: "!OBS.ndit_red"
 
   - name: binning
     description: Applies binning
