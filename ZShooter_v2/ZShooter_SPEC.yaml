@@ -113,14 +113,20 @@ effects:
        - selector_value: [ 3 ]
          effect_class: TERCurve
          effect_kwargs:
+           temperature: -198
+           temperature_unit: deg_D
            filename: "optics/TER_nir_blocking_filtYJ.dat"
        - selector_value: [ 4 ]
          effect_class: TERCurve
          effect_kwargs:
+           temperature: -198
+           temperature_unit: deg_D
            filename: "optics/TER_nir_blocking_filtH.dat"
        - selector_value: [ 5 ]
          effect_class: TERCurve
          effect_kwargs:
+           temperature: -198
+           temperature_unit: deg_D
            filename: "optics/TER_nir_blocking_filtK.dat"
 
 
