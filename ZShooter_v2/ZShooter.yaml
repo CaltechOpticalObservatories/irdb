@@ -6,9 +6,9 @@ name: ZShooter
 description: Common effects from the ZShooter_v1 optics
 
 properties:
-  temperature: -80 #TODO: check value
-  pixel_scale : 0.159574468085 #TODO update with real value
-  plate_scale : 10.638297872333334 #TODO update with real value
+#  temperature: 0
+  pixel_scale : 0.15556 #"/pix using .7"/4.5 pix
+  plate_scale : 10.37067  # "/mm above with 15 um pixels
 
 #effects:
 #  - name: Selector
