@@ -9,6 +9,21 @@ properties :
     binx : 1
     biny: 1
     full_well: 64000
+    # Per-image-plane scales. These currently match the global ZShooter
+    # values in ZShooter.yaml, but live here so each camera can diverge when
+    # the final channel optics are available.
+    pixel_scale_b: 0.15556
+    pixel_scale_g: 0.15556
+    pixel_scale_r: 0.15556
+    pixel_scale_yj: 0.15556
+    pixel_scale_h: 0.15556
+    pixel_scale_k: 0.15556
+    plate_scale_b: 10.37067
+    plate_scale_g: 10.37067
+    plate_scale_r: 10.37067
+    plate_scale_yj: 10.37067
+    plate_scale_h: 10.37067
+    plate_scale_k: 10.37067
     tapered_qe_example:
       enabled: False
       description: >
@@ -55,6 +70,8 @@ effects :
     class: DetectorList
     kwargs:
         image_plane_id : 0
+        pixel_scale: "!DET.pixel_scale_b"
+        plate_scale: "!DET.plate_scale_b"
         array_dict:
           id: [0]
           x_cen: [0.0]
@@ -79,6 +96,8 @@ effects :
     class: DetectorList
     kwargs:
         image_plane_id : 1
+        pixel_scale: "!DET.pixel_scale_g"
+        plate_scale: "!DET.plate_scale_g"
         array_dict:
           id: [1]
           x_cen: [0.0]
@@ -103,6 +122,8 @@ effects :
     class: DetectorList
     kwargs:
         image_plane_id : 2
+        pixel_scale: "!DET.pixel_scale_r"
+        plate_scale: "!DET.plate_scale_r"
         array_dict:
           id: [2]
           x_cen: [0.0]
@@ -127,6 +148,8 @@ effects :
     class: DetectorList
     kwargs:
         image_plane_id : 3
+        pixel_scale: "!DET.pixel_scale_yj"
+        plate_scale: "!DET.plate_scale_yj"
         array_dict:
           id: [3]
           x_cen: [0.0]
@@ -151,6 +174,8 @@ effects :
     class: DetectorList
     kwargs:
         image_plane_id : 4
+        pixel_scale: "!DET.pixel_scale_h"
+        plate_scale: "!DET.plate_scale_h"
         array_dict:
           id: [4]
           x_cen: [0.0]
@@ -175,6 +200,8 @@ effects :
     class: DetectorList
     kwargs:
         image_plane_id : 5
+        pixel_scale: "!DET.pixel_scale_k"
+        plate_scale: "!DET.plate_scale_k"
         array_dict:
           id: [5]
           x_cen: [0.0]
