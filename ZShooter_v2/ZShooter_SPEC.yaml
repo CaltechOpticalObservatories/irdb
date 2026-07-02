@@ -103,7 +103,7 @@ effects:
  - name: ir_blocking_filter_selector
    description: nIR blocking filter
    class: SelectorWheel
-   include: True
+   include: False
    kwargs:
      z_order: [610]
      selector_key: "aperture_id"
