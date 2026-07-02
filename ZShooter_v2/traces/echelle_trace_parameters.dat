@@ -18,7 +18,7 @@
 # slitlength_unit : arcsec
 # detector_angle_unit : deg
 # description : Table that defines the parameters for the analytical echelle trace generator used by EchelleSpectralTraceList effect. m0 = maximum order
-# geometry_note : focal_length is the spectrograph camera focal length used in the analytical dispersion geometry. plate_scale maps on-sky slit coordinate to detector/image-plane mm for the analytical trace generator only. detector_angle rotates the analytical trace footprint before detector placement; detector_pad is applied after that rotation in detector pixel coordinates. nominal_slit_width and fwhm document the slit-width-to-detector-FWHM consistency point used by the analytical model and validation diagnostics.
+# geometry_note : focal_length is the spectrograph camera focal length used in the analytical dispersion geometry. plate_scale maps on-sky slit coordinate to detector/image-plane mm for the analytical trace generator only. detector_angle rotates the analytical trace footprint before detector placement. detector_pad is legacy padding metadata and is not optical trace geometry. nominal_slit_width and fwhm document the slit-width-to-detector-FWHM consistency point used by the analytical model and validation diagnostics.
 # future_trace_note : These analytical consistency columns are not a replacement for future Zemax-export trace tables. Zemax-backed traces should carry their own image-plane geometry and validation metadata.
 # changes :
 # - 2025-10-20 : Initial creation of the file with trace parameters
