@@ -272,37 +272,37 @@ effects :
         - selector_value: [0]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.00001    # [e-/s] level of dark current
+            value: 0.000166    # [e-/s] level of dark current
             dit: "!OBS.dit_blue"
             ndit: "!OBS.ndit_blue"
         - selector_value: [1]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.00001    # [e-/s] level of dark current
+            value: 0.000166    # [e-/s] level of dark current
             dit: "!OBS.dit_green"
             ndit: "!OBS.ndit_green"
         - selector_value: [2]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.00001     # [e-/s] level of dark current
+            value: 0.000000222     # [e-/s] level of dark current
             dit: "!OBS.dit_red"
             ndit: "!OBS.ndit_red"
         - selector_value: [3]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.00001    # [e-/s] level of dark current
+            value: 0.0001    # [e-/s] level of dark current
             dit: "!OBS.dit_yj"
             ndit: "!OBS.ndit_yj"
         - selector_value: [4]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.00001    # [e-/s] level of dark current
+            value: 0.0001    # [e-/s] level of dark current
             dit: "!OBS.dit_h"
             ndit: "!OBS.ndit_h"
         - selector_value: [5]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.00001     # [e-/s] level of dark current
+            value: 0.0001     # [e-/s] level of dark current
             dit: "!OBS.dit_k"
             ndit: "!OBS.ndit_k"
 
@@ -440,4 +440,4 @@ effects :
         - selector_value: [3,4,5]   # APD detectors
           effect_class: Bias
           effect_kwargs:
-            bias: 1040     # APD bias level in electrons
+            bias: 0     # APD bias level in electrons
