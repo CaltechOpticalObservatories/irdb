@@ -14,6 +14,7 @@ properties:
     x: 0
     y: 0
     gain: 1  # should be taken from FPA layout??
+    include_ipc: false     # inter-pixel capacitance
 
 effects:
   - name: full_detector_array
@@ -70,6 +71,15 @@ effects:
     include: False
     kwargs:
       border: [0, 0, 0, 0]
+
+  - name: ipc
+    description: Inter-pixel capacitance
+    class: InterPixelCapacitance
+    include: "!DET.include_ipc"
+    kwargs:   # values from Kannawadi+2016 (H4RG!)
+      alpha_edge:   0.02
+      alpha_corner: 0.002
+      alpha_aniso:  0.
 
   - name: readout_noise
     description: Readout noise frames
