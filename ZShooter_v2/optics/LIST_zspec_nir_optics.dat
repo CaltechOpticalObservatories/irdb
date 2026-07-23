@@ -18,8 +18,6 @@ NIR_ADC_1             0.09    0.0     0       -153        transmission   optics/
 NIR_ADC_2             0.09    0.0     0       -153        transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
 NIR_ADC_3             0.09    0.0     0       -153        transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
 NIR_ADC_4             0.09    0.0     0       -153        transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
-NIR_Derotator_AR_1    0.09    0.0     0       -153        transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
-NIR_Derotator_AR_2    0.09    0.0     0       -153        transmission   optics/TER_nir_arcoat.dat   preoptics          pre_disperser
 NIR_Derotator_Refl_1  0.09    0.0     0       -153        reflection     optics/TER_nir_armirror.dat preoptics          pre_disperser
 NIR_Derotator_Refl_2  0.09    0.0     0       -153        reflection     optics/TER_nir_armirror.dat preoptics          pre_disperser
 NIR_Derotator_Refl_3  0.09    0.0     0       -153        reflection     optics/TER_nir_armirror.dat preoptics          pre_disperser
@@ -29,6 +27,7 @@ NIR_Col1_1            0.09    0.0     0       -153        reflection     optics/
 NIR_Col1_2            0.09    0.0     0       -153        reflection     optics/TER_nir_armirror.dat collimator         pre_disperser
 NIR_Mangin_AR         0.09    0.0     0       -153        transmission   optics/TER_nir_arcoat.dat   collimator         pre_disperser
 NIR_Mangin_Mirror     0.09    0.0     0       -153        reflection     optics/TER_nir_armirror.dat collimator         pre_disperser
+NIR_Mangin_AR         0.09    0.0     0       -153        transmission   optics/TER_nir_arcoat.dat   collimator         pre_disperser
 NIR_Col2              0.09    0.0     0       -153        reflection     optics/TER_nir_armirror.dat collimator         pre_disperser
 NIR_Camera_1          0.09    0.0     0       -153        transmission   optics/TER_nir_arcoat.dat   camera             post_disperser
 NIR_Camera_2          0.09    0.0     0       -153        transmission   optics/TER_nir_arcoat.dat   camera             post_disperser

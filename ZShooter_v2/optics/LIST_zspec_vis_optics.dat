@@ -16,8 +16,6 @@ VIS_Fold              0.09    0.0     0       0             reflection     optic
 VIS_PreOptFirst       0.09    0.0     0       0             transmission   optics/TER_vis_arcoat.dat   preoptics          pre_disperser
 VIS_ADC_12            0.09    0.0     0       0             transmission   optics/TER_vis_arcoat.dat   preoptics          pre_disperser
 VIS_ADC_34            0.09    0.0     0       0             transmission   optics/TER_vis_arcoat.dat   preoptics          pre_disperser
-VIS_Derotator_AR_1    0.09    0.0     0       0             transmission   optics/TER_vis_arcoat.dat   preoptics          pre_disperser
-VIS_Derotator_AR_2    0.09    0.0     0       0             transmission   optics/TER_vis_arcoat.dat   preoptics          pre_disperser
 VIS_Derotator_Refl_1  0.09    0.0     0       0             reflection     optics/TER_vis_armirror.dat preoptics          pre_disperser
 VIS_Derotator_Refl_2  0.09    0.0     0       0             reflection     optics/TER_vis_armirror.dat preoptics          pre_disperser
 VIS_Derotator_Refl_3  0.09    0.0     0       0             reflection     optics/TER_vis_armirror.dat preoptics          pre_disperser
