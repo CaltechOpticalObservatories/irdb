@@ -12,18 +12,18 @@ properties :
     # Per-image-plane scales. These currently match the global ZShooter
     # values in ZShooter.yaml, but live here so each camera can diverge when
     # the final channel optics are available.
-    pixel_scale_b: 0.15556
-    pixel_scale_g: 0.15556
-    pixel_scale_r: 0.15556
-    pixel_scale_yj: 0.15556
-    pixel_scale_h: 0.15556
-    pixel_scale_k: 0.15556
-    plate_scale_b: 10.37067
-    plate_scale_g: 10.37067
-    plate_scale_r: 10.37067
-    plate_scale_yj: 10.37067
-    plate_scale_h: 10.37067
-    plate_scale_k: 10.37067
+    pixel_scale_b: 0.1570545
+    pixel_scale_g: 0.1570545
+    pixel_scale_r: 0.1570545
+    pixel_scale_yj: 0.1570545
+    pixel_scale_h: 0.1570545
+    pixel_scale_k: 0.1570545
+    plate_scale_b: 10.4703
+    plate_scale_g: 10.4703
+    plate_scale_r: 10.4703
+    plate_scale_yj: 10.4703
+    plate_scale_h: 10.4703
+    plate_scale_k: 10.4703
     tapered_qe_example:
       enabled: False
       description: >
