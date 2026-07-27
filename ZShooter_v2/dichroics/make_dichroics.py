@@ -29,10 +29,9 @@ def make_dichroic(
     Returns: (ThermalSpectralElement, ThermalSpectralElement)
 
     """
+
     domain = u.Quantity(domain)
-    full_x = np.linspace(np.floor(domain.min()),
-                         np.ceil(domain.max()),
-                         num=int(np.ceil(np.ptp(domain)).value))
+    full_x = np.linspace(np.floor(domain.min()), np.ceil(domain.max()), num=int(np.ceil(np.ptp(domain)).value))
     full_yt = np.zeros(full_x.size)
     full_yr = np.zeros_like(full_yt)
     in_trans = (full_x >= fold)
@@ -42,20 +41,73 @@ def make_dichroic(
 
     if not isinstance(transition_width, u.Quantity):
         transition_width = transition_width * domain.unit
-    transition_sigma = transition_width / 2 / np.sqrt(2 * np.log(2))
-    ker_f = norm(loc=0, scale=transition_sigma.value).pdf
-    kx = np.arange(0, 10 * transition_width.value, (full_x[1] - full_x[0]).value)
-    kx = np.concatenate([-kx[1:][::-1], kx])
-    ker = ker_f(kx)
 
-    # ker = ker_f(np.linspace(-10*transition_width, 10 * transition_width, num=n))
-    smoothedt = convolve(full_yt, ker, mode='same')
-    smoothedr = convolve(full_yr, ker, mode='same')
+    transition_sigma = transition_width / (2 * norm.ppf(0.98))
+
+    dx = full_x[1] - full_x[0]
+    kx = np.arange(-10 * transition_sigma.value, 10 * transition_sigma.value + dx.value, dx.value)
+    ker = norm.pdf(kx, loc=0, scale=transition_sigma.value)
+    ker /= ker.sum()
+
+    smoothedt = convolve(full_yt, ker, mode="same")
+    smoothedr = convolve(full_yr, ker, mode="same")
 
     return (ThermalSpectralElement(Empirical1D, points=full_x, lookup_table=smoothedr, fill_value=0, method='linear',
                                    bounds_error=False, temperature=temperature),
             ThermalSpectralElement(Empirical1D, points=full_x, lookup_table=smoothedt, fill_value=0, method='linear',
                                    bounds_error=False, temperature=temperature))
+
+
+def make_zshooter_dichroics(
+        channel_ranges: dict[str, u.Quantity],
+        valid_domain: tuple[float, float],
+        transmission: float,
+        reflection: float,
+        range_pad: float,
+        transition_widths: dict[str, u.Quantity]):
+
+    def fold_wavelength(reflection_channels: tuple[str, ...],
+                        transmission_channels: tuple[str, ...]):
+        reflection_edge = max(channel_ranges[channel].max() for channel in reflection_channels)
+        transmission_edge = min(channel_ranges[channel].min() for channel in transmission_channels)
+        return 0.5 * (reflection_edge + transmission_edge)
+
+    def channel_bound(channels: tuple[str, ...], bound: str):
+        values = (getattr(channel_ranges[channel], bound)() for channel in channels)
+        return min(values) if bound == "min" else max(values)
+
+    def split(name: str,
+              reflection_channels: tuple[str, ...],
+              transmission_channels: tuple[str, ...]):
+        channels = reflection_channels + transmission_channels
+        return make_dichroic(
+            valid_domain,
+            transmission,
+            reflection,
+            channel_bound(channels, "min") - range_pad,
+            channel_bound(channels, "max") + range_pad,
+            fold_wavelength(reflection_channels, transmission_channels),
+            transition_width=transition_widths[name],
+        )
+
+    return {
+        "bgr-yjhk": split("bgr-yjhk", ("b", "g", "r"), ("yj", "h", "k")),
+        "b-gr": split("b-gr", ("b",), ("g", "r")),
+        "yj-hk": split("yj-hk", ("yj",), ("h", "k")),
+        "g-r": split("g-r", ("g",), ("r",)),
+        "h-k": split("h-k", ("h",), ("k",)),
+    }
+
+
+def write_dichroic_curves(filename, tx_model, rx_model, header=None):
+    wave = np.arange(3000, 25000, 10)
+    with open(filename, 'w') as f:
+        if header is not None:
+            f.write(header + '\n')
+        f.write('wavelength transmission reflection\n')
+        for x in wave:
+            f.write(f'{(x*u.AA).to(u.um).value:.3f} {tx_model(x):.6f} {rx_model(x):.6f}\n')
+
 
 
 def read_channel_ranges(trace_parameters_path: Path) -> dict[str, u.Quantity]:
@@ -75,55 +127,25 @@ def read_channel_ranges(trace_parameters_path: Path) -> dict[str, u.Quantity]:
             for trace in traces}
 
 
-def make_zshooter_dichroics(channel_ranges: dict[str, u.Quantity], valid_domain: tuple[float, float],
-                            transmission: float, reflection: float, range_pad: float):
-    def fold_wavelength(reflection_channels: tuple[str, ...], transmission_channels: tuple[str, ...]):
-        reflection_edge = max(channel_ranges[channel].max() for channel in reflection_channels)
-        transmission_edge = min(channel_ranges[channel].min() for channel in transmission_channels)
-        return 0.5 * (reflection_edge + transmission_edge)
-
-    def channel_bound(channels: tuple[str, ...], bound: str):
-        values = (getattr(channel_ranges[channel], bound)() for channel in channels)
-        return min(values) if bound == "min" else max(values)
-
-    def split(reflection_channels: tuple[str, ...], transmission_channels: tuple[str, ...]):
-        channels = reflection_channels + transmission_channels
-        return make_dichroic(
-            valid_domain,
-            transmission,
-            reflection,
-            channel_bound(channels, "min") - range_pad,
-            channel_bound(channels, "max") + range_pad,
-            fold_wavelength(reflection_channels, transmission_channels),
-        )
-
-    return {
-        "bgr-yjhk": split(("b", "g", "r"), ("yj", "h", "k")),
-        "b-gr": split(("b",), ("g", "r")),
-        "yj-hk": split(("yj",), ("h", "k")),
-        "g-r": split(("g",), ("r",)),
-        "h-k": split(("h",), ("k",)),
-    }
-
-def write_dichroic_curves(filename, tx_model, rx_model, header=None):
-    wave = np.arange(3000, 25000, 100)
-    with open(filename, 'w') as f:
-        if header is not None:
-            f.write(header + '\n')
-        f.write('wavelength transmission reflection\n')
-        for x in wave:
-            f.write(f'{(x*u.AA).to(u.um).value:.2f} {tx_model(x):.6f} {rx_model(x):.6f}\n')
-
 DICHROIC_PAD = 30 * u.nm
 DICHROIC_TRANS = 0.985
 DICHROIC_REFL = 0.985
 DICHROIC_DOMAIN = (250, 2550) * u.nm
 DICHROIC_DIR = Path(__file__).resolve().parent
+DICHROIC_TRANS_WID = {'bgr-yjhk': 20 *u.nm,
+             'b-gr': 10*u.nm,
+             'g-r': 12 * u.nm,
+             'yj-hk': 30 * u.nm,
+             'h-k': 40 * u.nm}
+
 TRACE_PARAMETERS_PATH = DICHROIC_DIR.parent / "traces" / "echelle_trace_parameters.dat"
+
+
 
 channel_range = read_channel_ranges(TRACE_PARAMETERS_PATH)
 
-dichroics = make_zshooter_dichroics(channel_range, DICHROIC_DOMAIN, DICHROIC_TRANS, DICHROIC_REFL, DICHROIC_PAD)
+dichroics = make_zshooter_dichroics(channel_range, DICHROIC_DOMAIN, DICHROIC_TRANS, DICHROIC_REFL, DICHROIC_PAD,
+                                    transition_widths=DICHROIC_TRANS_WID)
 
 ## First dichroic: I, splits BGR from YJHK
 hdr_i = f"""# name : first_dichroic
