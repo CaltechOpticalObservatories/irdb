@@ -284,7 +284,7 @@ effects :
         - selector_value: [2]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.000000222     # [e-/s] level of dark current
+            value: 0.000166     # [e-/s] level of dark current
             dit: "!OBS.dit_red"
             ndit: "!OBS.ndit_red"
         - selector_value: [3]
