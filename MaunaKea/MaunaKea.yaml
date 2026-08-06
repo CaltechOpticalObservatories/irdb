@@ -22,6 +22,7 @@ properties :
         value: 22.0
         unit: mag
     seeing : "!OBS.seeing"                # [arcsec]
+    skycalc_timeout : 2.0    # [seconds]
 
 effects :
 - name : atmo_transmission    # Also applies thermal emission component using !ATMO.temperature and (1-transmission)
@@ -38,6 +39,7 @@ effects :
   kwargs:
     disable_transmission: True
     disable_airglow: True
+    skycalc_query_timeout: "!ATMO.skycalc_timeout"
     pwv: "!ATMO.pwv"
     wmin: "!SIM.spectral.wave_min"
     wmax: "!SIM.spectral.wave_max"
