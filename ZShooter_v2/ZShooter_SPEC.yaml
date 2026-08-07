@@ -274,7 +274,7 @@ effects:
                axis: y
                position_unit: pix
                position_min: 0
-               position_max: 2048
+               position_max: 4096
                wave_unit: nm
                center_wave_min: "!INST.tapered_qe_b_center_wave_min"
                center_wave_max: "!INST.tapered_qe_b_center_wave_max"
@@ -295,7 +295,7 @@ effects:
                axis: y
                position_unit: pix
                position_min: 0
-               position_max: 2048
+               position_max: 4096
                wave_unit: nm
                center_wave_min: "!INST.tapered_qe_g_center_wave_min"
                center_wave_max: "!INST.tapered_qe_g_center_wave_max"
@@ -316,7 +316,7 @@ effects:
                axis: y
                position_unit: pix
                position_min: 0
-               position_max: 2048
+               position_max: 4096
                wave_unit: nm
                center_wave_min: "!INST.tapered_qe_r_center_wave_min"
                center_wave_max: "!INST.tapered_qe_r_center_wave_max"

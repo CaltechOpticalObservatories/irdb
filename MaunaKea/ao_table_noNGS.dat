@@ -1,0 +1,14 @@
+# description: FWHM as a function of wavelength with AO enhancement
+# wavelength_unit: nm
+# fwhm_unit: arcsec
+# alpha: 3.25
+wavelength    fwhm
+300.         0.343
+450.         0.257
+565.         0.220
+712.5        0.190
+892.5        0.185
+1087.5       0.183
+1282.5       0.182
+1650.        0.175
+2550.        0.182
