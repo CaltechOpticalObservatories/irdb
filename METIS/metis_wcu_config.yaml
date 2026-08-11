@@ -11,6 +11,15 @@ current_fpmask: "open"
 fpmask_angle: 0
 fpmask_shift: [0, 0]
 
+# ------------- Available lasers
+laser_l_wave: 3.39    # [um]
+laser_l_power: 5e-3   # [W]
+laser_t_wave: [4.70]  # [um], array
+laser_t_power: 70e-3  # [W], will be divided by number of lines
+laser_m_wave: 5.26    # [um]
+laser_m_power: 20e-3  # [W]
+
+
 # ------------- Data needed to describe the WCU
 bb_to_is:     "wcu/WCU_BB_to_IS_throughput.fits"
 is_reflect:   "wcu/WCU_IS_reflectivity.dat"
