@@ -24,44 +24,44 @@ properties :
     plate_scale_yj: 10.4703
     plate_scale_h: 10.4703
     plate_scale_k: 10.4703
-    tapered_qe_example:
-      enabled: False
-      description: >
-        Detector-axis tapered QE design metadata. This is documentation for
-        the disabled TaperedQuantumEfficiency selector in ZShooter_SPEC.yaml,
-        not an active detector effect.
-      axis: y
-      position_unit: pix
-      position_min: 0
-      position_max: 2048
-      wave_unit: nm
-      peak: 0.95
-      description_note: >
-        This is a flattop/wide-rolloff coating model, not a Gaussian bandpass.
-        Use flat_width_nm for the plateau width and transition_width_nm for
-        each cosine-edged shoulder.
-      channels:
-        - name: b
-          detector_id: 0
-          image_plane_id: 0
-          blue_nm: 310
-          red_nm: 420
-          flat_width_nm: 100
-          transition_width_nm: 300
-        - name: g
-          detector_id: 1
-          image_plane_id: 1
-          blue_nm: 400
-          red_nm: 600
-          flat_width_nm: 100
-          transition_width_nm: 300
-        - name: r
-          detector_id: 2
-          image_plane_id: 2
-          blue_nm: 580
-          red_nm: 980
-          flat_width_nm: 240
-          transition_width_nm: 500
+#    tapered_qe_example:
+#      enabled: False
+#      description: >
+#        Detector-axis tapered QE design metadata. This is documentation for
+#        the disabled TaperedQuantumEfficiency selector in ZShooter_SPEC.yaml,
+#        not an active detector effect.
+#      axis: y
+#      position_unit: pix
+#      position_min: 0
+#      position_max: 2048
+#      wave_unit: nm
+#      peak: 0.95
+#      description_note: >
+#        This is a flattop/wide-rolloff coating model, not a Gaussian bandpass.
+#        Use flat_width_nm for the plateau width and transition_width_nm for
+#        each cosine-edged shoulder.
+#      channels:
+#        - name: b
+#          detector_id: 0
+#          image_plane_id: 0
+#          blue_nm: 310
+#          red_nm: 420
+#          flat_width_nm: 100
+#          transition_width_nm: 300
+#        - name: g
+#          detector_id: 1
+#          image_plane_id: 1
+#          blue_nm: 400
+#          red_nm: 600
+#          flat_width_nm: 100
+#          transition_width_nm: 300
+#        - name: r
+#          detector_id: 2
+#          image_plane_id: 2
+#          blue_nm: 580
+#          red_nm: 980
+#          flat_width_nm: 240
+#          transition_width_nm: 500
 
 effects :
   - name: detector_b
