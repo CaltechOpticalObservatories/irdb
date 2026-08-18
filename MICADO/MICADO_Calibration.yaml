@@ -56,9 +56,9 @@ effects :
 alias: ATMO
 properties:
   temperature: 7
-  relH: 10          # [5:95:5]
+  relH: 0.2          # [0..1]
   spectrum:
-    filename: MICADO_water_trans.fits
+    filename: MICADO_relay_air_trans.fits
 
 ---
 object: observation

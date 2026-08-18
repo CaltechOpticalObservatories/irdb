@@ -3,7 +3,7 @@
 
       WISE:
         ATM:
-          HUMIDITY: ["#air_transmission.relH!", "[per cent] relative humidity"]
+          HUMIDITY: ["#air_transmission.relH!", "relative humidity"]
         REL:
           PSF:
             FWHM: ["#psf.fwhm!", "[arcsec] FWHM of Gaussian psf"]
