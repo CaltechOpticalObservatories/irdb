@@ -14,14 +14,6 @@ properties :
   relH: "!ATMO.relH"
 
 effects :
-- name : psf
-  description : PSF
-  class : SeeingPSF
-  kwargs:
-    fwhm: 0.02   # [arcsec]
-    interp_psf: "!SIM.psf.interp_psf"
-    interp_order: "!SIM.psf.interp_order"
-
 - name: mca_mirror
   description: deployable mirror for the MCA
   class: SurfaceList
@@ -44,12 +36,20 @@ effects :
     remote_filename: "!ATMO.spectrum.filename"
     #filename: "!ATMO.spectrum.filename"
 
-- name : extra_fits_keywords_calib
-  description : adds extra FITS keywords for Relay Optics
+- name : psf
+  description : PSF
+  class : SeeingPSF
+  kwargs:
+    fwhm: 0.02   # [arcsec]
+    interp_psf: "!SIM.psf.interp_psf"
+    interp_order: "!SIM.psf.interp_order"
+
+- name : calib_fits_keywords
+  description : adds extra FITS keywords for calibration unit
   class : ExtraFitsKeywords
   include : True
   kwargs :
-    filename : FITS_extra_keywords_Standalone_RO.yaml
+    filename : headers/FITS_calibration_keywords.yaml
 
 ### Overrides
 ---
