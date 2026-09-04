@@ -6,6 +6,8 @@ description: H4RG detector 2.5 um cut-off
 date_modified: 2025-08-07
 changes:
   - 2025-08-07 (OC) adapted from MICADO H4RG
+  - 2026-08-06 (OC) use MosaicOutputFormat
+
 properties:
   detector: HAWAII4RG
   image_plane_id: 0
@@ -92,12 +94,12 @@ effects:
       dtype: float32
       gain: "!DET.gain"
 
-  - name: collapse_1d
-    description: Collapse fiber bundle to 1D spectrum
-    class: MosaicCollapseSpectralTraces
-    include:  "!OBS.do_collapse_1d"
+  - name: output_format
+    description: Reformat MOS/mIFU output
+    class: MosaicOutputFormat
     kwargs:
       filename: "!OBS.trace_file"
+      format: "!OBS.output_format"
 
 #  - name: det_nir_fits_keywords
 #    description: FITS keywords specific to NIR detector
