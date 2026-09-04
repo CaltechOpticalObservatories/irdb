@@ -8,6 +8,60 @@ properties :
     temperature : -120
     binx : 1
     biny: 1
+    full_well: 64000
+    # Per-image-plane scales. These currently match the global ZShooter
+    # values in ZShooter.yaml, but live here so each camera can diverge when
+    # the final channel optics are available.
+    pixel_scale_b: 0.1570545
+    pixel_scale_g: 0.1570545
+    pixel_scale_r: 0.1570545
+    pixel_scale_yj: 0.1570545
+    pixel_scale_h: 0.1570545
+    pixel_scale_k: 0.1570545
+    plate_scale_b: 10.4703
+    plate_scale_g: 10.4703
+    plate_scale_r: 10.4703
+    plate_scale_yj: 10.4703
+    plate_scale_h: 10.4703
+    plate_scale_k: 10.4703
+#    tapered_qe_example:
+#      enabled: False
+#      description: >
+#        Detector-axis tapered QE design metadata. This is documentation for
+#        the disabled TaperedQuantumEfficiency selector in ZShooter_SPEC.yaml,
+#        not an active detector effect.
+#      axis: y
+#      position_unit: pix
+#      position_min: 0
+#      position_max: 2048
+#      wave_unit: nm
+#      peak: 0.95
+#      description_note: >
+#        This is a flattop/wide-rolloff coating model, not a Gaussian bandpass.
+#        Use flat_width_nm for the plateau width and transition_width_nm for
+#        each cosine-edged shoulder.
+#      channels:
+#        - name: b
+#          detector_id: 0
+#          image_plane_id: 0
+#          blue_nm: 310
+#          red_nm: 420
+#          flat_width_nm: 100
+#          transition_width_nm: 300
+#        - name: g
+#          detector_id: 1
+#          image_plane_id: 1
+#          blue_nm: 400
+#          red_nm: 600
+#          flat_width_nm: 100
+#          transition_width_nm: 300
+#        - name: r
+#          detector_id: 2
+#          image_plane_id: 2
+#          blue_nm: 580
+#          red_nm: 980
+#          flat_width_nm: 240
+#          transition_width_nm: 500
 
 effects :
   - name: detector_b
@@ -16,12 +70,14 @@ effects :
     class: DetectorList
     kwargs:
         image_plane_id : 0
+        pixel_scale: "!DET.pixel_scale_b"
+        plate_scale: "!DET.plate_scale_b"
         array_dict:
           id: [0]
           x_cen: [0.0]
           y_cen: [0.0]
           x_size: [2048]
-          y_size: [2048]
+          y_size: [4096]
           pixel_size: [0.015]
           angle: [0.0]
           gain: [1.0]
@@ -40,12 +96,14 @@ effects :
     class: DetectorList
     kwargs:
         image_plane_id : 1
+        pixel_scale: "!DET.pixel_scale_g"
+        plate_scale: "!DET.plate_scale_g"
         array_dict:
           id: [1]
           x_cen: [0.0]
           y_cen: [0.0]
           x_size: [2048]
-          y_size: [2048]
+          y_size: [4096]
           pixel_size: [0.015]
           angle: [0.0]
           gain: [1.0]
@@ -64,12 +122,14 @@ effects :
     class: DetectorList
     kwargs:
         image_plane_id : 2
+        pixel_scale: "!DET.pixel_scale_r"
+        plate_scale: "!DET.plate_scale_r"
         array_dict:
           id: [2]
           x_cen: [0.0]
           y_cen: [0.0]
           x_size: [2048]
-          y_size: [2048]
+          y_size: [4096]
           pixel_size: [0.015]
           angle: [0.0]
           gain: [1.0]
@@ -88,6 +148,8 @@ effects :
     class: DetectorList
     kwargs:
         image_plane_id : 3
+        pixel_scale: "!DET.pixel_scale_yj"
+        plate_scale: "!DET.plate_scale_yj"
         array_dict:
           id: [3]
           x_cen: [0.0]
@@ -112,6 +174,8 @@ effects :
     class: DetectorList
     kwargs:
         image_plane_id : 4
+        pixel_scale: "!DET.pixel_scale_h"
+        plate_scale: "!DET.plate_scale_h"
         array_dict:
           id: [4]
           x_cen: [0.0]
@@ -136,6 +200,8 @@ effects :
     class: DetectorList
     kwargs:
         image_plane_id : 5
+        pixel_scale: "!DET.pixel_scale_k"
+        plate_scale: "!DET.plate_scale_k"
         array_dict:
           id: [5]
           x_cen: [0.0]
@@ -171,11 +237,26 @@ effects :
           effect_kwargs:
             dit: "!OBS.dit_green"
             ndit: "!OBS.ndit_green"
-        - selector_value: [2,3,4,5] # CCD_R, APD_YJ, APD_H, and APD_K detectors
+        - selector_value: [2] # CCD_R
           effect_class: ExposureIntegration
           effect_kwargs:
             dit: "!OBS.dit_red"
             ndit: "!OBS.ndit_red"
+        - selector_value: [ 3 ] # YJ detector
+          effect_class: ExposureIntegration
+          effect_kwargs:
+            dit: "!OBS.dit_yj"
+            ndit: "!OBS.ndit_yj"
+        - selector_value: [ 4 ] # H detector
+          effect_class: ExposureIntegration
+          effect_kwargs:
+            dit: "!OBS.dit_h"
+            ndit: "!OBS.ndit_h"
+        - selector_value: [ 5 ] #  K detector
+          effect_class: ExposureIntegration
+          effect_kwargs:
+            dit: "!OBS.dit_k"
+            ndit: "!OBS.ndit_k"
 
   - name: shot_noise
     description : apply poisson shot noise to images
@@ -191,21 +272,39 @@ effects :
         - selector_value: [0]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.00001    # [e-/s] level of dark current for CCD detectors
+            value: 0.000166    # [e-/s] level of dark current
             dit: "!OBS.dit_blue"
             ndit: "!OBS.ndit_blue"
         - selector_value: [1]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.00001    # [e-/s] level of dark current for CCD detectors
+            value: 0.000166    # [e-/s] level of dark current
             dit: "!OBS.dit_green"
             ndit: "!OBS.ndit_green"
-        - selector_value: [2,3,4,5]
+        - selector_value: [2]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.00001     # [e-/s] level of dark current for APD detectors
+            value: 0.000166     # [e-/s] level of dark current
             dit: "!OBS.dit_red"
             ndit: "!OBS.ndit_red"
+        - selector_value: [3]
+          effect_class: DarkCurrent
+          effect_kwargs:
+            value: 0.0001    # [e-/s] level of dark current
+            dit: "!OBS.dit_yj"
+            ndit: "!OBS.ndit_yj"
+        - selector_value: [4]
+          effect_class: DarkCurrent
+          effect_kwargs:
+            value: 0.0001    # [e-/s] level of dark current
+            dit: "!OBS.dit_h"
+            ndit: "!OBS.ndit_h"
+        - selector_value: [5]
+          effect_class: DarkCurrent
+          effect_kwargs:
+            value: 0.0001     # [e-/s] level of dark current
+            dit: "!OBS.dit_k"
+            ndit: "!OBS.ndit_k"
 
   - name: detector_linearity_selector
     description: Selector Wheel for linearity characteristics for CCDs and APDs
@@ -235,13 +334,28 @@ effects :
               incident: [0, 64e3]
               measured: [0, 64e3]
             ndit: "!OBS.ndit_red"
-        - selector_value: [3,4,5]   # APD detectors
+        - selector_value: [3]   # APD detectors
           effect_class: LinearityCurve
           effect_kwargs:
             array_dict:
               incident: [0, 64e3]
               measured: [0, 64e3]
-            ndit: "!OBS.ndit_red"
+            ndit: "!OBS.ndit_yj"
+        - selector_value: [4]   # APD detectors
+          effect_class: LinearityCurve
+          effect_kwargs:
+            array_dict:
+              incident: [0, 64e3]
+              measured: [0, 64e3]
+            ndit: "!OBS.ndit_h"
+        - selector_value: [5 ]   # APD detectors
+          effect_class: LinearityCurve
+          effect_kwargs:
+            array_dict:
+              incident: [ 0, 64e3 ]
+              measured: [ 0, 64e3 ]
+            ndit: "!OBS.ndit_k"
+
 
 #  - name: border_reference_pixels
 #    description: Blanks the signal on N edge row and column pixels
@@ -260,31 +374,57 @@ effects :
         - selector_value: [0]
           effect_class: BasicReadoutNoise
           effect_kwargs:
-            noise_std: 2    # CCD readout noise std dev in electrons
+            noise_std: 0.1    # CCD readout noise std dev in electrons
             ndit: "!OBS.ndit_blue"
         - selector_value: [1]
           effect_class: BasicReadoutNoise
           effect_kwargs:
-            noise_std: 2    # CCD readout noise std dev in electrons
+            noise_std: 0.1    # CCD readout noise std dev in electrons
             ndit: "!OBS.ndit_green"
         - selector_value: [2]
           effect_class: BasicReadoutNoise
           effect_kwargs:
-            noise_std: 2    # CCD readout noise std dev in electrons
+            noise_std: 0.1    # CCD readout noise std dev in electrons
             ndit: "!OBS.ndit_red"
-        - selector_value: [3,4,5]   # APD detectors
+        - selector_value: [3]   # APD detectors
           effect_class: BasicReadoutNoise
           effect_kwargs:
-            noise_std: 2     # APD readout noise std dev in electrons
-            ndit: "!OBS.ndit_red"
+            noise_std: .5    # APD readout noise std dev in electrons
+            ndit: "!OBS.ndit_yj"
+        - selector_value: [ 4 ]   # APD detectors
+          effect_class: BasicReadoutNoise
+          effect_kwargs:
+            noise_std: .5     # APD readout noise std dev in electrons
+            ndit: "!OBS.ndit_h"
+        - selector_value: [ 5 ]   # APD detectors
+          effect_class: BasicReadoutNoise
+          effect_kwargs:
+            noise_std: .5     # APD readout noise std dev in electrons
+            ndit: "!OBS.ndit_k"
 
-  - name: binning
-    description: Applies binning
-    class: UnequalBinnedImage
-    include: False
+  - name: visible_binning_selector
+    description: Applies Binning in Visible
+    class: SelectorWheel
+    include: True
     kwargs:
-        binx: "!DET.binx"
-        biny: "!DET.biny"
+      selector_key: "detector_id" # not really used as the Detector object's id is stored as just "id", but kept for consistency
+      allowed_missing_selector_values: [ 3, 4, 5 ]
+      wheel:
+        - selector_value: [ 0 ]
+          effect_class: UnequalBinnedImage
+          effect_kwargs:
+              binx: "!DET.binx"
+              biny: "!DET.biny"
+        - selector_value: [ 1 ]
+          effect_class: UnequalBinnedImage
+          effect_kwargs:
+              binx: "!DET.binx"
+              biny: "!DET.biny"
+        - selector_value: [ 2 ]
+          effect_class: UnequalBinnedImage
+          effect_kwargs:
+              binx: "!DET.binx"
+              biny: "!DET.biny"
 
   - name: bias_selector
     description: Selector Wheel for bias levels for CCDs and APDs
@@ -300,4 +440,4 @@ effects :
         - selector_value: [3,4,5]   # APD detectors
           effect_class: Bias
           effect_kwargs:
-            bias: 1040     # APD bias level in electrons
+            bias: 0     # APD bias level in electrons

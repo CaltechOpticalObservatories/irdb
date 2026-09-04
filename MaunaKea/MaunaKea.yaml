@@ -21,7 +21,10 @@ properties :
         filter_name : R
         value: 22.0
         unit: mag
-    seeing : 0.7                # [arcsec]
+    seeing : "!OBS.seeing"                # [arcsec]
+    skycalc_timeout : 2.0    # [seconds]
+    ao_table : "ao_table.dat"
+    ao_enabled: False
 
 effects :
 - name : atmo_transmission    # Also applies thermal emission component using !ATMO.temperature and (1-transmission)
@@ -38,6 +41,7 @@ effects :
   kwargs:
     disable_transmission: True
     disable_airglow: True
+    skycalc_query_timeout: "!ATMO.skycalc_timeout"
     pwv: "!ATMO.pwv"
     wmin: "!SIM.spectral.wave_min"
     wmax: "!SIM.spectral.wave_max"
@@ -63,8 +67,8 @@ effects :
   class : AOEnhanceablePSF
   include : True
   kwargs:
-    enable_ao: False
-    ao_table: "ao_table.dat"
+    enable_ao: "!ATMO.ao_enabled"
+    ao_table: "!ATMO.ao_table"
     is_absolute: True
     fwhm:
       seeing: "!ATMO.seeing"

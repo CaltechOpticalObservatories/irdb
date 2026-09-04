@@ -1,0 +1,14 @@
+# author : J. Bailey/J. Fucik
+# date_created : 2026-05-26
+# status : conceptual
+# type : window:transmission
+# wavelength_unit : nm
+# description : Emissivity block
+# changes :
+# - 2025-09-24 : created
+#
+wavelength  transmission
+950    0.995
+1470    0.995
+1500    0.001
+2500    0.001

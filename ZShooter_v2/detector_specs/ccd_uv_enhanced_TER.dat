@@ -1,0 +1,43 @@
+# author : J. Bailey
+# date_created : 2026-05-30
+# type : detector:quantum_efficiency
+# description : e2v CCD UV coating, UV enhanced, digitized from an e2v website QE plot
+# source : e2v website quantum-efficiency plot; local digitization reference was notebooks/img.png and is not archived here
+# wavelength_unit : nm
+# action : transmission
+# changes :
+# - 2026-05-30 : added digitized baseline QE curve for ZShooter channel 0
+wavelength  transmission
+250         0.620
+275         0.540
+300         0.580
+325         0.590
+350         0.560
+375         0.520
+400         0.600
+425         0.620
+450         0.630
+475         0.635
+500         0.640
+525         0.645
+550         0.648
+575         0.650
+600         0.650
+625         0.648
+650         0.645
+675         0.638
+700         0.625
+725         0.605
+750         0.580
+775         0.555
+800         0.520
+825         0.475
+850         0.430
+875         0.380
+900         0.320
+925         0.260
+950         0.195
+975         0.140
+1000        0.095
+1025        0.055
+1050        0.025

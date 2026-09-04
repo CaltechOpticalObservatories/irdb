@@ -6,22 +6,24 @@ description: Effects from the ZShooter optics
 
 properties:
   decouple_detector_from_sky_headers: True  # needed for slit spectroscopy
-  dichroic_names:
-    - bgr-yjhk # First dichroic, splits beam into bgr and yjhk
-    - b-gr     # Next dichroic in bgr arm, splits b from gr
-    - yj-hk    # Next dichroic in yjhk arm, splits yj from hk
-    - g-r      # Next dichroic in gr arm, splits g from r
-    - h-k      # Next dichroic in hk arm, splits h from k
-  ubvis_slit_names:
-    - "ubvis_half_arcsec"
-    - "ubvis_one_arcsec"
-    - "ubvis_two_arcsec"
-  nir_slit_names:
-    - "nir_half_arcsec"
-    - "nir_one_arcsec"
-    - "nir_two_arcsec"
-  ubvis_curr_slit: "ubvis_one_arcsec"
-  nir_curr_slit: "nir_one_arcsec"
+  include_diffuse_emmisivity: True
+  vis_curr_slit: 0.70
+  nir_curr_slit: 0.70
+  tapered_qe_peak: 0.95
+  tapered_qe_floor: 0.0
+  tapered_qe_diffuse_position_samples: 20
+  tapered_qe_b_center_wave_min: 308
+  tapered_qe_b_center_wave_max: 420
+  tapered_qe_b_flat_width: 100
+  tapered_qe_b_transition_width: 300
+  tapered_qe_g_center_wave_min: 400
+  tapered_qe_g_center_wave_max: 600
+  tapered_qe_g_flat_width: 100
+  tapered_qe_g_transition_width: 300
+  tapered_qe_r_center_wave_min: 580
+  tapered_qe_r_center_wave_max: 980
+  tapered_qe_r_flat_width: 240
+  tapered_qe_r_transition_width: 500
 
 # There are 6 image planes in ZSpec: b, g, r, yj, h, k. We use the DichroicTree effect to establish the branching
 # in the beginning of the flow, using aperture_id as the identifying key. Though physically there may be other
@@ -35,7 +37,12 @@ effects:
    include: True
    kwargs:
      tree_filename: "dichroics/dichroic_tree.dat"
-     dichroic_names: "!INST.dichroic_names"
+     dichroic_names:
+       - bgr-yjhk # First dichroic, splits beam into bgr and yjhk
+       - b-gr     # Next dichroic in bgr arm, splits b from gr
+       - yj-hk    # Next dichroic in yjhk arm, splits yj from hk
+       - g-r      # Next dichroic in gr arm, splits g from r
+       - h-k      # Next dichroic in hk arm, splits h from k
      filename_format: "dichroics/TER_dichroic_{}.dat"
 
 
@@ -49,24 +56,78 @@ effects:
        - selector_value: [0, 1, 2]
          effect_class: SlitWheel
          effect_kwargs:
-           slit_names: "!INST.ubvis_slit_names"   # as live property to allow dynamic updates
-           filename_format: "slits/{}.dat"
-           current_slit: "!INST.ubvis_curr_slit"  # as live property to allow dynamic updates
-
+           slit_names:
+             - 1.25
+             - 0.70
+             - 0.57
+             - 0.50
+             - 0.42
+             - 0.37
+             - 0.33
+           filename_format: "slits/slit_{:.2f}_as.dat"
+           current_slit: "!INST.vis_curr_slit"  # as live property to allow dynamic updates
        - selector_value: [3, 4, 5]
          effect_class: SlitWheel
          effect_kwargs:
-           slit_names: "!INST.nir_slit_names"   # as live property to allow dynamic updates
-           filename_format: "slits/{}.dat"
+           slit_names:
+             - 1.25
+             - 0.70
+             - 0.57
+             - 0.50
+             - 0.42
+             - 0.37
+             - 0.33
+           filename_format: "slits/slit_{:.2f}_as.dat"
            current_slit: "!INST.nir_curr_slit"  # as live property to allow dynamic updates
 
 
-# - name: some_optics
-#   description: placeholder for other optics in ZShooter
-#   class: SurfaceList
-#   include: False
-#   kwargs:
-#     filename: "LIST_ZSHOOTER_optics.dat"
+ - name: channel_optics_selector
+   description: ZSpec channel optics
+   class: SelectorWheel
+   include: True
+   kwargs:
+     z_order: [610]
+     selector_key: "aperture_id"
+     wheel:
+       - selector_value: [0, 1, 2]
+         effect_class: SurfaceList
+         effect_kwargs:
+           filename: "optics/LIST_zspec_vis_optics.dat"
+
+       - selector_value: [3, 4, 5]
+         effect_class: SurfaceList
+         effect_kwargs:
+           filename: "optics/LIST_zspec_nir_optics.dat"
+
+
+ - name: ir_blocking_filter_selector
+   description: nIR blocking filter
+   class: SelectorWheel
+   include: False
+   kwargs:
+     z_order: [610]
+     selector_key: "aperture_id"
+     allowed_missing_selector_values: [ 0, 1, 2 ]
+     emission_phase: post_disperser
+     wheel:
+       - selector_value: [ 3 ]
+         effect_class: TERCurve
+         effect_kwargs:
+           temperature: -198
+           temperature_unit: deg_D
+           filename: "optics/TER_nir_blocking_filtYJ.dat"
+       - selector_value: [ 4 ]
+         effect_class: TERCurve
+         effect_kwargs:
+           temperature: -198
+           temperature_unit: deg_D
+           filename: "optics/TER_nir_blocking_filtH.dat"
+       - selector_value: [ 5 ]
+         effect_class: TERCurve
+         effect_kwargs:
+           temperature: -198
+           temperature_unit: deg_D
+           filename: "optics/TER_nir_blocking_filtK.dat"
 
 
 ## Need only one entry for trace efficiency and trace list for all arms as the same FITS description contains info for all arms and orders
@@ -94,6 +155,97 @@ effects:
    kwargs:
      filename: "traces/echelle_trace_parameters.dat"
 
+ - name: detector_qe_selector
+   description: Throughput-only QE curves for different detectors
+   class: SelectorWheel
+   include: False
+   kwargs:
+     z_order: [610]
+     selector_key: "aperture_id"
+     wheel:
+       - selector_value: [0] # CCD_B, e2v UV coating, UV enhanced
+         effect_class: SpectralQuantumEfficiency
+         effect_kwargs:
+           filename: "detector_specs/ccd_uv_enhanced_TER.dat"
+       - selector_value: [1] # CCD_G, placeholder inherited from old CCD_B curve
+         effect_class: SpectralQuantumEfficiency
+         effect_kwargs:
+           filename: "detector_specs/ccd_ml_uv_enhanced_TER.dat"
+       - selector_value: [2] # CCD_R, e2v ML coating, UV enhanced
+         effect_class: SpectralQuantumEfficiency
+         effect_kwargs:
+           filename: "detector_specs/ccd_ml2_uv_enhanced_hirho_TER.dat"
+       - selector_value: [3, 4, 5] # APD_H, APD_K
+         effect_class: SpectralQuantumEfficiency
+         effect_kwargs:
+           filename: "detector_specs/APD_TER.dat"
+
+ - name: detector_qe_selector
+   description: >
+     Active detector QE selector. Visible channels use detector-axis tapered
+     flattop QE coatings; NIR channels use spectral APD QE. The flattop
+     bandpass peak is 95%, with broad cosine-edged transitions to a 30% floor.
+   class: SelectorWheel
+   include: True
+   kwargs:
+     z_order: [610]
+     selector_key: "aperture_id"
+     wheel:
+       - selector_value: [0] # B channel: 310-420 nm, flat width = 100 nm
+         effect_class: TaperedQuantumEfficiency
+         effect_kwargs:
+           axis: y
+           position_unit: pix
+           position_min: 0
+           position_max: 2048
+           wave_unit: nm
+           center_wave_min: "!INST.tapered_qe_b_center_wave_min"
+           center_wave_max: "!INST.tapered_qe_b_center_wave_max"
+           flat_width: "!INST.tapered_qe_b_flat_width"
+           transition_width: "!INST.tapered_qe_b_transition_width"
+           peak: "!INST.tapered_qe_peak"
+           floor: "!INST.tapered_qe_floor"
+           clip_position: True
+           diffuse_position_samples: "!INST.tapered_qe_diffuse_position_samples"
+       - selector_value: [1] # G channel: 400-600 nm, flat width = 100 nm
+         effect_class: TaperedQuantumEfficiency
+         effect_kwargs:
+           axis: y
+           position_unit: pix
+           position_min: 0
+           position_max: 2048
+           wave_unit: nm
+           center_wave_min: "!INST.tapered_qe_g_center_wave_min"
+           center_wave_max: "!INST.tapered_qe_g_center_wave_max"
+           flat_width: "!INST.tapered_qe_g_flat_width"
+           transition_width: "!INST.tapered_qe_g_transition_width"
+           peak: "!INST.tapered_qe_peak"
+           floor: "!INST.tapered_qe_floor"
+           clip_position: True
+           diffuse_position_samples: "!INST.tapered_qe_diffuse_position_samples"
+       - selector_value: [2] # R channel: 580-980 nm, flat width = 240 nm
+         effect_class: TaperedQuantumEfficiency
+         effect_kwargs:
+           axis: y
+           position_unit: pix
+           position_min: 0
+           position_max: 2048
+           wave_unit: nm
+           center_wave_min: "!INST.tapered_qe_r_center_wave_min"
+           center_wave_max: "!INST.tapered_qe_r_center_wave_max"
+           flat_width: "!INST.tapered_qe_r_flat_width"
+           transition_width: "!INST.tapered_qe_r_transition_width"
+           peak: "!INST.tapered_qe_peak"
+           floor: "!INST.tapered_qe_floor"
+           clip_position: True
+           diffuse_position_samples: "!INST.tapered_qe_diffuse_position_samples"
+       - selector_value: [3, 4, 5] # APD_H, APD_K
+         effect_class: SpectralQuantumEfficiency
+         effect_kwargs:
+           filename: "detector_specs/APD_TER.dat"
+
+
+
  - name: trace_list_analytical
    description: list of spectral order trace geometry on the focal plane calculated from analytical model for Echelle
    class: EchelleSpectralTraceList
@@ -103,3 +255,96 @@ effects:
      wave_colname: "wavelength"
      s_colname: "s"
      col_number_start: 1
+
+ - name: post_echelle_diffuse_background_selector
+   description: Post-echelle camera emission injected as diffuse image-plane background
+   class: SelectorWheel
+   include: "!INST.include_diffuse_emmisivity"
+   kwargs:
+     z_order: [760]
+     selector_key: "image_plane_id"
+     wheel:
+       - selector_value: [0] # CCD_B, e2v UV coating, UV enhanced
+         effect_class: PostDisperserDiffuseBackground
+         effect_kwargs:
+           filename: "optics/LIST_zspec_vis_optics.dat"
+           detector_qe:
+             class: TaperedQuantumEfficiency
+             kwargs:
+               axis: y
+               position_unit: pix
+               position_min: 0
+               position_max: 4096
+               wave_unit: nm
+               center_wave_min: "!INST.tapered_qe_b_center_wave_min"
+               center_wave_max: "!INST.tapered_qe_b_center_wave_max"
+               flat_width: "!INST.tapered_qe_b_flat_width"
+               transition_width: "!INST.tapered_qe_b_transition_width"
+               peak: "!INST.tapered_qe_peak"
+               floor: "!INST.tapered_qe_floor"
+               clip_position: True
+               diffuse_position_samples: "!INST.tapered_qe_diffuse_position_samples"
+           wave_bin: 0.001
+       - selector_value: [1] # CCD_G, placeholder inherited from old CCD_B curve
+         effect_class: PostDisperserDiffuseBackground
+         effect_kwargs:
+           filename: "optics/LIST_zspec_vis_optics.dat"
+           detector_qe:
+             class: TaperedQuantumEfficiency
+             kwargs:
+               axis: y
+               position_unit: pix
+               position_min: 0
+               position_max: 4096
+               wave_unit: nm
+               center_wave_min: "!INST.tapered_qe_g_center_wave_min"
+               center_wave_max: "!INST.tapered_qe_g_center_wave_max"
+               flat_width: "!INST.tapered_qe_g_flat_width"
+               transition_width: "!INST.tapered_qe_g_transition_width"
+               peak: "!INST.tapered_qe_peak"
+               floor: "!INST.tapered_qe_floor"
+               clip_position: True
+               diffuse_position_samples: "!INST.tapered_qe_diffuse_position_samples"
+           wave_bin: 0.001
+       - selector_value: [2] # CCD_R, e2v ML coating, UV enhanced
+         effect_class: PostDisperserDiffuseBackground
+         effect_kwargs:
+           filename: "optics/LIST_zspec_vis_optics.dat"
+           detector_qe:
+             class: TaperedQuantumEfficiency
+             kwargs:
+               axis: y
+               position_unit: pix
+               position_min: 0
+               position_max: 4096
+               wave_unit: nm
+               center_wave_min: "!INST.tapered_qe_r_center_wave_min"
+               center_wave_max: "!INST.tapered_qe_r_center_wave_max"
+               flat_width: "!INST.tapered_qe_r_flat_width"
+               transition_width: "!INST.tapered_qe_r_transition_width"
+               peak: "!INST.tapered_qe_peak"
+               floor: "!INST.tapered_qe_floor"
+               clip_position: True
+               diffuse_position_samples: "!INST.tapered_qe_diffuse_position_samples"
+           wave_bin: 0.001
+       - selector_value: [3] # APD_YJ
+         effect_class: PostDisperserDiffuseBackground
+         effect_kwargs:
+           filename: "optics/LIST_zspec_nir_optics.dat"
+           detector_qe_filename: "detector_specs/APD_TER.dat"
+           downstream_throughput_filename: "optics/TER_nir_blocking_filtYJ.dat"
+           wave_bin: 0.001
+       - selector_value: [4] # APD_H
+         effect_class: PostDisperserDiffuseBackground
+         effect_kwargs:
+           filename: "optics/LIST_zspec_nir_optics.dat"
+           detector_qe_filename: "detector_specs/APD_TER.dat"
+           downstream_throughput_filename: "optics/TER_nir_blocking_filtH.dat"
+           wave_bin: 0.001
+       - selector_value: [5] # APD_K
+         effect_class: PostDisperserDiffuseBackground
+         effect_kwargs:
+           filename: "optics/LIST_zspec_nir_optics.dat"
+           detector_qe_filename: "detector_specs/APD_TER.dat"
+           downstream_throughput_filename: "optics/TER_nir_blocking_filtK.dat"
+           wave_bin: 0.001
