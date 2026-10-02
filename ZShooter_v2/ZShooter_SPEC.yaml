@@ -64,6 +64,7 @@ effects:
              - 0.42
              - 0.37
              - 0.33
+             - 0.30
            filename_format: "slits/slit_{:.2f}_as.dat"
            current_slit: "!INST.vis_curr_slit"  # as live property to allow dynamic updates
        - selector_value: [3, 4, 5]
@@ -77,6 +78,7 @@ effects:
              - 0.42
              - 0.37
              - 0.33
+             - 0.30
            filename_format: "slits/slit_{:.2f}_as.dat"
            current_slit: "!INST.nir_curr_slit"  # as live property to allow dynamic updates
 
@@ -197,7 +199,7 @@ effects:
            axis: y
            position_unit: pix
            position_min: 0
-           position_max: 2048
+           position_max: 4096
            wave_unit: nm
            center_wave_min: "!INST.tapered_qe_b_center_wave_min"
            center_wave_max: "!INST.tapered_qe_b_center_wave_max"
@@ -213,7 +215,7 @@ effects:
            axis: y
            position_unit: pix
            position_min: 0
-           position_max: 2048
+           position_max: 4096
            wave_unit: nm
            center_wave_min: "!INST.tapered_qe_g_center_wave_min"
            center_wave_max: "!INST.tapered_qe_g_center_wave_max"
@@ -229,7 +231,7 @@ effects:
            axis: y
            position_unit: pix
            position_min: 0
-           position_max: 2048
+           position_max: 4096
            wave_unit: nm
            center_wave_min: "!INST.tapered_qe_r_center_wave_min"
            center_wave_max: "!INST.tapered_qe_r_center_wave_max"

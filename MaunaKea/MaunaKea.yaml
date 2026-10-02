@@ -22,7 +22,7 @@ properties :
         value: 22.0
         unit: mag
     seeing : "!OBS.seeing"                # [arcsec]
-    skycalc_timeout : 2.0    # [seconds]
+    skycalc_timeout : 30.0    # [seconds]
     ao_table : "ao_table.dat"
     ao_enabled: False
 
