@@ -22,14 +22,14 @@ properties :
         value: 22.0
         unit: mag
     seeing : "!OBS.seeing"                # [arcsec]
-    skycalc_timeout : 2.0    # [seconds]
+    skycalc_timeout : 30.0    # [seconds]
     ao_table : "ao_table.dat"
     ao_enabled: False
 
 effects :
 - name : atmo_transmission    # Also applies thermal emission component using !ATMO.temperature and (1-transmission)
   description : Atmospheric transmission for Mauna Kea from TAPAS
-  class : TERCurve
+  class : TAPASTERCurve
   include : True
   kwargs:
     filename: "TER_maunakea_tapas.dat"
