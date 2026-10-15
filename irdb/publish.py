@@ -6,9 +6,8 @@ import argparse
 import logging
 import getpass
 from typing import Optional
-from warnings import warn
 from pathlib import Path
-from datetime import datetime as dt, timezone
+from datetime import datetime as dt, UTC
 from zipfile import ZIP_DEFLATED, ZipFile
 
 import yaml
@@ -16,8 +15,6 @@ import paramiko
 
 from scopesim.server import database as db
 
-# After 3.11, can just import UTC directly from datetime
-UTC = timezone.utc
 
 PATH_HERE = Path(__file__).parent
 PKGS_DIR = PATH_HERE.parent
@@ -42,37 +39,11 @@ class Password:
         return self.value == other.value
 
 
-def publish(pkg_names=None, compilezip=False, upload=True,
-            login=None, password=None, update_version=True):
-    """
-    Should be as easy as just calling this function to republish all packages.
-
-    Parameters
-    ----------
-    pkg_names : list
-    compilezip : str, bool
-        [False, "stable", "dev"]
-    upload : bool
-    login : str
-    password : str
-    update_version : bool
-        True (default): update version in <pkg_name>/version.yaml
-        False: use version in <pkg_name>/version.yaml
-        See make_package().
-    """
-    warn(("This function is deprecated and will be removed by the end of 2025."),
-         FutureWarning, stacklevel=2)
-    for pkg_name in pkg_names:
-        if compilezip:
-            make_package(pkg_name,
-                         stable=(compilezip == "stable"),
-                         keep_version=not update_version)
-        if upload:
-            push_to_server(pkg_name, login=login, password=password)
-
-
-def make_package(pkg_name: str, stable: bool = False,
-                 keep_version: bool = False) -> str:
+def make_package(
+    pkg_name: str,
+    stable: bool = False,
+    keep_version: bool = False,
+) -> str:
     """
     Make a package (todo: update this description!).
 
