@@ -40,12 +40,12 @@ properties:
   ndit_h: 1                # number of exposures for H arms
   dit_k: 300.0              # exposure time for K arms
   ndit_k: 1                # number of exposures for K arms
-  imager_dit_a: 10.
-  imager_ndit_a: 1.
-  imager_dit_b: 10.
-  imager_ndit_b: 1.
-  imager_dit_c: 10.
-  imager_ndit_c: 1.
+  imager_dit_u: 10.
+  imager_ndit_u: 1.
+  imager_dit_v: 10.
+  imager_ndit_v: 1.
+  imager_dit_z: 10.
+  imager_ndit_z: 1.
 
 mode_yamls:
 - object: instrument

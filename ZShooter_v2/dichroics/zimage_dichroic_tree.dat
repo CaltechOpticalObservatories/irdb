@@ -2,7 +2,7 @@
 # author : Y. Sharma
 # date_created : 2026-10-14
 # description : Image plane ID mapping 0->u, 1->v, 2->z
-aperture_id        u-vz     v-z
+image_plane_id        u-vz     v-z
 0                    R       X
 1                    T       R
 2                    T       T

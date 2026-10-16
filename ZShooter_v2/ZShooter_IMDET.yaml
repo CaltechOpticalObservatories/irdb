@@ -9,12 +9,12 @@ properties :
     binx : 1
     biny: 1
     full_well: 7000
-    pixel_scale_A: 0.0511  #"/pix
-    pixel_scale_B: 0.0511
-    pixel_scale_C: 0.0511
-    plate_scale_A: 11.1087 #"/mm
-    plate_scale_B: 11.1087
-    plate_scale_C: 11.1087
+    pixel_scale_u: 0.0511  #"/pix
+    pixel_scale_v: 0.0511
+    pixel_scale_z: 0.0511
+    plate_scale_u: 11.1087 #"/mm
+    plate_scale_v: 11.1087
+    plate_scale_z: 11.1087
 
 effects :
   - name: detector_u

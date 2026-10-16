@@ -172,7 +172,7 @@ hdr_zi_z = f"""# name : zimager_z_dichroic
 # wavelength_unit : um
 # changes :
 #"""
-write_dichroic_curves(DICHROIC_DIR / 'TER_dichroic_u-v.dat', dichroics['u-vz'][1]._model, dichroics['u-vz'][0]._model, header=hdr_zi_u)
+write_dichroic_curves(DICHROIC_DIR / 'TER_dichroic_u-vz.dat', dichroics['u-vz'][1]._model, dichroics['u-vz'][0]._model, header=hdr_zi_u)
 write_dichroic_curves(DICHROIC_DIR / 'TER_dichroic_v-z.dat', dichroics['v-z'][1]._model, dichroics['v-z'][0]._model, header=hdr_zi_z)
 
 ## First dichroic: I, splits BGR from YJHK
