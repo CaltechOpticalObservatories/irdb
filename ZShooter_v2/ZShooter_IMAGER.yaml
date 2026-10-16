@@ -3,10 +3,11 @@ alias: INST
 name: ZIMAGE
 description: Effects from the ZIMAGE optics
 
-#properties:
+properties:
+  imager_filter_v: g
 
 # There are 3 image planes in ZIMAGE: 3 filters. We use the DichroicTree effect to establish the branching
-# in the beginning of the flow, using aperture_id as the identifying key. Though physically there may be other
+# in the beginning of the flow, using image_plane_id as the identifying key. Though physically there may be other
 # optical elements in between dichroics, here all dichroics are considered together in a tree. Other effects that
 # act selectively on different arms can be orchestrated using SelectorWheel effects.
 
@@ -21,6 +22,7 @@ effects:
    class: DichroicTree
    include: True
    kwargs:
+     z_order: [117, 217, 517]
      tree_filename: "dichroics/zimage_dichroic_tree.dat"
      dichroic_names:
        - u-vz     # First dichroic, splits beam into u and red
@@ -32,8 +34,8 @@ effects:
    class: SelectorWheel
    include: True
    kwargs:
-     z_order: [610]
-     selector_key: "aperture_id"
+     z_order: [220, 520]
+     selector_key: "image_plane_id"
      wheel:
        - selector_value: [0]
          effect_class: SurfaceList
@@ -50,15 +52,31 @@ effects:
          effect_kwargs:
            filename: "optics/LIST_zimage_z_optics.dat"
 
- - name: detector_qe_selector
-   description: Throughput-only QE curves for different detectors
+ - name: filter_wheel_selector
+   description: ZIMAGE v-channel filter wheel
    class: SelectorWheel
    include: True
    kwargs:
-     z_order: [610]
-     selector_key: "aperture_id"
+     z_order: [224, 524]
+     selector_key: "image_plane_id"
+     allowed_missing_selector_values: [0, 2]
+     wheel:
+       - selector_value: [1]
+         effect_class: FilterWheel
+         effect_kwargs:
+           filter_names: [g, r, i]
+           filename_format: "filters/sloan_{}.dat"
+           current_filter: "!INST.imager_filter_v"
+
+ - name: detector_qe_selector
+   description: ZIMAGE detector quantum efficiency
+   class: SelectorWheel
+   include: True
+   kwargs:
+     z_order: [513]
+     selector_key: "image_plane_id"
      wheel:
        - selector_value: [0, 1, 2]
-         effect_class: SpectralQuantumEfficiency
+         effect_class: QuantumEfficiencyCurve
          effect_kwargs:
            filename: "detector_specs/quest2_TER.dat"

@@ -16,3 +16,4 @@ u_element_2           0.09    0.0     0       0           transmission   optics/
 u_element_3           0.09    0.0     0       0           transmission   optics/TER_vis_arcoat.dat
 u_element_4           0.09    0.0     0       0           transmission   optics/TER_vis_arcoat.dat
 u_element_5           0.09    0.0     0       0           transmission   optics/TER_vis_arcoat.dat
+u_filter              0.09    0.0     0       0           transmission   filters/sloan_u.dat

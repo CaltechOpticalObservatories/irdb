@@ -16,3 +16,4 @@ z_element_2           0.09    0.0     0       0           transmission   optics/
 z_element_3           0.09    0.0     0       0           transmission   optics/TER_vis_arcoat.dat
 z_element_4           0.09    0.0     0       0           transmission   optics/TER_vis_arcoat.dat
 z_element_5           0.09    0.0     0       0           transmission   optics/TER_vis_arcoat.dat
+z_filter              0.09    0.0     0       0           transmission   filters/sloan_z.dat
