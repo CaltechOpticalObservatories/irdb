@@ -258,10 +258,6 @@ effects :
             dit: "!OBS.dit_k"
             ndit: "!OBS.ndit_k"
 
-  - name: shot_noise
-    description : apply poisson shot noise to images
-    class: ShotNoise
-
   - name: dark_current_selector
     description: Selector Wheel for dark current levels for CCDs and APDs
     class: SelectorWheel
@@ -305,6 +301,10 @@ effects :
             value: 0.0001     # [e-/s] level of dark current
             dit: "!OBS.dit_k"
             ndit: "!OBS.ndit_k"
+
+  - name: shot_noise
+    description: Poisson statistics of integrated source, background and dark charge
+    class: ShotNoise
 
   - name: detector_linearity_selector
     description: Selector Wheel for linearity characteristics for CCDs and APDs

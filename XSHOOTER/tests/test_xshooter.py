@@ -171,7 +171,7 @@ def test_mapped_line_photons_centroid_and_variance(train, aid, name):
         illumination = np.exp(-.5*(eta/.2)**2)
         cube = line[:, None, None]*illumination[None, :, None]*np.exp(-.5*(xi/.35)**2)[None, None, :]
         header = fits.Header({'CTYPE1': 'LINEAR', 'CTYPE2': 'LINEAR', 'CTYPE3': 'WAVE', 'CUNIT1': 'arcsec', 'CUNIT2': 'arcsec', 'CUNIT3': 'um', 'CDELT1': step, 'CDELT2': step, 'CDELT3': wave[1]-wave[0], 'CRPIX1': 1., 'CRPIX2': 1., 'CRPIX3': 1., 'CRVAL1': xi[0], 'CRVAL2': eta[0], 'CRVAL3': wave[0]})
-        metadata = {'wave_min': wave[0]*u.um, 'wave_max': wave[-1]*u.um, 'xi_min': xi[0]*u.arcsec, 'xi_max': xi[-1]*u.arcsec}
+        metadata = {'wave_min': wave[0]*u.um, 'wave_max': wave[-1]*u.um, 'xi_min': xi[0]*u.arcsec, 'xi_max': xi[-1]*u.arcsec, 'eta_min': -.5*u.arcsec, 'eta_max': .5*u.arcsec}
         fov = SimpleNamespace(cube=fits.ImageHDU(cube, header), header=header, detector_header=train.image_planes[aid].header, meta=metadata, trace_id=name)
         mapped = trace.map_spectra_to_focal_plane(fov)
         # Integrate source radiance over wavelength and both sky coordinates.
