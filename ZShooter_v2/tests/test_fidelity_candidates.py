@@ -108,3 +108,36 @@ def test_native_trace_photon_normalization_is_independent_of_sky_grid(traces, ch
         image = trace.map_spectra_to_focal_plane(fov)
         expected = cube.sum() * step * eta_step * (wave[1]-wave[0])
         assert image.data.sum() == pytest.approx(expected, rel=.01)
+
+
+@pytest.mark.parametrize('channel,center', [('b', .365), ('g', .53), ('r', .75), ('yj', 1.2), ('h', 1.65), ('k', 2.2)])
+def test_observed_point_flux_converges_with_spatial_grid(monkeypatch, channel, center):
+    from synphot import SourceSpectrum, ConstFlux1D
+    from synphot.units import PHOTLAM
+
+    monkeypatch.setitem(sim.rc.__config__, '!SIM.file.local_packages_path', str(ROOT.parent))
+    # Keep the prescribed optics, effective PSF and native detector pitch.
+    # Sky and ADC are excluded to isolate spatial integration rather than
+    # changing a quantized atmospheric displacement between grids.
+    ignore = ['atmo_transmission', 'continuum_emission', 'airglow_and_interline_continuum', 'adc_residuals']
+    source = sim.Source(x=[.037], y=[.13], ref=[0], weight=[1.], spectra=[SourceSpectrum(ConstFlux1D, amplitude=.01*PHOTLAM)])
+    rates = []
+    sky_steps = []
+    for step in [.1570545, .07852725, .039263625]:
+        properties = {'!INST.pixel_scale': step, '!SIM.spectral.wave_min': center*.999, '!SIM.spectral.wave_max': center*1.001, '!OBS.seeing': .7, '!OBS.mjdobs': 60310.25, '!INST.vis_curr_slit': .7, '!INST.nir_curr_slit': .7, '!INST.include_diffuse_emissivity': False}
+        properties.update({f'!DET.pixel_scale_{arm}': step for arm in ('b', 'g', 'r', 'yj', 'h', 'k')})
+        commands = sim.UserCommands(use_instrument='ZShooter_v2', properties=properties)
+        for document in commands.yaml_dicts:
+            if 'effects' in document:
+                document['effects'] = [effect for effect in document['effects'] if effect['name'] not in ignore]
+        train = sim.OpticalTrain(commands)
+        sky_steps.append(abs(train.fov_manager.fovs[0].header['CDELT1'])*3600)
+        assert all(manager[0]._native_header['CDELT1D'] == .015 for manager in train.detector_managers)
+        train.observe(None)
+        sky = sum(plane.data.sum() for plane in train.image_planes)
+        train.observe(source)
+        rates.append(sum(plane.data.sum() for plane in train.image_planes) - sky)
+    print(f'{channel}: source e/s {rates}; relative to finest {np.array(rates)/rates[-1]}')
+    assert sky_steps[0] > sky_steps[1] > sky_steps[2]
+    assert np.all(np.array(rates) > 0)
+    np.testing.assert_allclose(np.array(rates)/rates[-1], 1., rtol=.02)
