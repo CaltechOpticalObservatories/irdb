@@ -1,0 +1,198 @@
+object: detector
+alias: DET
+name: XSHOOTER_detectors
+properties:
+  binx_uvb: 1
+  biny_uvb: 1
+  binx_vis: 1
+  biny_vis: 1
+  readout_mode_uvb: slow
+  readout_mode_vis: slow
+  gain_nir: 2.29
+  dark_uvb: 0.0005555555555555556
+  dark_vis: 0.0005555555555555556
+  dark_nir: 0.02
+  # Numerical sky sampling / physical detector pitch, not an optical plate scale.
+  plate_scale_ccd: 3.333333333333333
+  plate_scale_nir: 2.777777777777778
+
+effects:
+  - name: uvb_readout_parameters
+    class: DetectorModePropertiesSetter
+    kwargs:
+      mode_key: '!DET.readout_mode_uvb'
+      mode_properties:
+        slow: {'!DET.gain_uvb': 0.63, '!DET.ron_uvb': 2.4}
+        fast: {'!DET.gain_uvb': 1.83, '!DET.ron_uvb': 4.6}
+  - name: vis_readout_parameters
+    class: DetectorModePropertiesSetter
+    kwargs:
+      mode_key: '!DET.readout_mode_vis'
+      mode_properties:
+        slow: {'!DET.gain_vis': 0.64, '!DET.ron_vis': 3.4}
+        fast: {'!DET.gain_vis': 1.64, '!DET.ron_vis': 6.6}
+
+  - name: detector_uvb
+    class: DetectorList
+    kwargs:
+      image_plane_id: 0
+      pixel_scale: '!INST.pixel_scale'
+      plate_scale: '!DET.plate_scale_ccd'
+      array_dict:
+        id: [0]
+        x_cen: [0.0]
+        y_cen: [0.0]
+        x_size: [2048]
+        y_size: [3000]
+        pixel_size: [0.015]
+        angle: [0.0]
+        gain: [1.0]
+      x_cen_unit: mm
+      y_cen_unit: mm
+      x_size_unit: pixel
+      y_size_unit: pixel
+      pixel_size_unit: mm
+      angle_unit: deg
+      gain_unit: electron/adu
+  - name: detector_vis
+    class: DetectorList
+    kwargs:
+      image_plane_id: 1
+      pixel_scale: '!INST.pixel_scale'
+      plate_scale: '!DET.plate_scale_ccd'
+      array_dict:
+        id: [1]
+        x_cen: [0.0]
+        y_cen: [0.0]
+        x_size: [2048]
+        y_size: [4000]
+        pixel_size: [0.015]
+        angle: [0.0]
+        gain: [1.0]
+      x_cen_unit: mm
+      y_cen_unit: mm
+      x_size_unit: pixel
+      y_size_unit: pixel
+      pixel_size_unit: mm
+      angle_unit: deg
+      gain_unit: electron/adu
+  - name: detector_nir
+    class: DetectorList
+    kwargs:
+      image_plane_id: 2
+      pixel_scale: '!INST.pixel_scale'
+      plate_scale: '!DET.plate_scale_nir'
+      array_dict:
+        id: [2]
+        x_cen: [0.0]
+        y_cen: [0.0]
+        x_size: [2048]
+        y_size: [1100]
+        pixel_size: [0.018]
+        angle: [0.0]
+        gain: [1.0]
+      x_cen_unit: mm
+      y_cen_unit: mm
+      x_size_unit: pixel
+      y_size_unit: pixel
+      pixel_size_unit: mm
+      angle_unit: deg
+      gain_unit: electron/adu
+
+  # Photon rate -> accumulated charge -> charge binning -> shot noise ->
+  # one amplifier read per binned pixel -> NIR average -> gain conversion.
+  - name: exposure_integration
+    class: SelectorWheel
+    kwargs:
+      selector_key: detector_id
+      z_order: [805]
+      wheel:
+        - selector_value: [0]
+          effect_class: ExposureIntegration
+          effect_kwargs: {dit: '!OBS.dit_uvb', ndit: '!OBS.ndit_uvb'}
+        - selector_value: [1]
+          effect_class: ExposureIntegration
+          effect_kwargs: {dit: '!OBS.dit_vis', ndit: '!OBS.ndit_vis'}
+        - selector_value: [2]
+          effect_class: ExposureIntegration
+          effect_kwargs: {dit: '!OBS.dit_nir', ndit: '!OBS.ndit_nir'}
+  - name: dark_current
+    class: SelectorWheel
+    kwargs:
+      selector_key: detector_id
+      z_order: [810]
+      wheel:
+        - selector_value: [0]
+          effect_class: DarkCurrent
+          effect_kwargs: {value: '!DET.dark_uvb', dit: '!OBS.dit_uvb', ndit: '!OBS.ndit_uvb'}
+        - selector_value: [1]
+          effect_class: DarkCurrent
+          effect_kwargs: {value: '!DET.dark_vis', dit: '!OBS.dit_vis', ndit: '!OBS.ndit_vis'}
+        - selector_value: [2]
+          effect_class: DarkCurrent
+          effect_kwargs: {value: '!DET.dark_nir', dit: '!OBS.dit_nir', ndit: '!OBS.ndit_nir'}
+  - name: on_chip_binning
+    class: SelectorWheel
+    kwargs:
+      selector_key: detector_id
+      z_order: [815]
+      allowed_missing_selector_values: [2]
+      wheel:
+        - selector_value: [0]
+          effect_class: OnChipBinning
+          effect_kwargs:
+            binx: '!DET.binx_uvb'
+            biny: '!DET.biny_uvb'
+            allowed_bins: [[1, 1], [1, 2], [2, 2]]
+        - selector_value: [1]
+          effect_class: OnChipBinning
+          effect_kwargs:
+            binx: '!DET.binx_vis'
+            biny: '!DET.biny_vis'
+            allowed_bins: [[1, 1], [1, 2], [2, 2]]
+  - name: shot_noise
+    class: ShotNoise
+    kwargs: {z_order: [820]}
+  - name: readout_noise
+    class: SelectorWheel
+    kwargs:
+      selector_key: detector_id
+      z_order: [825]
+      wheel:
+        - selector_value: [0]
+          effect_class: BasicReadoutNoise
+          effect_kwargs: {noise_std: '!DET.ron_uvb', ndit: '!OBS.ndit_uvb'}
+        - selector_value: [1]
+          effect_class: BasicReadoutNoise
+          effect_kwargs: {noise_std: '!DET.ron_vis', ndit: '!OBS.ndit_vis'}
+        - selector_value: [2]
+          effect_class: ReadoutNoiseFromTable
+          effect_kwargs: {filename: detector/nir_read_noise.dat, dit: '!OBS.dit_nir', ndit: '!OBS.ndit_nir'}
+  - name: nir_exposure_average
+    class: SelectorWheel
+    kwargs:
+      selector_key: detector_id
+      z_order: [830]
+      allowed_missing_selector_values: [0, 1]
+      wheel:
+        - selector_value: [2]
+          effect_class: ExposureOutput
+          effect_kwargs: {mode: average, dit: '!OBS.dit_nir', ndit: '!OBS.ndit_nir'}
+  - name: gain_conversion
+    class: SelectorWheel
+    kwargs:
+      selector_key: detector_id
+      z_order: [835]
+      wheel:
+        - selector_value: [0]
+          effect_class: ADConversion
+          effect_kwargs: {gain: '!DET.gain_uvb', dtype: float32}
+        - selector_value: [1]
+          effect_class: ADConversion
+          effect_kwargs: {gain: '!DET.gain_vis', dtype: float32}
+        - selector_value: [2]
+          effect_class: ADConversion
+          effect_kwargs: {gain: '!DET.gain_nir', dtype: float32}
+  - name: xshooter_fits_keywords
+    class: ExtraFitsKeywords
+    kwargs: {filename: FITS_extra_keywords.yaml}

@@ -1,0 +1,49 @@
+- ext_type: PrimaryHDU
+  keywords:
+    INSTRUME: XSHOOTER
+    TELESCOP: '!TEL.name'
+    OBJECT: '!OBS.object'
+    HIERARCH:
+      ESO:
+        TEL: {AIRM: {START: '!OBS.airmass'}}
+- ext_type: ImageHDU
+  keywords:
+    BUNIT: adu
+- detector_id: 0
+  ext_number: [0, 1]
+  keywords:
+    ARM: UVB
+    DIT: '!OBS.dit_uvb'
+    NDIT: '!OBS.ndit_uvb'
+    GAIN: '!DET.gain_uvb'
+    RDNOISE: '!DET.ron_uvb'
+    BINX: '!DET.binx_uvb'
+    BINY: '!DET.biny_uvb'
+    SLIT: '!INST.uvb_curr_slit'
+    READMODE: '!DET.readout_mode_uvb'
+    COMBINE: sum
+- detector_id: 1
+  ext_number: [0, 1]
+  keywords:
+    ARM: VIS
+    DIT: '!OBS.dit_vis'
+    NDIT: '!OBS.ndit_vis'
+    GAIN: '!DET.gain_vis'
+    RDNOISE: '!DET.ron_vis'
+    BINX: '!DET.binx_vis'
+    BINY: '!DET.biny_vis'
+    SLIT: '!INST.vis_curr_slit'
+    READMODE: '!DET.readout_mode_vis'
+    COMBINE: sum
+- detector_id: 2
+  ext_number: [0, 1]
+  keywords:
+    ARM: NIR
+    DIT: '!OBS.dit_nir'
+    NDIT: '!OBS.ndit_nir'
+    GAIN: '!DET.gain_nir'
+    BINX: 1
+    BINY: 1
+    SLIT: '!INST.nir_curr_slit'
+    READMODE: nondestructive
+    COMBINE: average
