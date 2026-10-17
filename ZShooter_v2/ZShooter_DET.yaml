@@ -8,6 +8,12 @@ properties :
     temperature : -120
     binx : 1
     biny: 1
+    binx_blue: 1
+    biny_blue: 1
+    binx_green: 1
+    biny_green: 1
+    binx_red: 1
+    biny_red: 1
     full_well: 64000
     # Per-image-plane scales. These currently match the global ZShooter
     # values in ZShooter.yaml, but live here so each camera can diverge when
@@ -302,6 +308,24 @@ effects :
             dit: "!OBS.dit_k"
             ndit: "!OBS.ndit_k"
 
+  - name: ccd_charge_binning
+    description: On-chip charge summation for the three visible CCD design channels
+    class: SelectorWheel
+    kwargs:
+      selector_key: detector_id
+      z_order: [815]
+      allowed_missing_selector_values: [3, 4, 5]
+      wheel:
+        - selector_value: [0]
+          effect_class: OnChipBinning
+          effect_kwargs: {binx: '!DET.binx_blue', biny: '!DET.biny_blue'}
+        - selector_value: [1]
+          effect_class: OnChipBinning
+          effect_kwargs: {binx: '!DET.binx_green', biny: '!DET.biny_green'}
+        - selector_value: [2]
+          effect_class: OnChipBinning
+          effect_kwargs: {binx: '!DET.binx_red', biny: '!DET.biny_red'}
+
   - name: shot_noise
     description: Poisson statistics of integrated source, background and dark charge
     class: ShotNoise
@@ -403,7 +427,7 @@ effects :
             ndit: "!OBS.ndit_k"
 
   - name: visible_binning_selector
-    description: Applies Binning in Visible
+    description: Software summation of visible pixels after read noise; separate from CCD charge binning
     class: SelectorWheel
     include: True
     kwargs:

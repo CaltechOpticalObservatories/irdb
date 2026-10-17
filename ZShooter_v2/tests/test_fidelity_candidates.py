@@ -69,6 +69,24 @@ def test_dark_current_participates_in_poisson_statistics(detector_id, arm, dark,
     assert detector.data.var() == pytest.approx(dark*3600 + ron**2, rel=.02)
 
 
+@pytest.mark.parametrize('detector_id,arm,bx,by', [(0, 'blue', 1, 2), (1, 'green', 2, 1), (2, 'red', 2, 2)])
+def test_visible_ccd_charge_binning_is_independent_per_arm(detector_id, arm, bx, by):
+    config = yaml.safe_load((ROOT / 'ZShooter_DET.yaml').read_text())
+    configured = next(item for item in config['effects'] if item['name'] == 'ccd_charge_binning')
+    properties = {f'!DET.bin{axis}_{channel}': 1 for channel in ('blue', 'green', 'red') for axis in ('x', 'y')}
+    properties.update({f'!DET.binx_{arm}': bx, f'!DET.biny_{arm}': by})
+    cmds = sim.UserCommands(properties=properties)
+    effect = make_effect(configured, cmds)
+    for identity in range(6):
+        header = header_from_list_of_xy([-.3, .3], [-.3, .3], .015, 'D')
+        detector = Detector(header, cmds=cmds, id=identity)
+        detector.data[:] = 7.
+        effect.apply_to(detector)
+        expected_shape = (40//by, 40//bx) if identity == detector_id else (40, 40)
+        assert detector.data.shape == expected_shape
+        assert detector.data.sum() == pytest.approx(7*40*40)
+
+
 @pytest.mark.parametrize('channel', ['b', 'g', 'r', 'yj', 'h', 'k'])
 def test_native_trace_photon_normalization_is_independent_of_sky_grid(traces, channel):
     trace = next(trace for name, trace in traces.items() if name.startswith(channel + '_'))
