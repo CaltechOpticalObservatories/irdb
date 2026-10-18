@@ -154,6 +154,36 @@ def test_unsupported_bin_fails(train):
         train.readout(reset=False)
 
 
+@pytest.mark.parametrize('aid,ndit', [(0, 1), (0, 4), (1, 1), (1, 4), (2, 1), (2, 4)])
+def test_independent_sky_subtraction_variance(train, aid, ndit):
+    arm = ['uvb', 'vis', 'nir'][aid]
+    dit, source_rate, sky_rate = 300., .03, .3
+    train.cmds[f'!OBS.dit_{arm}'] = dit
+    train.cmds[f'!OBS.ndit_{arm}'] = ndit
+    train.cmds['!SIM.random.seed'] = 62419
+    if aid != 2:
+        train[f'{arm}_readout_parameters'].apply_to(None)
+        train.cmds[f'!DET.binx_{arm}'] = 2
+        train.cmds[f'!DET.biny_{arm}'] = 2
+    header = header_from_list_of_xy([-6., 6.], [-4.5, 4.5], .015, 'D')
+    frames = []
+    for roid, rate in enumerate((source_rate+sky_rate, sky_rate)):
+        train.cmds['!OBS.roid'] = roid
+        detector = Detector(header, cmds=train.cmds, id=aid)
+        detector.data.fill(rate)
+        for effect in train.optics_manager.detector_effects:
+            effect.apply_to(detector)
+        frames.append(detector.data.copy())
+    gain, dark = train.cmds[f'!DET.gain_{arm}'], train.cmds[f'!DET.dark_{arm}']
+    ron = detector.header['RDNOISE'] if aid == 2 else train.cmds[f'!DET.ron_{arm}']
+    area, average = (1, ndit) if aid == 2 else (4, 1)
+    difference = (frames[0]-frames[1])*gain*average
+    signal = source_rate*dit*ndit*area
+    variance = signal+2*((sky_rate+dark)*dit*area+ron**2)*ndit
+    assert abs(difference.mean()-signal) < 4*np.sqrt(variance/difference.size)
+    assert difference.var() == pytest.approx(variance, rel=.025)
+
+
 def test_trace_fit_bounds_and_finite_physical_calibrations():
     residuals = Table.read(ROOT / 'calibration' / 'trace_residuals.ecsv')
     assert len(residuals) == 43
