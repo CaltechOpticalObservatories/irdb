@@ -200,9 +200,12 @@ def test_mapped_line_photons_centroid_and_variance(train, aid, name):
         detector_wave = trace.xy2lam(xmm, ymm)
         mean = (mapped.data*detector_wave).sum()/mapped.data.sum()
         variance = (mapped.data*(detector_wave-mean)**2).sum()/mapped.data.sum()
-        eta_variance = (eta**2*illumination).sum()/illumination.sum()
+        eta_variance = (eta**2*illumination).sum()/illumination.sum() + step**2/12
         optical_sigma = center/trace.meta['optical_resolving_power']/np.sqrt(8*np.log(2))
-        expected_variance = (center/100000)**2 + optical_sigma**2 + eta_variance*trace.slit_dispersion(center)**2
+        # Independent uniform slit cells and detector pixels contribute their
+        # second moments in addition to the input and optical line profiles.
+        pixel_variance = trace.dlam_per_pix(center)**2/12
+        expected_variance = (center/100000)**2 + optical_sigma**2 + eta_variance*trace.slit_dispersion(center)**2 + pixel_variance
         assert abs(mean-center) < abs(trace.dlam_per_pix(center))*.02
         assert variance == pytest.approx(expected_variance, rel=.02)
 
