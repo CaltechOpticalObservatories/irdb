@@ -34,6 +34,39 @@ def test_native_geometry_and_orders(train):
     assert train.cmds['!TEL.name'] == 'VLT UT3'
 
 
+@pytest.mark.parametrize('aid', [0, 1, 2])
+def test_science_defaults_draw_nonuniform_source_and_sky(train, aid):
+    assert train['shot_noise'].include
+    assert train['readout_noise'].include
+    arm = ['uvb', 'vis', 'nir'][aid]
+    train.cmds[f'!OBS.dit_{arm}'], train.cmds[f'!OBS.ndit_{arm}'] = 300., 2
+    train.cmds['!SIM.random.seed'] = 19734
+    if aid != 2:
+        train[f'{arm}_readout_parameters'].apply_to(None)
+    source = np.repeat([0., .003, 3.], 100)[None, :]
+    sky = np.repeat([0., .03, 5.], 100)[:, None]
+    header = header_from_list_of_xy([-2.25, 2.25], [-2.25, 2.25], .015, 'D')
+    frames = []
+    for roid in (0, 1):
+        train.cmds['!OBS.roid'] = roid
+        detector = Detector(header, cmds=train.cmds, id=aid)
+        detector.data[:] = source+sky
+        for effect in train.optics_manager.detector_effects:
+            effect.apply_to(detector)
+        gain, dark = train.cmds[f'!DET.gain_{arm}'], train.cmds[f'!DET.dark_{arm}']
+        ron = detector.header['RDNOISE'] if aid == 2 else train.cmds[f'!DET.ron_{arm}']
+        expected = (source+sky+dark)*600
+        accumulated = detector.data*gain*(2 if aid == 2 else 1)
+        residual = (accumulated-expected)/np.sqrt(expected+2*ron**2)
+        for yy in (0, 100, 200):
+            for xx in (0, 100, 200):
+                region = residual[yy:yy+100, xx:xx+100]
+                assert abs(region.mean()) < .05
+                assert region.var() == pytest.approx(1., abs=.06)
+        frames.append(accumulated)
+    assert not np.array_equal(*frames)
+
+
 def test_readout_exposure_changes_reach_each_arm(train):
     train['shot_noise'].include = False
     train['readout_noise'].include = False

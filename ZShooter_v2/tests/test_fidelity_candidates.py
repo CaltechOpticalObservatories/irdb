@@ -17,8 +17,46 @@ from scopesim.optics.image_plane_utils import header_from_list_of_xy
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def test_science_defaults_draw_source_sky_and_dark_per_pixel(monkeypatch):
+    monkeypatch.setitem(sim.rc.__config__, '!SIM.file.local_packages_path', str(ROOT.parent))
+    ignore = ['atmo_transmission', 'continuum_emission', 'airglow_and_interline_continuum', 'adc_residuals']
+    cmds = sim.UserCommands(use_instrument='ZShooter_v2', properties={'!OBS.mjdobs': 60310.25, '!SIM.random.seed': 38291})
+    for document in cmds.yaml_dicts:
+        if 'effects' in document:
+            document['effects'] = [effect for effect in document['effects'] if effect['name'] not in ignore]
+    train = sim.OpticalTrain(cmds)
+    assert train['shot_noise'].include
+    assert train['readout_noise_selector'].include
+    # Different source and sky levels in nine regions, including pure dark,
+    # sky-only and source-only pixels. No stochastic effect is disabled.
+    source = np.repeat([0., .003, 3.], 100)[None, :]
+    sky = np.repeat([0., .03, 5.], 100)[:, None]
+    header = header_from_list_of_xy([-2.25, 2.25], [-2.25, 2.25], .015, 'D')
+    for aid, arm in enumerate(('blue', 'green', 'red', 'yj', 'h', 'k')):
+        train.cmds[f'!OBS.dit_{arm}'], train.cmds[f'!OBS.ndit_{arm}'] = 300., 2
+        dark = train['dark_current_selector'].get_effect(aid).meta['value']
+        ron = train['readout_noise_selector'].get_effect(aid).meta['noise_std']
+        bias = train['bias_selector'].get_effect(aid).meta['bias']
+        expected = (source+sky+dark)*600
+        frames = []
+        for roid in (0, 1):
+            train.cmds['!OBS.roid'] = roid
+            detector = Detector(header, cmds=train.cmds, id=aid)
+            detector.data[:] = source+sky
+            for effect in train.optics_manager.detector_effects:
+                effect.apply_to(detector)
+            residual = (detector.data-bias-expected)/np.sqrt(expected+2*ron**2)
+            for yy in (0, 100, 200):
+                for xx in (0, 100, 200):
+                    region = residual[yy:yy+100, xx:xx+100]
+                    assert abs(region.mean()) < .05
+                    assert region.var() == pytest.approx(1., abs=.06)
+            frames.append(detector.data.copy())
+        assert not np.array_equal(*frames)
+
+
 def test_reused_configuration_matches_fresh_slits_and_exposures(monkeypatch):
-    from synphot import SourceSpectrum, ConstFlux1D
+    from synphot import SourceSpectrum, Empirical1D
     from synphot.units import PHOTLAM
 
     monkeypatch.setitem(sim.rc.__config__, '!SIM.file.local_packages_path', str(ROOT.parent))
@@ -29,8 +67,12 @@ def test_reused_configuration_matches_fresh_slits_and_exposures(monkeypatch):
         if 'effects' in document:
             document['effects'] = [effect for effect in document['effects'] if effect['name'] not in ignore]
     train = sim.OpticalTrain(commands)
-    source = sim.Source(x=[0.], y=[.05], ref=[0], weight=[1.], spectra=[SourceSpectrum(ConstFlux1D, amplitude=.01*PHOTLAM)])
-    for slit, seconds in ((.7, 3600.), (.33, 300.), (.7, 3600.)):
+    wave = np.linspace(5400., 5600., 4001)*u.AA
+    spectrum = SourceSpectrum(Empirical1D, points=wave, lookup_table=.01*np.exp(-.5*((wave.value-5500)/1.)**2)*PHOTLAM)
+    source = sim.Source(x=[0.], y=[.05], ref=[0], weight=[1.], spectra=[spectrum])
+    for slit, seconds, redshift, weight in ((.7, 3600., 0., 1.), (.33, 300., .0003, 2.), (.7, 3600., 0., 1.)):
+        source.spectra[0].z = redshift
+        source.fields[0].field['weight'][0] = weight
         settings = {'!INST.vis_curr_slit': slit, '!INST.nir_curr_slit': slit, '!OBS.dit': seconds, '!OBS.ndit': 1}
         train.cmds.update(properties=settings.copy())
         train.update(migrate_cmds=True)
