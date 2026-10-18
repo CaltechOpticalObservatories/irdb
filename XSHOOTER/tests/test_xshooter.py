@@ -34,6 +34,24 @@ def test_native_geometry_and_orders(train):
     assert train.cmds['!TEL.name'] == 'VLT UT3'
 
 
+def test_readout_exposure_changes_reach_each_arm(train):
+    train['shot_noise'].include = False
+    train['readout_noise'].include = False
+    for plane in train.image_planes:
+        plane.data.fill(2.)
+    for seconds in (3600., 300., 3600.):
+        exposure = {'dit': seconds, 'ndit': 1, '!OBS.dit_vis': seconds / 2, '!OBS.ndit_vis': 2}
+        outputs = train.readout(**exposure)
+        for index, arm in enumerate(('uvb', 'vis', 'nir')):
+            hdu = outputs[index][1]
+            dit, ndit = (seconds / 2, 2) if arm == 'vis' else (seconds, 1)
+            assert hdu.header['DIT'] == dit
+            assert hdu.header['NDIT'] == ndit
+            assert hdu.header['EXPTIME'] == seconds
+            charge = hdu.data * train.cmds[f'!DET.gain_{arm}']
+            np.testing.assert_allclose(charge, (2 + train.cmds[f'!DET.dark_{arm}']) * seconds, rtol=2e-6)
+
+
 @pytest.mark.parametrize('bx,by', [(1, 1), (1, 2), (2, 2)])
 def test_full_readout_charge_headers_and_repeat(train, bx, by):
     for arm in ['uvb', 'vis']:

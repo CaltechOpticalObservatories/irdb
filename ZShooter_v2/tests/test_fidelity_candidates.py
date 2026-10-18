@@ -1,5 +1,6 @@
 """Physical checks using the configured ZShooter prescription and detector effects."""
 from pathlib import Path
+from copy import deepcopy
 import numpy as np
 import pytest
 import yaml
@@ -14,6 +15,41 @@ from scopesim.detector import Detector
 from scopesim.optics.image_plane_utils import header_from_list_of_xy
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_reused_configuration_matches_fresh_slits_and_exposures(monkeypatch):
+    from synphot import SourceSpectrum, ConstFlux1D
+    from synphot.units import PHOTLAM
+
+    monkeypatch.setitem(sim.rc.__config__, '!SIM.file.local_packages_path', str(ROOT.parent))
+    properties = {'!SIM.spectral.wave_min': .549, '!SIM.spectral.wave_max': .551, '!OBS.mjdobs': 60310.25, '!INST.include_diffuse_emissivity': False}
+    commands = sim.UserCommands(use_instrument='ZShooter_v2', properties=properties)
+    ignore = ['atmo_transmission', 'continuum_emission', 'airglow_and_interline_continuum', 'adc_residuals', 'shot_noise', 'readout_noise_selector']
+    for document in commands.yaml_dicts:
+        if 'effects' in document:
+            document['effects'] = [effect for effect in document['effects'] if effect['name'] not in ignore]
+    train = sim.OpticalTrain(commands)
+    source = sim.Source(x=[0.], y=[.05], ref=[0], weight=[1.], spectra=[SourceSpectrum(ConstFlux1D, amplitude=.01*PHOTLAM)])
+    for slit, seconds in ((.7, 3600.), (.33, 300.), (.7, 3600.)):
+        settings = {'!INST.vis_curr_slit': slit, '!INST.nir_curr_slit': slit, '!OBS.dit': seconds, '!OBS.ndit': 1}
+        train.cmds.update(properties=settings.copy())
+        train.update(migrate_cmds=True)
+        fresh_commands = deepcopy(commands)
+        fresh_commands.update(properties=settings)
+        fresh = sim.OpticalTrain(fresh_commands)
+        train.observe(source, update=False)
+        fresh.observe(source, update=False)
+        for actual, expected in zip(train.image_planes, fresh.image_planes):
+            np.testing.assert_allclose(actual.data, expected.data, rtol=1e-6, atol=1e-12, err_msg=f'slit={slit}, DIT={seconds}')
+        for arm in range(6):
+            aperture = train['slitwheel_selector'].get_effect(arm).current_slit.table
+            assert np.ptp(aperture['y']) == pytest.approx(slit)
+        readouts = train.readout(dit=seconds, ndit=1, dit_green=seconds/2, ndit_green=2)
+        for index, readout in enumerate(readouts):
+            header = readout[1].header
+            assert header['DIT'] == (seconds/2 if index == 1 else seconds)
+            assert header['NDIT'] == (2 if index == 1 else 1)
+            assert header['EXPTIME'] == seconds
 
 
 @pytest.fixture(scope='module')

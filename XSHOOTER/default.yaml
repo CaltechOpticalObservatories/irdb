@@ -16,12 +16,14 @@ properties:
   az: 0
   airmass: 1.3
   seeing: 0.7
-  dit_uvb: 300.0
-  dit_vis: 300.0
-  dit_nir: 300.0
-  ndit_uvb: 1
-  ndit_vis: 1
-  ndit_nir: 1
+  dit: 300.0
+  ndit: 1
+  dit_uvb: '!OBS.dit'
+  dit_vis: '!OBS.dit'
+  dit_nir: '!OBS.dit'
+  ndit_uvb: '!OBS.ndit'
+  ndit_vis: '!OBS.ndit'
+  ndit_nir: '!OBS.ndit'
 mode_yamls:
   - name: SPEC
     object: instrument

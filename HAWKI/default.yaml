@@ -22,6 +22,7 @@ yamls:
 
 properties :
   instrument: HAWKI
+  modes: []  # Imaging configuration has no selectable observing modes.
   filter_name : Ks
   airmass : 1.2
   declination : -30

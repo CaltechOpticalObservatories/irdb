@@ -28,18 +28,21 @@ properties:
   airmass : 1.0          # altitude, if set and different from airmass will override airmass
   seeing: 0.7
   brightness : "dark"    # Sky brightness, can be "dark", "grey", or "bright"
-  dit_blue : 300.0              # exposure time for B arm
-  ndit_blue : 1                # number of exposures for B arm
-  dit_green : 300.0              # exposure time for G arm
-  ndit_green : 1                # number of exposures for G arm
-  dit_red : 300.0              # exposure time for R arms
-  ndit_red : 1                # number of exposures for R arms
-  dit_yj: 300.0              # exposure time for YJ arms
-  ndit_yj: 1                # number of exposures for YJ arms
-  dit_h: 300.0              # exposure time for H arms
-  ndit_h: 1                # number of exposures for H arms
-  dit_k: 300.0              # exposure time for K arms
-  ndit_k: 1                # number of exposures for K arms
+  dit: 300.0
+  ndit: 1
+  # Arm settings follow the global exposure unless explicitly overridden.
+  dit_blue: '!OBS.dit'
+  ndit_blue: '!OBS.ndit'
+  dit_green: '!OBS.dit'
+  ndit_green: '!OBS.ndit'
+  dit_red: '!OBS.dit'
+  ndit_red: '!OBS.ndit'
+  dit_yj: '!OBS.dit'
+  ndit_yj: '!OBS.ndit'
+  dit_h: '!OBS.dit'
+  ndit_h: '!OBS.ndit'
+  dit_k: '!OBS.dit'
+  ndit_k: '!OBS.ndit'
 
 mode_yamls:
 - object: instrument
