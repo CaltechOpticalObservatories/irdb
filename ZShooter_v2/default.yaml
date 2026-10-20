@@ -53,6 +53,15 @@ mode_yamls:
     - ZShooter_SPEC.yaml
     - ZShooter_DET.yaml
 
+- object: instrument
+  alias: OBS
+  name: SPEC_ALTDETECT
+  description: "Untapered CCDs in B/G/R, LmAPD in YJ, 18 um H2RGs in H/K"
+  yamls:
+    - ZShooter_SPEC.yaml
+    - ZShooter_DET.yaml
+    - ZShooter_ALTDETECT.yaml
+
 ---
 ### default simulation parameters needed for a MICADO simulation
 object : simulation
