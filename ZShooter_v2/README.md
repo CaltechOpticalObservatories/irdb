@@ -1,7 +1,7 @@
 # ZShooter detector engineering configurations
 
-`SPEC` selects tapered qCCDs in B/G/R and 15 um LmAPDs in YJ/H/K.
-`SPEC_ALTDETECT` selects untapered CCDs in B/G/R, the same YJ LmAPD, and 18 um H2RGs in H/K. Detector dimensions remain 2048 x 4096 in B/G/R and 2048 x 2048 in YJ/H/K. Optical prescription, focal-plane offsets and selected orders are shared.
+`SPEC` loads the baseline package in `ZShooter_DET.yaml`; `SPEC_ALTDETECT` adds the editable overrides in `ZShooter_ALTDETECT.yaml`. These names select engineering configurations, not permanent detector identities. The current baseline uses tapered qCCDs in B/G/R and 15 um LmAPDs in YJ/H/K; the current alternative uses untapered CCDs and 18 um H2RGs in YJ/H/K.
+Detector dimensions remain 2048 x 4096 in B/G/R and 2048 x 2048 in YJ/H/K. Optical prescription, focal-plane offsets and selected orders are shared. Use the configured effects and output headers as the source of detector properties when comparing a revised package.
 
 Select one mode when constructing `UserCommands`, then construct an `OpticalTrain`. Reconstruct the train when changing the detector package or its initialization parameters, including pitch and QE. Exposure parameters can be supplied independently per arm through `readout(dit_blue=..., ndit_blue=..., ...)`.
 
@@ -13,4 +13,4 @@ DIT/NDIT are observing settings: no effect changes them automatically. `Exposure
 
 Native headers record `DETMODE`, `DETTYPE`, `PIXEL_SIZE` (mm), `EXNOISE` (variance factor), `AVGAIN` and `WELLDEP`, alongside actual exposure and detector WCS. Image charge stays input-referred; avalanche gain is distinct from the electronic electron/ADU conversion.
 
-Analytical traces resolve their pixel pitch from the same detector commands. Seven along-slit samples and a sixth-degree transform fit keep the common physical footprint consistent across the two detector sizes. The larger H/K area changes coverage and sampling without retuning optics or reinstating the omitted YJ order.
+Analytical traces resolve their pixel pitch from the same detector commands. Seven along-slit samples and a sixth-degree transform fit keep the common physical footprint consistent across detector pitches. The current larger YJ/H/K area changes coverage and sampling without retuning optics or reinstating the omitted YJ order.

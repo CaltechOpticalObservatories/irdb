@@ -22,6 +22,14 @@ properties:
   qe_class_r: SpectralQuantumEfficiency
   qe_kwargs_r:
     filename: detector_specs/ccd_ml2_uv_enhanced_hirho_TER.dat
+  detector_type_yj: H2RG
+  pixel_size_yj: 0.018
+  pixel_scale_yj: 0.1884654  # Same 10.4703 arcsec/mm camera plate scale
+  usable_well_yj: 60000
+  ron_yj: 6.0
+  dark_yj: 0.006388888888888889  # 23 e/hour/pixel
+  excess_noise_factor_yj: 1.0
+  avalanche_gain_yj: 1
   detector_type_h: H2RG
   pixel_size_h: 0.018
   pixel_scale_h: 0.1884654  # Same 10.4703 arcsec/mm camera plate scale

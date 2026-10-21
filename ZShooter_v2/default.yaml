@@ -56,7 +56,7 @@ mode_yamls:
 - object: instrument
   alias: OBS
   name: SPEC_ALTDETECT
-  description: "Untapered CCDs in B/G/R, LmAPD in YJ, 18 um H2RGs in H/K"
+  description: "Editable alternative detector engineering package"
   yamls:
     - ZShooter_SPEC.yaml
     - ZShooter_DET.yaml
