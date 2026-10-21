@@ -267,3 +267,13 @@ description: instrument parameters common to all MOSAIC modes
 
 properties:
   decouple_detector_from_sky_headers: True
+
+effects:
+  - name: mosaic_fits_keywords
+    description: Instrument identity for all MOSAIC output formats
+    class: ExtraFitsKeywords
+    kwargs:
+      header_dict:
+        - ext_type: PrimaryHDU
+          keywords:
+            INSTRUME: MOSAIC
