@@ -96,7 +96,7 @@ def make_zshooter_dichroics(
         "yj-hk": split("yj-hk", ("yj",), ("h", "k")),
         "g-r": split("g-r", ("g",), ("r",)),
         "h-k": split("h-k", ("h",), ("k",)),
-        "u-vz": split("b-gr", ("u",), ("v", "z")),
+        "u-vz": split("u-vz", ("u",), ("v", "z")),
         "v-z": split("v-z", ("v",), ("z",)),
     }
 

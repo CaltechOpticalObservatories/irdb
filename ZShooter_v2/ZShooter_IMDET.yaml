@@ -9,6 +9,9 @@ properties :
     binx : 1
     biny: 1
     full_well: 7000
+    dark_current: 0.006  # electron/s/pixel
+    read_noise: 0.3     # electron RMS/integration
+    bias: 200          # electron
     pixel_scale_u: 0.0511  #"/pix
     pixel_scale_v: 0.0511
     pixel_scale_z: 0.0511
@@ -33,6 +36,9 @@ effects :
           pixel_size: [0.0046]
           angle: [0.0]
           gain: [1.0]
+          bunit: [electron]
+          detmode: [IMAGER]
+          dettype: [CMOS]
         x_cen_unit: mm
         y_cen_unit: mm
         x_size_unit: pixel
@@ -58,6 +64,9 @@ effects :
           pixel_size: [0.0046]
           angle: [0.0]
           gain: [1.0]
+          bunit: [electron]
+          detmode: [IMAGER]
+          dettype: [CMOS]
         x_cen_unit: mm
         y_cen_unit: mm
         x_size_unit: pixel
@@ -83,6 +92,9 @@ effects :
           pixel_size: [0.0046]
           angle: [0.0]
           gain: [1.0]
+          bunit: [electron]
+          detmode: [IMAGER]
+          dettype: [CMOS]
         x_cen_unit: mm
         y_cen_unit: mm
         x_size_unit: pixel
@@ -116,10 +128,6 @@ effects :
             ndit: "!OBS.imager_ndit_z"
 
 
-  - name: shot_noise
-    description : apply poisson shot noise to images
-    class: ShotNoise
-
   - name: dark_current_selector
     description: Selector Wheel for dark current levels for CMOS
     class: SelectorWheel
@@ -130,21 +138,41 @@ effects :
         - selector_value: [0]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.006    # [e-/s] level of dark current
+            value: "!DET.dark_current"
             dit: "!OBS.imager_dit_u"
             ndit: "!OBS.imager_ndit_u"
         - selector_value: [1]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.006    # [e-/s] level of dark current
+            value: "!DET.dark_current"
             dit: "!OBS.imager_dit_v"
             ndit: "!OBS.imager_ndit_v"
         - selector_value: [2]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.006     # [e-/s] level of dark current
+            value: "!DET.dark_current"
             dit: "!OBS.imager_dit_z"
             ndit: "!OBS.imager_ndit_z"
+
+  - name: exposure_limit
+    description: Warn about per-integration charge without changing DIT/NDIT
+    class: SelectorWheel
+    kwargs:
+      selector_key: detector_id
+      wheel:
+        - selector_value: [0]
+          effect_class: ExposureLimit
+          effect_kwargs: {usable_well: '!DET.full_well', ndit: '!OBS.imager_ndit_u'}
+        - selector_value: [1]
+          effect_class: ExposureLimit
+          effect_kwargs: {usable_well: '!DET.full_well', ndit: '!OBS.imager_ndit_v'}
+        - selector_value: [2]
+          effect_class: ExposureLimit
+          effect_kwargs: {usable_well: '!DET.full_well', ndit: '!OBS.imager_ndit_z'}
+
+  - name: shot_noise
+    description: Poisson statistics of source, sky and accumulated dark charge
+    class: ShotNoise
 
   - name: detector_linearity_selector
     description: Selector Wheel for linearity characteristics for CMOS
@@ -157,22 +185,22 @@ effects :
           effect_class: LinearityCurve
           effect_kwargs:
             array_dict:
-              incident: [0, 7e3]
-              measured: [0, 7e3]
+              incident: [0, "!DET.full_well"]
+              measured: [0, "!DET.full_well"]
             ndit: "!OBS.imager_ndit_u"
         - selector_value: [1]
           effect_class: LinearityCurve
           effect_kwargs:
             array_dict:
-              incident: [0, 7e3]
-              measured: [0, 7e3]
+              incident: [0, "!DET.full_well"]
+              measured: [0, "!DET.full_well"]
             ndit: "!OBS.imager_ndit_v"
         - selector_value: [2]
           effect_class: LinearityCurve
           effect_kwargs:
             array_dict:
-              incident: [0, 7e3]
-              measured: [0, 7e3]
+              incident: [0, "!DET.full_well"]
+              measured: [0, "!DET.full_well"]
             ndit: "!OBS.imager_ndit_z"
 
   - name: readout_noise_selector
@@ -185,17 +213,17 @@ effects :
         - selector_value: [0]
           effect_class: BasicReadoutNoise
           effect_kwargs:
-            noise_std: 0.3
+            noise_std: "!DET.read_noise"
             ndit: "!OBS.imager_ndit_u"
         - selector_value: [1]
           effect_class: BasicReadoutNoise
           effect_kwargs:
-            noise_std: 0.3
+            noise_std: "!DET.read_noise"
             ndit: "!OBS.imager_ndit_v"
         - selector_value: [2]
           effect_class: BasicReadoutNoise
           effect_kwargs:
-            noise_std: 0.3
+            noise_std: "!DET.read_noise"
             ndit: "!OBS.imager_ndit_z"
 
   - name: bias_selector
@@ -208,4 +236,4 @@ effects :
         - selector_value: [0,1,2]
           effect_class: Bias
           effect_kwargs:
-            bias: 200    #  bias level in electrons
+            bias: "!DET.bias"
