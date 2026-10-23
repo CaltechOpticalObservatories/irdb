@@ -254,6 +254,7 @@ effects:
    include: True
    kwargs:
      filename: "traces/echelle_trace_parameters.dat"
+     physical_slit_dispersion: true
      wave_colname: "wavelength"
      s_colname: "s"
      col_number_start: 1
