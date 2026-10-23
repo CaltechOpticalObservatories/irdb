@@ -1,0 +1,49 @@
+object: configuration
+alias: OBS
+name: XSHOOTER_default_configuration
+description: VLT UT3 X-shooter simultaneous slit spectroscopy
+status: development
+version: 0.1
+packages: [Paranal, VLT, XSHOOTER]
+yamls: [Paranal_spectroscopy.yaml, VLT_UT3_Cassegrain.yaml, XSHOOTER.yaml]
+properties:
+  instrument: XSHOOTER
+  modes: [SPEC]
+  object: Test
+  brightness: dark
+  mjdobs: 60310.25  # 2024-01-01 06:00 UTC; geometry calibration epoch
+  pupil_angle: 0
+  az: 0
+  airmass: 1.3
+  seeing: 0.7
+  dit: 300.0
+  ndit: 1
+  dit_uvb: '!OBS.dit'
+  dit_vis: '!OBS.dit'
+  dit_nir: '!OBS.dit'
+  ndit_uvb: '!OBS.ndit'
+  ndit_vis: '!OBS.ndit'
+  ndit_nir: '!OBS.ndit'
+mode_yamls:
+  - name: SPEC
+    object: instrument
+    alias: OBS
+    description: Three simultaneous 11 arcsec slits; full science readout regions
+    yamls: [XSHOOTER_SPEC.yaml, XSHOOTER_DET.yaml]
+---
+object: simulation
+alias: SIM
+name: XSHOOTER_simulation
+properties:
+  spectral:
+    wave_unit: um
+    wave_min: 0.3
+    wave_mid: 1.0
+    wave_max: 2.48
+    spectral_bin_width: 0.000005
+    spectral_resolution: 200000
+    trace_flux_jacobian: true
+  sub_pixel:
+    flag: true
+  computing:
+    preload_field_of_views: false

@@ -1,0 +1,11 @@
+object: instrument
+alias: INST
+name: XSHOOTER
+properties:
+  # Sky sampling is numerical. Detector pixel sizes and slit dispersion live in the traces.
+  pixel_scale: 0.05
+  plate_scale: 3.333333333333333
+  decouple_detector_from_sky_headers: true
+  uvb_curr_slit: '1.0'
+  vis_curr_slit: '0.9'
+  nir_curr_slit: '0.9'

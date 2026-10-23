@@ -1,0 +1,39 @@
+object: atmosphere
+alias: ATMO
+name: paranal_spectroscopy
+description: Paranal sky and wavelength-dependent seeing for slit spectroscopy
+properties:
+  altitude: 2635
+  longitude: -70.4042
+  latitude: -24.6272
+  temperature: 9
+  humidity: 0.15
+  pressure: 0.75
+  pwv: 2.5
+  airmass: '!OBS.airmass'
+  moon_sun_sep: 0
+  local_sky_file: false
+  seeing: '!OBS.seeing'
+effects:
+  - name: skycalc_atmosphere
+    class: SkycalcTERCurve
+    kwargs:
+      observatory: paranal
+      airmass: '!OBS.airmass'
+      pwv: '!ATMO.pwv'
+      moon_sun_sep: '!ATMO.moon_sun_sep'
+      wmin: 300
+      wmax: 2500
+      wunit: nm
+      wgrid_mode: fixed_spectral_resolution
+      wres: '!SIM.spectral.spectral_resolution'
+      use_local_skycalc_file: '!ATMO.local_sky_file'
+  - name: seeing_psf
+    class: MoffatPSF
+    kwargs:
+      alpha: 4.765
+      fwhm:
+        seeing: '!OBS.seeing'
+        seeing_unit: arcsec
+        pivot_wave: 500
+        pivot_wave_unit: nm

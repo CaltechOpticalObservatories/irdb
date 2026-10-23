@@ -1,0 +1,9 @@
+# description: UT3 Cassegrain path; M2 obscuration projected onto the entrance pupil
+# source: https://www.eso.org/sci/facilities/paranal/telescopes/ut/m1unit.html
+# outer_unit: m
+# inner_unit: m
+# angle_unit: degree
+# temperature_description: Resolved from !ATMO.temperature in degrees Celsius
+name outer inner angle temperature action filename
+M1 8.2 1.116 0.0 !ATMO.temperature reflection TC_mirror_aluminium.dat
+M2 1.116 0.05 0.0 !ATMO.temperature reflection TC_mirror_aluminium.dat
