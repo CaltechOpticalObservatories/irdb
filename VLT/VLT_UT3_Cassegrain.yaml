@@ -1,0 +1,12 @@
+object: telescope
+alias: TEL
+name: VLT_UT3_Cassegrain
+description: UT3 M1/M2 path to the Cassegrain focus
+properties:
+  name: VLT UT3
+  temperature: '!ATMO.temperature'
+effects:
+  - name: vlt_mirror_list
+    class: SurfaceList
+    kwargs:
+      filename: LIST_VLT_UT3_Cassegrain_mirrors.dat
