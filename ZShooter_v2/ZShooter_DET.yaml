@@ -14,7 +14,101 @@ properties :
     biny_green: 1
     binx_red: 1
     biny_red: 1
-    full_well: 64000
+    detector_mode: SPEC
+    # Input-referred engineering operating points; F multiplies photon variance.
+    pixel_size_b: 0.015
+    usable_well_b: 60000
+    ron_b: 0.1
+    dark_b: 0.000166
+    excess_noise_factor_b: 1.0
+    avalanche_gain_b: 1
+    detector_type_b: qCCD
+    qe_class_b: TaperedQuantumEfficiency
+    qe_kwargs_b:
+      axis: y
+      position_unit: pix
+      position_min: 0
+      position_max: 4096
+      wave_unit: nm
+      center_wave_min: '!INST.tapered_qe_b_center_wave_min'
+      center_wave_max: '!INST.tapered_qe_b_center_wave_max'
+      flat_width: '!INST.tapered_qe_b_flat_width'
+      transition_width: '!INST.tapered_qe_b_transition_width'
+      peak: '!INST.tapered_qe_peak'
+      floor: '!INST.tapered_qe_floor'
+      clip_position: True
+      diffuse_position_samples: '!INST.tapered_qe_diffuse_position_samples'
+    pixel_size_g: 0.015
+    usable_well_g: 60000
+    ron_g: 0.1
+    dark_g: 0.000166
+    excess_noise_factor_g: 1.0
+    avalanche_gain_g: 1
+    detector_type_g: qCCD
+    qe_class_g: TaperedQuantumEfficiency
+    qe_kwargs_g:
+      axis: y
+      position_unit: pix
+      position_min: 0
+      position_max: 4096
+      wave_unit: nm
+      center_wave_min: '!INST.tapered_qe_g_center_wave_min'
+      center_wave_max: '!INST.tapered_qe_g_center_wave_max'
+      flat_width: '!INST.tapered_qe_g_flat_width'
+      transition_width: '!INST.tapered_qe_g_transition_width'
+      peak: '!INST.tapered_qe_peak'
+      floor: '!INST.tapered_qe_floor'
+      clip_position: True
+      diffuse_position_samples: '!INST.tapered_qe_diffuse_position_samples'
+    pixel_size_r: 0.015
+    usable_well_r: 60000
+    ron_r: 0.1
+    dark_r: 0.000166
+    excess_noise_factor_r: 1.0
+    avalanche_gain_r: 1
+    detector_type_r: qCCD
+    qe_class_r: TaperedQuantumEfficiency
+    qe_kwargs_r:
+      axis: y
+      position_unit: pix
+      position_min: 0
+      position_max: 4096
+      wave_unit: nm
+      center_wave_min: '!INST.tapered_qe_r_center_wave_min'
+      center_wave_max: '!INST.tapered_qe_r_center_wave_max'
+      flat_width: '!INST.tapered_qe_r_flat_width'
+      transition_width: '!INST.tapered_qe_r_transition_width'
+      peak: '!INST.tapered_qe_peak'
+      floor: '!INST.tapered_qe_floor'
+      clip_position: True
+      diffuse_position_samples: '!INST.tapered_qe_diffuse_position_samples'
+    pixel_size_yj: 0.015
+    usable_well_yj: 15000
+    ron_yj: 0.5
+    dark_yj: 0.0001
+    excess_noise_factor_yj: 1.2
+    avalanche_gain_yj: 10
+    detector_type_yj: LmAPD
+    qe_class_yj: SpectralQuantumEfficiency
+    qe_kwargs_yj: {filename: detector_specs/H2RG_TER.dat}
+    pixel_size_h: 0.015
+    usable_well_h: 15000
+    ron_h: 0.5
+    dark_h: 0.0001
+    excess_noise_factor_h: 1.2
+    avalanche_gain_h: 10
+    detector_type_h: LmAPD
+    qe_class_h: SpectralQuantumEfficiency
+    qe_kwargs_h: {filename: detector_specs/H2RG_TER.dat}
+    pixel_size_k: 0.015
+    usable_well_k: 15000
+    ron_k: 0.5
+    dark_k: 0.0001
+    excess_noise_factor_k: 1.2
+    avalanche_gain_k: 10
+    detector_type_k: LmAPD
+    qe_class_k: SpectralQuantumEfficiency
+    qe_kwargs_k: {filename: detector_specs/H2RG_TER.dat}
     # Per-image-plane scales. These currently match the global ZShooter
     # values in ZShooter.yaml, but live here so each camera can diverge when
     # the final channel optics are available.
@@ -84,9 +178,14 @@ effects :
           y_cen: [0.0]
           x_size: [2048]
           y_size: [4096]
-          pixel_size: [0.015]
+          pixel_size: ['!DET.pixel_size_b']
           angle: [0.0]
           gain: [1.0]
+          detmode: ['!DET.detector_mode']
+          dettype: ['!DET.detector_type_b']
+          exnoise: ['!DET.excess_noise_factor_b']
+          avgain: ['!DET.avalanche_gain_b']
+          welldep: ['!DET.usable_well_b']
         x_cen_unit: mm
         y_cen_unit: mm
         x_size_unit: pixel
@@ -94,7 +193,7 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
-        detector: "CCD_B"
+        detector: "!DET.detector_type_b"
 
   - name: detector_g
     description: Single 2k x 2k detector for ZShooter_v2 G arm
@@ -110,9 +209,14 @@ effects :
           y_cen: [0.0]
           x_size: [2048]
           y_size: [4096]
-          pixel_size: [0.015]
+          pixel_size: ['!DET.pixel_size_g']
           angle: [0.0]
           gain: [1.0]
+          detmode: ['!DET.detector_mode']
+          dettype: ['!DET.detector_type_g']
+          exnoise: ['!DET.excess_noise_factor_g']
+          avgain: ['!DET.avalanche_gain_g']
+          welldep: ['!DET.usable_well_g']
         x_cen_unit: mm
         y_cen_unit: mm
         x_size_unit: pixel
@@ -120,7 +224,7 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
-        detector: "CCD_G"
+        detector: "!DET.detector_type_g"
 
   - name: detector_r
     description: Single 2k x 2k detector for ZShooter_v2 R arm
@@ -136,9 +240,14 @@ effects :
           y_cen: [0.0]
           x_size: [2048]
           y_size: [4096]
-          pixel_size: [0.015]
+          pixel_size: ['!DET.pixel_size_r']
           angle: [0.0]
           gain: [1.0]
+          detmode: ['!DET.detector_mode']
+          dettype: ['!DET.detector_type_r']
+          exnoise: ['!DET.excess_noise_factor_r']
+          avgain: ['!DET.avalanche_gain_r']
+          welldep: ['!DET.usable_well_r']
         x_cen_unit: mm
         y_cen_unit: mm
         x_size_unit: pixel
@@ -146,7 +255,7 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
-        detector: "CCD_R"
+        detector: "!DET.detector_type_r"
 
   - name: detector_yj
     description: Single 2k x 2k detector for ZShooter_v2 YJ arm
@@ -162,9 +271,14 @@ effects :
           y_cen: [0.0]
           x_size: [2048]
           y_size: [2048]
-          pixel_size: [0.015]
+          pixel_size: ['!DET.pixel_size_yj']
           angle: [0.0]
           gain: [1.0]
+          detmode: ['!DET.detector_mode']
+          dettype: ['!DET.detector_type_yj']
+          exnoise: ['!DET.excess_noise_factor_yj']
+          avgain: ['!DET.avalanche_gain_yj']
+          welldep: ['!DET.usable_well_yj']
         x_cen_unit: mm
         y_cen_unit: mm
         x_size_unit: pixel
@@ -172,7 +286,7 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
-        detector: "APD_YJ"
+        detector: "!DET.detector_type_yj"
 
   - name: detector_h
     description: Single 2k x 2k detector for ZShooter_v2 H arm
@@ -188,9 +302,14 @@ effects :
           y_cen: [0.0]
           x_size: [2048]
           y_size: [2048]
-          pixel_size: [0.015]
+          pixel_size: ['!DET.pixel_size_h']
           angle: [0.0]
           gain: [1.0]
+          detmode: ['!DET.detector_mode']
+          dettype: ['!DET.detector_type_h']
+          exnoise: ['!DET.excess_noise_factor_h']
+          avgain: ['!DET.avalanche_gain_h']
+          welldep: ['!DET.usable_well_h']
         x_cen_unit: mm
         y_cen_unit: mm
         x_size_unit: pixel
@@ -198,7 +317,7 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
-        detector: "APD_H"
+        detector: "!DET.detector_type_h"
 
   - name: detector_k
     description: Single 2k x 2k detector for ZShooter_v2 K arm
@@ -214,9 +333,14 @@ effects :
           y_cen: [0.0]
           x_size: [2048]
           y_size: [2048]
-          pixel_size: [0.015]
+          pixel_size: ['!DET.pixel_size_k']
           angle: [0.0]
           gain: [1.0]
+          detmode: ['!DET.detector_mode']
+          dettype: ['!DET.detector_type_k']
+          exnoise: ['!DET.excess_noise_factor_k']
+          avgain: ['!DET.avalanche_gain_k']
+          welldep: ['!DET.usable_well_k']
         x_cen_unit: mm
         y_cen_unit: mm
         x_size_unit: pixel
@@ -224,7 +348,7 @@ effects :
         pixel_size_unit: mm
         angle_unit: deg
         gain_unit: electron/adu
-        detector: "APD_K"
+        detector: "!DET.detector_type_k"
 
   - name: exposure_integration_selector
     description: Summing up sky signal for all DITs and NDITs for different detectors
@@ -274,37 +398,37 @@ effects :
         - selector_value: [0]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.000166    # [e-/s] level of dark current
+            value: "!DET.dark_b"
             dit: "!OBS.dit_blue"
             ndit: "!OBS.ndit_blue"
         - selector_value: [1]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.000166    # [e-/s] level of dark current
+            value: "!DET.dark_g"
             dit: "!OBS.dit_green"
             ndit: "!OBS.ndit_green"
         - selector_value: [2]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.000166     # [e-/s] level of dark current
+            value: "!DET.dark_r"
             dit: "!OBS.dit_red"
             ndit: "!OBS.ndit_red"
         - selector_value: [3]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.0001    # [e-/s] level of dark current
+            value: "!DET.dark_yj"
             dit: "!OBS.dit_yj"
             ndit: "!OBS.ndit_yj"
         - selector_value: [4]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.0001    # [e-/s] level of dark current
+            value: "!DET.dark_h"
             dit: "!OBS.dit_h"
             ndit: "!OBS.ndit_h"
         - selector_value: [5]
           effect_class: DarkCurrent
           effect_kwargs:
-            value: 0.0001     # [e-/s] level of dark current
+            value: "!DET.dark_k"
             dit: "!OBS.dit_k"
             ndit: "!OBS.ndit_k"
 
@@ -326,60 +450,48 @@ effects :
           effect_class: OnChipBinning
           effect_kwargs: {binx: '!DET.binx_red', biny: '!DET.biny_red'}
 
-  - name: shot_noise
-    description: Poisson statistics of integrated source, background and dark charge
-    class: ShotNoise
-
-  - name: detector_linearity_selector
-    description: Selector Wheel for linearity characteristics for CCDs and APDs
+  - name: exposure_limit
+    description: Warn about per-integration charge; never change DIT/NDIT or clip data
     class: SelectorWheel
-    include: False
     kwargs:
-      selector_key: "detector_id" # not really used as the Detector object's id is stored as just "id", but kept for consistency
+      selector_key: detector_id
       wheel:
-        - selector_value: [0]   # CCD_B detectors
-          effect_class: LinearityCurve
-          effect_kwargs:
-            array_dict:
-              incident: [0, 64e3]
-              measured: [0, 64e3]
-            ndit: "!OBS.ndit_blue"
-        - selector_value: [1]   # CCD_G detector
-          effect_class: LinearityCurve
-          effect_kwargs:
-            array_dict:
-              incident: [0, 64e3]
-              measured: [0, 64e3]
-            ndit: "!OBS.ndit_green"
-        - selector_value: [2] # CCD_R detectors
-          effect_class: LinearityCurve
-          effect_kwargs:
-            array_dict:
-              incident: [0, 64e3]
-              measured: [0, 64e3]
-            ndit: "!OBS.ndit_red"
-        - selector_value: [3]   # APD detectors
-          effect_class: LinearityCurve
-          effect_kwargs:
-            array_dict:
-              incident: [0, 64e3]
-              measured: [0, 64e3]
-            ndit: "!OBS.ndit_yj"
-        - selector_value: [4]   # APD detectors
-          effect_class: LinearityCurve
-          effect_kwargs:
-            array_dict:
-              incident: [0, 64e3]
-              measured: [0, 64e3]
-            ndit: "!OBS.ndit_h"
-        - selector_value: [5 ]   # APD detectors
-          effect_class: LinearityCurve
-          effect_kwargs:
-            array_dict:
-              incident: [ 0, 64e3 ]
-              measured: [ 0, 64e3 ]
-            ndit: "!OBS.ndit_k"
+        - selector_value: [0]
+          effect_class: ExposureLimit
+          effect_kwargs: {usable_well: '!DET.usable_well_b', ndit: '!OBS.ndit_blue'}
+        - selector_value: [1]
+          effect_class: ExposureLimit
+          effect_kwargs: {usable_well: '!DET.usable_well_g', ndit: '!OBS.ndit_green'}
+        - selector_value: [2]
+          effect_class: ExposureLimit
+          effect_kwargs: {usable_well: '!DET.usable_well_r', ndit: '!OBS.ndit_red'}
+        - selector_value: [3]
+          effect_class: ExposureLimit
+          effect_kwargs: {usable_well: '!DET.usable_well_yj', ndit: '!OBS.ndit_yj'}
+        - selector_value: [4]
+          effect_class: ExposureLimit
+          effect_kwargs: {usable_well: '!DET.usable_well_h', ndit: '!OBS.ndit_h'}
+        - selector_value: [5]
+          effect_class: ExposureLimit
+          effect_kwargs: {usable_well: '!DET.usable_well_k', ndit: '!OBS.ndit_k'}
 
+  - name: shot_noise
+    description: Photon and dark statistics, with LmAPD excess photon variance
+    class: SelectorWheel
+    kwargs:
+      selector_key: detector_id
+      wheel:
+        - selector_value: [0, 1, 2]
+          effect_class: ShotNoise
+        - selector_value: [3]
+          effect_class: AvalancheShotNoise
+          effect_kwargs: {excess_noise_factor: '!DET.excess_noise_factor_yj', dark_current: '!DET.dark_yj', dit: '!OBS.dit_yj', ndit: '!OBS.ndit_yj'}
+        - selector_value: [4]
+          effect_class: AvalancheShotNoise
+          effect_kwargs: {excess_noise_factor: '!DET.excess_noise_factor_h', dark_current: '!DET.dark_h', dit: '!OBS.dit_h', ndit: '!OBS.ndit_h'}
+        - selector_value: [5]
+          effect_class: AvalancheShotNoise
+          effect_kwargs: {excess_noise_factor: '!DET.excess_noise_factor_k', dark_current: '!DET.dark_k', dit: '!OBS.dit_k', ndit: '!OBS.ndit_k'}
 
 #  - name: border_reference_pixels
 #    description: Blanks the signal on N edge row and column pixels
@@ -398,32 +510,32 @@ effects :
         - selector_value: [0]
           effect_class: BasicReadoutNoise
           effect_kwargs:
-            noise_std: 0.1    # CCD readout noise std dev in electrons
+            noise_std: "!DET.ron_b"
             ndit: "!OBS.ndit_blue"
         - selector_value: [1]
           effect_class: BasicReadoutNoise
           effect_kwargs:
-            noise_std: 0.1    # CCD readout noise std dev in electrons
+            noise_std: "!DET.ron_g"
             ndit: "!OBS.ndit_green"
         - selector_value: [2]
           effect_class: BasicReadoutNoise
           effect_kwargs:
-            noise_std: 0.1    # CCD readout noise std dev in electrons
+            noise_std: "!DET.ron_r"
             ndit: "!OBS.ndit_red"
         - selector_value: [3]   # APD detectors
           effect_class: BasicReadoutNoise
           effect_kwargs:
-            noise_std: .5    # APD readout noise std dev in electrons
+            noise_std: "!DET.ron_yj"
             ndit: "!OBS.ndit_yj"
         - selector_value: [ 4 ]   # APD detectors
           effect_class: BasicReadoutNoise
           effect_kwargs:
-            noise_std: .5     # APD readout noise std dev in electrons
+            noise_std: "!DET.ron_h"
             ndit: "!OBS.ndit_h"
         - selector_value: [ 5 ]   # APD detectors
           effect_class: BasicReadoutNoise
           effect_kwargs:
-            noise_std: .5     # APD readout noise std dev in electrons
+            noise_std: "!DET.ron_k"
             ndit: "!OBS.ndit_k"
 
   - name: visible_binning_selector
