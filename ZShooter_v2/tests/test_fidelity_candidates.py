@@ -10,6 +10,7 @@ from types import SimpleNamespace
 import scopesim as sim
 from scopesim.effects import EchelleSpectralTraceList
 from scopesim.effects.effects_utils import make_effect
+from scopesim.utils import from_currsys
 from scopesim.effects.spectral_trace_list_utils import XiLamImage
 from scopesim.detector import Detector
 from scopesim.optics.image_plane_utils import header_from_list_of_xy
@@ -29,14 +30,16 @@ def test_science_defaults_draw_source_sky_and_dark_per_pixel(monkeypatch):
     assert train['readout_noise_selector'].include
     # Different source and sky levels in nine regions, including pure dark,
     # sky-only and source-only pixels. No stochastic effect is disabled.
-    source = np.repeat([0., .003, 3.], 100)[None, :]
-    sky = np.repeat([0., .03, 5.], 100)[:, None]
-    header = header_from_list_of_xy([-2.25, 2.25], [-2.25, 2.25], .015, 'D')
+    # 90,000 pixels per region constrain even the sparse dark-only Poisson tail.
+    source = np.repeat([0., .003, 3.], 300)[None, :]
+    sky = np.repeat([0., .03, 5.], 300)[:, None]
+    header = header_from_list_of_xy([-6.75, 6.75], [-6.75, 6.75], .015, 'D')
     for aid, arm in enumerate(('blue', 'green', 'red', 'yj', 'h', 'k')):
         train.cmds[f'!OBS.dit_{arm}'], train.cmds[f'!OBS.ndit_{arm}'] = 300., 2
-        dark = train['dark_current_selector'].get_effect(aid).meta['value']
-        ron = train['readout_noise_selector'].get_effect(aid).meta['noise_std']
-        bias = train['bias_selector'].get_effect(aid).meta['bias']
+        dark = train['dark_current_selector'].get_effect(aid)._get_dark_level(aid)
+        ron = from_currsys(train['readout_noise_selector'].get_effect(aid).meta['noise_std'], train.cmds)
+        bias = from_currsys(train['bias_selector'].get_effect(aid).meta['bias'], train.cmds)
+        factor = train.detector_managers[aid][0]._native_header['EXNOISE']
         expected = (source+sky+dark)*600
         frames = []
         for roid in (0, 1):
@@ -45,10 +48,10 @@ def test_science_defaults_draw_source_sky_and_dark_per_pixel(monkeypatch):
             detector.data[:] = source+sky
             for effect in train.optics_manager.detector_effects:
                 effect.apply_to(detector)
-            residual = (detector.data-bias-expected)/np.sqrt(expected+2*ron**2)
-            for yy in (0, 100, 200):
-                for xx in (0, 100, 200):
-                    region = residual[yy:yy+100, xx:xx+100]
+            residual = (detector.data-bias-expected)/np.sqrt((factor*(source+sky)+dark)*600+2*ron**2)
+            for yy in (0, 300, 600):
+                for xx in (0, 300, 600):
+                    region = residual[yy:yy+300, xx:xx+300]
                     assert abs(region.mean()) < .05
                     assert region.var() == pytest.approx(1., abs=.06)
             frames.append(detector.data.copy())
@@ -95,14 +98,21 @@ def test_reused_configuration_matches_fresh_slits_and_exposures(monkeypatch):
 
 
 @pytest.fixture(scope='module')
-def traces():
+def spec_commands():
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setitem(sim.rc.__config__, '!SIM.file.local_packages_path', str(ROOT.parent))
+        yield sim.UserCommands(use_instrument='ZShooter_v2', set_modes=['SPEC'])
+
+
+@pytest.fixture(scope='module')
+def traces(spec_commands):
     config = yaml.safe_load((ROOT / 'ZShooter_SPEC.yaml').read_text())
     effect = next(item for item in config['effects'] if item['name'] == 'trace_list_analytical')
     kwargs = dict(effect['kwargs'])
     kwargs['filename'] = str(ROOT / kwargs['filename'])
     simulation = next(item for item in yaml.safe_load_all((ROOT / 'default.yaml').read_text()) if item['alias'] == 'SIM')
     kwargs['trace_flux_jacobian'] = simulation['properties']['spectral']['trace_flux_jacobian']
-    return EchelleSpectralTraceList(**kwargs).spectral_traces
+    return EchelleSpectralTraceList(cmds=spec_commands, **kwargs).spectral_traces
 
 
 @pytest.mark.parametrize('channel', ['b', 'g', 'r', 'yj', 'h', 'k'])
@@ -132,17 +142,23 @@ def test_physical_slit_dispersion_across_sky_grids(traces, channel):
         assert flux == pytest.approx(np.sqrt(2*np.pi)*sigma_wave*np.trapezoid(illumination, eta_ref), rel=.015)
 
 
-@pytest.mark.parametrize('detector_id,arm,dark,ron', [(0, 'blue', .000166, .1), (1, 'green', .000166, .1), (2, 'red', .000166, .1), (3, 'yj', .0001, .5), (4, 'h', .0001, .5), (5, 'k', .0001, .5)])
-def test_dark_current_participates_in_poisson_statistics(detector_id, arm, dark, ron):
+@pytest.mark.parametrize('detector_id', range(6))
+def test_dark_current_participates_in_poisson_statistics(spec_commands, detector_id):
     config = yaml.safe_load((ROOT / 'ZShooter_DET.yaml').read_text())
     names = ['exposure_integration_selector', 'dark_current_selector', 'shot_noise', 'readout_noise_selector']
     effects = [item for item in config['effects'] if item['name'] in names]
     assert len(effects) == 4
-    cmds = sim.UserCommands(properties={f'!OBS.dit_{arm}': 3600., f'!OBS.ndit_{arm}': 1, '!SIM.random.seed': 126})
+    cmds = deepcopy(spec_commands)
+    cmds['!OBS.dit'], cmds['!OBS.ndit'], cmds['!SIM.random.seed'] = 3600., 1, 126
+    effects = [make_effect(item, cmds) for item in effects]
+    dark_effect, = [effect.get_effect(detector_id) for effect in effects if effect.meta['name'] == 'dark_current_selector']
+    read_effect, = [effect.get_effect(detector_id) for effect in effects if effect.meta['name'] == 'readout_noise_selector']
+    dark = dark_effect._get_dark_level(detector_id)
+    ron = from_currsys(read_effect.meta['noise_std'], cmds)
     header = header_from_list_of_xy([-4.5, 4.5], [-4.5, 4.5], .015, 'D')
     detector = Detector(header, cmds=cmds, id=detector_id)
-    for item in effects:
-        make_effect(item, cmds).apply_to(detector)
+    for effect in effects:
+        effect.apply_to(detector)
     assert detector.data.mean() == pytest.approx(dark*3600, abs=.005)
     assert detector.data.var() == pytest.approx(dark*3600 + ron**2, rel=.02)
 
@@ -166,13 +182,13 @@ def test_visible_ccd_charge_binning_is_independent_per_arm(detector_id, arm, bx,
 
 
 @pytest.mark.parametrize('channel', ['b', 'g', 'r', 'yj', 'h', 'k'])
-def test_native_trace_photon_normalization_is_independent_of_sky_grid(traces, channel):
+def test_native_trace_photon_normalization_is_independent_of_sky_grid(traces, spec_commands, channel):
     trace = next(trace for name, trace in traces.items() if name.startswith(channel + '_'))
     center = (trace.wave_min + trace.wave_max) / 2
     # Native detector geometry comes from the same IRDB prescription as the trace.
     config = yaml.safe_load((ROOT / 'ZShooter_DET.yaml').read_text())
     detector_effect = next(item for item in config['effects'] if item['class'] == 'DetectorList' and item['kwargs']['image_plane_id'] == trace.meta['image_plane_id'])
-    detector_header = make_effect(detector_effect).image_plane_header
+    detector_header = make_effect(detector_effect, spec_commands).image_plane_header
     for step in [.1, .05, .025]:
         wave = np.linspace(center*.998, center*1.002, 2001)
         xi = np.arange(-2, 2 + step/2, step)
