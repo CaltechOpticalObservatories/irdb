@@ -1,9 +1,9 @@
 # Alternative detector engineering package; optical prescription is unchanged.
 object: detector
 alias: DET
-name: zshooter_alternative_detectors
+name: zshooter_alternative_detectors_4k
 properties:
-  detector_mode: SPEC_ALTDETECT
+  detector_mode: SPEC_ALTDETECT4K
   detector_type_b: CCD
   ron_b: 2.5
   dark_b: 0.0005555555555555556  # 2 e/hour/pixel
