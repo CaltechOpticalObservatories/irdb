@@ -46,3 +46,5 @@ properties:
   dark_k: 0.006388888888888889  # 23 e/hour/pixel
   excess_noise_factor_k: 1.0
   avalanche_gain_k: 1
+  x_size_k: 2048
+  y_size_k: 2048
