@@ -124,6 +124,8 @@ properties :
     plate_scale_yj: 10.4703
     plate_scale_h: 10.4703
     plate_scale_k: 10.4703
+    x_size_k: 2048
+    y_size_k: 2048
 #    tapered_qe_example:
 #      enabled: False
 #      description: >
@@ -320,7 +322,7 @@ effects :
         detector: "!DET.detector_type_h"
 
   - name: detector_k
-    description: Single 2k x 2k detector for ZShooter_v2 K arm
+    description: Single detector for ZShooter_v2 K arm
     include: True
     class: DetectorList
     kwargs:
@@ -331,8 +333,8 @@ effects :
           id: [5]
           x_cen: [0.0]
           y_cen: [0.0]
-          x_size: [2048]
-          y_size: [2048]
+          x_size: ["!DET.x_size_k"]
+          y_size: ["!DET.y_size_k"]
           pixel_size: ['!DET.pixel_size_k']
           angle: [0.0]
           gain: [1.0]
