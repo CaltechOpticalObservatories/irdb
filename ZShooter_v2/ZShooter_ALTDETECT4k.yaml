@@ -1,0 +1,50 @@
+# Alternative detector engineering package; optical prescription is unchanged.
+object: detector
+alias: DET
+name: zshooter_alternative_detectors_4k
+properties:
+  detector_mode: SPEC_ALTDETECT4K
+  detector_type_b: CCD
+  ron_b: 2.5
+  dark_b: 0.0005555555555555556  # 2 e/hour/pixel
+  qe_class_b: SpectralQuantumEfficiency
+  qe_kwargs_b:
+    filename: detector_specs/ccd_uv_enhanced_TER.dat
+  detector_type_g: CCD
+  ron_g: 2.5
+  dark_g: 0.0005555555555555556  # 2 e/hour/pixel
+  qe_class_g: SpectralQuantumEfficiency
+  qe_kwargs_g:
+    filename: detector_specs/ccd_ml_uv_enhanced_TER.dat
+  detector_type_r: CCD
+  ron_r: 2.5
+  dark_r: 0.0005555555555555556  # 2 e/hour/pixel
+  qe_class_r: SpectralQuantumEfficiency
+  qe_kwargs_r:
+    filename: detector_specs/ccd_ml2_uv_enhanced_hirho_TER.dat
+  detector_type_yj: H2RG
+  pixel_size_yj: 0.018
+  pixel_scale_yj: 0.1884654  # Same 10.4703 arcsec/mm camera plate scale
+  usable_well_yj: 60000
+  ron_yj: 6.0
+  dark_yj: 0.006388888888888889  # 23 e/hour/pixel
+  excess_noise_factor_yj: 1.0
+  avalanche_gain_yj: 1
+  detector_type_h: H2RG
+  pixel_size_h: 0.018
+  pixel_scale_h: 0.1884654  # Same 10.4703 arcsec/mm camera plate scale
+  usable_well_h: 60000
+  ron_h: 6.0
+  dark_h: 0.006388888888888889  # 23 e/hour/pixel
+  excess_noise_factor_h: 1.0
+  avalanche_gain_h: 1
+  detector_type_k: H4RG
+  pixel_size_k: 0.010
+  pixel_scale_k: 0.104703  # Same 10.4703 arcsec/mm camera plate scale
+  usable_well_k: 60000
+  ron_k: 6.0
+  dark_k: 0.006388888888888889  # 23 e/hour/pixel
+  excess_noise_factor_k: 1.0
+  avalanche_gain_k: 1
+  x_size_k: 4096
+  y_size_k: 4096
