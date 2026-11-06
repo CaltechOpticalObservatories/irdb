@@ -1,0 +1,8 @@
+# x_unit: arcsec
+# y_unit: arcsec
+# description: 11 arcsec long X-shooter slit
+x y
+-5.5 -0.6
+5.5 -0.6
+5.5 0.6
+-5.5 0.6
