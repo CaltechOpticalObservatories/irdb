@@ -82,6 +82,7 @@ effects:
     kwargs:
       filename: traces/traces.fits
       trace_flux_jacobian: true
+      fit_normalize: true
   - name: nir_stray_light
     class: SelectorWheel
     kwargs:

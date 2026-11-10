@@ -192,6 +192,7 @@ effects:
      physical_slit_dispersion: true
      # Converged over the wider 18 um detector footprint as well as 15 um.
      fit_degree: 6
+     fit_normalize: true
      slit_samples: 7
      wave_colname: "wavelength"
      s_colname: "s"

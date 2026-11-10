@@ -43,6 +43,7 @@ properties:
     spectral_bin_width: 0.000005
     spectral_resolution: 200000
     trace_flux_jacobian: true
+    integrate_spectral_bins: true
   sub_pixel:
     flag: true
   computing:
