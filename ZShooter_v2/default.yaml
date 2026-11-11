@@ -107,6 +107,7 @@ properties :
     spectral_bin_width: 0.00001 # in um, may want 0.000005
     spectral_resolution: 40000
     trace_flux_jacobian: true
+    pixel_quadrature_order: 4
 
   computing :
     preload_field_of_views : True
